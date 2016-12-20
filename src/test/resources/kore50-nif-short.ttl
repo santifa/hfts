@@ -1,0 +1,79 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
+@prefix itsrdf: <http://www.w3.org/2005/11/its/rdf#> .
+
+<http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv#char=0,>
+	a nif:String , nif:Context , nif:RFC5147String ;
+	nif:sourceUrl <http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv> .
+
+<http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL01#char=0,>
+	a nif:String , nif:Context , nif:RFC5147String ;
+	nif:broaderContext <http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv#char=0,> ;
+	nif:isString "David and Victoria named their children Brooklyn, Romeo, Cruz, and Harper Seven."^^xsd:string .
+
+<http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL01#char=0,5>
+	a nif:String , nif:RFC5147String ;
+	nif:referenceContext <http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL01#char=0,> ;
+	nif:anchorOf "David"^^xsd:string ;
+	nif:beginIndex "0"^^xsd:long ;
+	nif:endIndex "5"^^xsd:long ;
+	a nif:Phrase ;
+	itsrdf:taIdentRef  <http://dbpedia.org/resource/David_Beckham> .
+
+<http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL01#char=10,18>
+	a nif:String , nif:RFC5147String ;
+	nif:referenceContext <http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL01#char=0,> ;
+	nif:anchorOf "Victoria"^^xsd:string ;
+	nif:beginIndex "10"^^xsd:long ;
+	nif:endIndex "18"^^xsd:long ;
+	a nif:Phrase ;
+	itsrdf:taIdentRef  <http://dbpedia.org/resource/Victoria_Beckham> .
+
+<http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL02#char=0,>
+	a nif:String , nif:Context , nif:RFC5147String ;
+	nif:broaderContext <http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv> ;
+	nif:isString "David and Victoria added spice to their marriage."^^xsd:string .
+
+<http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL02#char=0,5>
+	a nif:String , nif:RFC5147String ;
+	nif:referenceContext <http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL02#char=0,> ;
+	nif:anchorOf "David"^^xsd:string ;
+	nif:beginIndex "0"^^xsd:long ;
+	nif:endIndex "5"^^xsd:long ;
+	a nif:Phrase ;
+	itsrdf:taIdentRef  <http://dbpedia.org/resource/David_Beckham> .
+
+<http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL02#char=10,18>
+	a nif:String , nif:RFC5147String ;
+	nif:referenceContext <http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL02#char=0,> ;
+	nif:anchorOf "Victoria"^^xsd:string ;
+	nif:beginIndex "10"^^xsd:long ;
+	nif:endIndex "18"^^xsd:long ;
+	a nif:Phrase ;
+	itsrdf:taIdentRef  <http://dbpedia.org/resource/Victoria_Beckham> .
+
+<http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL03#char=0,>
+	a nif:String , nif:Context , nif:RFC5147String ;
+	nif:broaderContext <http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv> ;
+	nif:isString "Tiger was lost in the woods when he got divorced from Elin."^^xsd:string .
+
+<http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL03#char=0,5>
+	a nif:String , nif:RFC5147String ;
+	nif:referenceContext <http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL03#char=0,> ;
+	nif:anchorOf "Tiger"^^xsd:string ;
+	nif:beginIndex "0"^^xsd:long ;
+	nif:endIndex "5"^^xsd:long ;
+	a nif:Phrase ;
+	itsrdf:taIdentRef  <http://dbpedia.org/resource/Tiger_Woods> .
+
+<http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL03#char=54,58>
+	a nif:String , nif:RFC5147String ;
+	nif:referenceContext <http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL03#char=0,> ;
+	nif:anchorOf "Elin"^^xsd:string ;
+	nif:beginIndex "54"^^xsd:long ;
+	nif:endIndex "58"^^xsd:long ;
+	a nif:Phrase ;
+	itsrdf:taIdentRef  <http://dbpedia.org/resource/Elin_Nordegren> .
