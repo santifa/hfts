@@ -14,12 +14,25 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 
 /**
- * Created by ratzeputz on 04.01.17.
+ * A very quick extension to the {@link TurtleNIFWriter}.
+ * <br/>
+ * Since the {@link org.aksw.gerbil.io.nif.NIFWriter} interface
+ * is very restrictive the shortest solution was to extend and didn't
+ * use the interface at all. Maybe changed later.
+ * <p>
+ * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 public class ExtendedTurtleNifWriter extends TurtleNIFWriter {
 
     private String lang = Lang.TURTLE.getName();
 
+    /**
+     * Create a {@link Model} from the {@link org.aksw.gerbil.transfer.nif.Document}s
+     * and insert the extension from the {@link NifDataset}.
+     *
+     * @param dataset the dataset
+     * @return the model
+     */
     public Model extendModel(NifDataset dataset) {
         Model nifModel = createNIFModel(dataset.getDocuments());
 
@@ -39,12 +52,19 @@ public class ExtendedTurtleNifWriter extends TurtleNIFWriter {
         nifModel.add(ds, notAnnotated, String.valueOf(dataset.getNotAnnotatedDocs()));
         nifModel.add(ds, density, String.valueOf(dataset.getMacroDensity()));
         nifModel.add(ds, ambOfE, String.valueOf(dataset.getAverageMacroAmbiguityOfEntities()));
-        nifModel.add(ds, ambOfSf, String.valueOf(dataset.getAverageMacroAmbiguityOfSurfaceforms()));
+        nifModel.add(ds, ambOfSf, String.valueOf(dataset.getAverageMacroAmbiguityOfSurfaceForms()));
         nifModel.add(ds, divOfE, String.valueOf(dataset.getAverageMacroDiversityOfEntities()));
-        nifModel.add(ds, divOfSf, String.valueOf(dataset.getAverageMacroDiversityOfSurfaceforms()));
+        nifModel.add(ds, divOfSf, String.valueOf(dataset.getAverageMacroDiversityOfSurfaceForms()));
         return nifModel;
     }
 
+    /**
+     * Write a {@link NifDataset} into a huge {@link String}
+     * in turtle.
+     *
+     * @param dataset the dataset
+     * @return the string
+     */
     public String writeNIF(NifDataset dataset) {
         Model nifModel = extendModel(dataset);
         StringWriter writer = new StringWriter();
@@ -52,6 +72,13 @@ public class ExtendedTurtleNifWriter extends TurtleNIFWriter {
         return writer.toString();
     }
 
+    /**
+     * Write a {@link NifDataset} into a file or some
+     * other {@link OutputStream}.
+     *
+     * @param dataset the dataset
+     * @param os      the os
+     */
     public void writeNIF(NifDataset dataset, OutputStream os) {
         Model nifModel = extendModel(dataset);
         nifModel.write(os, lang);

@@ -68,6 +68,6 @@ public class AmbiguityTest {
     public void calculate() throws Exception {
         dataset = ambiguity.calculate(dataset);
         Assert.assertThat(dataset.getAverageMacroAmbiguityOfEntities(), is(expectedEntityAmb));
-        Assert.assertThat(dataset.getAverageMacroAmbiguityOfSurfaceforms(), is(expectedSfAmb));
+        Assert.assertThat(dataset.getAverageMacroAmbiguityOfSurfaceForms(), is(expectedSfAmb));
     }
 }

@@ -13,19 +13,45 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 
 /**
- * Created by ratzeputz on 30.12.16.
+ * This class loads a simple text file containing occurrences
+ * and a word. One file represents a mapping between the number
+ * of surface forms used for one entity (known as entity Mapping)
+ * and the other a mapping between the amount of possible entities
+ * denoted by an surface form (known as Surface Form Mapping).
+ * <br/>
+ * This object can use a huge amount of memory, since its stupidly loading the file
+ * into a huge {@link HashMap}.
+ * <p>
+ * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 public class DictionaryConnector {
 
-    private HashMap<String, Integer> entityMap = new HashMap<>();
+    private HashMap<String, Integer> entityMappping = new HashMap<>();
 
-    private HashMap<String, Integer> surfaceformMap = new HashMap<>();
+    private HashMap<String, Integer> sfMapping = new HashMap<>();
 
+    /**
+     * Instantiates a new dictionary connector.
+     * Provide two files which first column is a number
+     * and the second one containing a word surrounded by '<>'.
+     *
+     * @param entityFile      the entity mapping file
+     * @param surfaceFormFile the surface form mapping file
+     * @throws IOException the io exception
+     */
     public DictionaryConnector(Path entityFile, Path surfaceFormFile) throws IOException {
-        readAmbiguityFile(entityFile, entityMap);
-        readAmbiguityFile(surfaceFormFile, surfaceformMap);
+        readAmbiguityFile(entityFile, entityMappping);
+        readAmbiguityFile(surfaceFormFile, sfMapping);
     }
 
+    /**
+     * Gets a new {@link DictionaryConnector} initialized
+     * with the internal files.<br/>
+     * Keep in mind that this loads a huge amount of data into the
+     * memory. Use this object wisely.
+     *
+     * @return the default connector
+     */
     public static DictionaryConnector getDefaultConnector() {
         try {
             return new DictionaryConnector(Paths.get(DictionaryConnector.class.getClass().getResource("/filter/ambiguity_e").toURI()),
@@ -51,11 +77,23 @@ public class DictionaryConnector {
         }
     }
 
-    public HashMap<String, Integer> getEntityMap() {
-        return entityMap;
+    /**
+     * Gets the {@link HashMap} containing the Relation between
+     * one entity and multiple surface forms.
+     *
+     * @return the entity map
+     */
+    public HashMap<String, Integer> getEntityMappping() {
+        return entityMappping;
     }
 
-    public HashMap<String, Integer> getSurfaceformMap() {
-        return surfaceformMap;
+    /**
+     * Gets {@link HashMap} containing the relation between one
+     * surface form and multiple entities.
+     *
+     * @return the surface form map
+     */
+    public HashMap<String, Integer> getSfMapping() {
+        return sfMapping;
     }
 }

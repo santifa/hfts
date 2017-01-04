@@ -71,8 +71,8 @@ public class Diversity implements Metric {
         int counter = 0;
         double averageMacroEntityDiversity = 0.0;
         for (String entity : knownEntities.keySet()) {
-            if (connector.getEntityMap().containsKey(entity)) {
-                averageMacroEntityDiversity += (double) knownEntities.get(entity) / (double) connector.getEntityMap().get(entity);
+            if (connector.getEntityMappping().containsKey(entity)) {
+                averageMacroEntityDiversity += (double) knownEntities.get(entity) / (double) connector.getEntityMappping().get(entity);
                 counter++;
             }
         }
@@ -83,17 +83,17 @@ public class Diversity implements Metric {
         counter = 0;
         double averageMacroSurfaceFormDiversity = 0.0;
         for (String surfaceForm : knownSurfaceForms.keySet()) {
-            if (connector.getSurfaceformMap().containsKey(surfaceForm)) {
-                averageMacroSurfaceFormDiversity += (double) knownSurfaceForms.get(surfaceForm) / (double) connector.getSurfaceformMap().get(surfaceForm);
+            if (connector.getSfMapping().containsKey(surfaceForm)) {
+                averageMacroSurfaceFormDiversity += (double) knownSurfaceForms.get(surfaceForm) / (double) connector.getSfMapping().get(surfaceForm);
                 counter++;
             }
         }
 
         if (counter != 0) {
-            dataset.setAverageMacroDiversityOfSurfaceforms(averageMacroSurfaceFormDiversity/ (double) counter);
+            dataset.setAverageMacroDiversityOfSurfaceForms(averageMacroSurfaceFormDiversity/ (double) counter);
         }
         Logger.debug("Macro diversity of entities for {} is {}", dataset.getName(), dataset.getAverageMacroDiversityOfEntities());
-        Logger.debug("Macro diversity of surface forms for {} is {}", dataset.getName(), dataset.getAverageMacroDiversityOfSurfaceforms());
+        Logger.debug("Macro diversity of surface forms for {} is {}", dataset.getName(), dataset.getAverageMacroDiversityOfSurfaceForms());
         return dataset;
     }
 

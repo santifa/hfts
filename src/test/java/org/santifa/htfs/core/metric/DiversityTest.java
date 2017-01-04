@@ -68,7 +68,7 @@ public class DiversityTest {
     public void calculate() throws Exception {
         dataset = diversity.calculate(dataset);
         Assert.assertThat(dataset.getAverageMacroDiversityOfEntities(), is(expectedEntitiesDiversity));
-        Assert.assertThat(dataset.getAverageMacroDiversityOfSurfaceforms(), is(expectedSfDiversity));
+        Assert.assertThat(dataset.getAverageMacroDiversityOfSurfaceForms(), is(expectedSfDiversity));
     }
 
 }

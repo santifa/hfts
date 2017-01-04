@@ -11,12 +11,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by ratzeputz on 28.12.16.
+ * The class takes a {@link NifDataset} and resolves
+ * all 'owl:sameAs' relations for every URI present in the data set.
+ * <br/>
+ * This can be used with some metrics which are utilizing URIs
+ * or the typing of entities.
+ *
+ * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 class SameAsRetriever {
 
-    SameAsService service = DefaultSameAsServiceFactory.createNew();
+    private SameAsService service = DefaultSameAsServiceFactory.createNew();
 
+    /**
+     * Retrieve all sameAs relations for URIs present in a {@link NifDataset}
+     *
+     * @param dataset the data set
+     * @return the extended data set
+     */
     NifDataset retrieve(NifDataset dataset) {
         for (Document d : dataset.getDocuments()) {
 

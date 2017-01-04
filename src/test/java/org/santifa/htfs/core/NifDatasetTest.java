@@ -14,7 +14,9 @@ import java.nio.file.Paths;
 import static org.hamcrest.core.Is.is;
 
 /**
- * Test the creation of nif datasets.
+ * Test the creation and writing of nif data sets.
+ * <br/>
+ * Also provide a static test data set.
  *
  * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
@@ -83,13 +85,19 @@ public class NifDatasetTest {
         dataset.setNotAnnotatedDocs(0.0);
         dataset.setMacroDensity(0.1);
         dataset.setAverageMacroAmbiguityOfEntities(0.2);
-        dataset.setAverageMacroAmbiguityOfSurfaceforms(0.3);
+        dataset.setAverageMacroAmbiguityOfSurfaceForms(0.3);
         dataset.setAverageMacroDiversityOfEntities(0.4);
-        dataset.setAverageMacroDiversityOfSurfaceforms(0.5);
+        dataset.setAverageMacroDiversityOfSurfaceForms(0.5);
         String result = dataset.write();
         System.out.println(result);
     }
 
+    /**
+     * Gets a {@link NifDataset} which contains one sentence with two entities
+     * 'Victoria Beckham' and 'David Beckham'
+     *
+     * @return the test data set
+     */
     public static NifDataset getTestDataset() {
         String data = "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n" +
                 "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n" +

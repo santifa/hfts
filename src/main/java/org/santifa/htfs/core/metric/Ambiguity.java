@@ -55,13 +55,13 @@ public class Ambiguity implements Metric {
                         meaning.getStartPosition() + meaning.getLength()).toLowerCase();
                 sf = StringUtils.replace(sf, "_", " ");
 
-                if (connector.getEntityMap().containsKey(s)) {
-                    ambiguityEntities += connector.getEntityMap().get(s);
+                if (connector.getEntityMappping().containsKey(s)) {
+                    ambiguityEntities += connector.getEntityMappping().get(s);
                 }
 
 
-                if (connector.getSurfaceformMap().containsKey(sf)) {
-                    ambiguitySf += connector.getSurfaceformMap().get(sf);
+                if (connector.getSfMapping().containsKey(sf)) {
+                    ambiguitySf += connector.getSfMapping().get(sf);
                 }
             }
             counter += meanings.size();
@@ -72,10 +72,10 @@ public class Ambiguity implements Metric {
         }
 
         if (ambiguitySf != 0.0) {
-            dataset.setAverageMacroAmbiguityOfSurfaceforms((double) ambiguitySf / (double) counter);
+            dataset.setAverageMacroAmbiguityOfSurfaceForms((double) ambiguitySf / (double) counter);
         }
         Logger.debug("Macro ambiguity of entities for {} is {}", dataset.getName(), dataset.getAverageMacroAmbiguityOfEntities());
-        Logger.debug("Macro ambiguity of surface forms for {} is {}", dataset.getName(), dataset.getAverageMacroAmbiguityOfSurfaceforms());
+        Logger.debug("Macro ambiguity of surface forms for {} is {}", dataset.getName(), dataset.getAverageMacroAmbiguityOfSurfaceForms());
         return dataset;
     }
 
