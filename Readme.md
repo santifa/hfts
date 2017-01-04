@@ -49,7 +49,7 @@ have more influence.
 ### ontology extensions
 
 The NIF format has until now no possibility to store meta information about a data set.
-So we introduce a new class the `nif:Dataset` which is represented with `nif:{Dataset Name}`.
+So we introduce a new class the `nif:Dataset` which is represented with `nif:dataset/{Dataset Name}`.
 All metrics on the dataset level are stored under this entity.
 
 Some of the metrics are also calculated on document level. These are additionally stored
