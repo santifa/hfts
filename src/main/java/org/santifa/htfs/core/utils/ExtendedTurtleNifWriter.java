@@ -43,10 +43,10 @@ public class ExtendedTurtleNifWriter extends TurtleNIFWriter {
         /* metrics */
         Property notAnnotated = ResourceFactory.createProperty(NIF.getURI(), "notAnnotated");
         Property density = ResourceFactory.createProperty(NIF.getURI(), "macroDensity");
-        Property ambOfSf = ResourceFactory.createProperty(NIF.getURI(), "macroAmbiguityOfSf");
-        Property ambOfE = ResourceFactory.createProperty(NIF.getURI(), "macroAmbiguityOfE");
-        Property divOfE = ResourceFactory.createProperty(NIF.getURI(), "macroDiversityOfE");
-        Property divOfSf = ResourceFactory.createProperty(NIF.getURI(), "macroDiversityOfSf");
+        Property ambOfSf = ResourceFactory.createProperty(NIF.getURI(), "macroAmbiguitySurfaceForms");
+        Property ambOfE = ResourceFactory.createProperty(NIF.getURI(), "macroAmbiguityEntities");
+        Property divOfE = ResourceFactory.createProperty(NIF.getURI(), "macroDiversityOfEntities");
+        Property divOfSf = ResourceFactory.createProperty(NIF.getURI(), "macroDiversitySurfaceForms");
 
         nifModel.add(ds, RDF.type, dsProp);
         nifModel.add(ds, notAnnotated, String.valueOf(dataset.getNotAnnotatedDocs()));
