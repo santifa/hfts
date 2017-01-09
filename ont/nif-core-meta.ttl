@@ -1067,3 +1067,68 @@ nif:Dataset
     rdfs:label "Dataset"@en ;
     rdfs;comment """Individuals of this class describing meta informations for collections of documents."""
 
+nif:notAnnotated
+    a owl:DatatypeProperty ;
+    rdfs:label "The amount of strings without annotations within a dataset."@en ;
+    rdfs:domain nif:Dataset ;
+    rdfs:range xsd:decimal ;
+
+nif:microDensity
+    a owl:DatatypeProperty ;
+    rdfs:label "Describes the amount of annotations within the words in the dataset."@en ;
+    rdfs:domain nif:Dataset ;
+    rdfs:range xsd:decimal ;
+
+nif:macroDensity
+    a owl:DatatypeProperty ;
+    rdfs:label "Describes the amount of annotations within the words in the dataset."@en ;
+    rdfs:domain nif:Dataset ;
+    rdfs:range xsd:decimal ;
+
+nif:microAmbiguityEntities
+    a owl:DatatypeProperty ;
+    rdfs:label "The average amount of surface forms per entity."@en ;
+    rdfs:domain nif:Dataset ;
+    rdfs:range xsd:decimal ;
+
+nif:macroAmbiguityEntities
+    a owl:DatatypeProperty ;
+    rdfs:label "The average amount of surface forms per entity."@en ;
+    rdfs:domain nif:Dataset ;
+    rdfs:range xsd:decimal ;
+
+nif:microAmbiguitySurfaceForms
+    a owl:DatatypeProperty ;
+    rdfs:label "The average amount of entities per surface form."@en ;
+    rdfs:domain nif:Dataset ;
+    rdfs:range xsd:decimal ;
+
+nif:macroAmbiguitySurfaceForms
+    a owl:DatatypeProperty ;
+    rdfs:label "The average amount of entities per surface form."@en ;
+    rdfs:domain nif:Dataset ;
+    rdfs:range xsd:decimal ;
+
+nif:microDiversityEntities
+    a owl:DatatypeProperty ;
+    rdfs:label "The average diversity of entities."@en ;
+    rdfs:domain nif:Dataset ;
+    rdfs:range xsd:decimal ;
+
+nif:macroDiversityEntities
+    a owl:DatatypeProperty ;
+    rdfs:label "The average diversity of entities."@en ;
+    rdfs:domain nif:Dataset ;
+    rdfs:range xsd:decimal ;
+
+nif:microDiversitySurfaceForms
+    a owl:DatatypeProperty ;
+    rdfs:label "The average diversity of surface forms."@en ;
+    rdfs:domain nif:Dataset ;
+    rdfs:range xsd:decimal ;
+
+nif:macroDiversitySurfaceForms
+    a owl:DatatypeProperty ;
+    rdfs:label "The average diversity of surface form."@en ;
+    rdfs:domain nif:Dataset ;
+    rdfs:range xsd:decimal ;
