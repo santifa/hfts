@@ -27,7 +27,7 @@ properties to store meta informations in documents.
 The only new base class is `nif:Dataset` which is represented as `nif:{Dataset Name}`.
 The properties describing the meta informations are related to this object.
 
-The extended ontology file can be found [here](https://github.com/santifa/hfts/blob/master/ont/nif-core-meta.owl).
+The extended ontology file can be found [here](https://github.com/santifa/hfts/blob/master/ont/nif-core-meta.ttl).
 Also the properties are further explained within the [metrics document](https://github.com/santifa/hfts/blob/master/Metrics.md).
 
 ## Core API
