@@ -28,6 +28,10 @@ public class HftsApi {
 
     private List<Metric> metrics = new ArrayList<>();
 
+    private SameAsRetriever retriever = new SameAsRetriever();
+
+    private boolean sameAs = false;
+
     /**
      * Instantiates a new Hfts api
      * which can be used multiple times.
@@ -91,6 +95,11 @@ public class HftsApi {
         return this;
     }
 
+    public HftsApi withSameAsRetrival() {
+        this.sameAs = true;
+        return this;
+    }
+
     /**
      * Process the data sets.
      * <br/>
@@ -101,6 +110,14 @@ public class HftsApi {
      */
     public List<NifDataset> run() {
         List<NifDataset> result = new ArrayList<>(datasets.size());
+
+        if (sameAs) {
+            /* do some sameAs retrieval */
+            for (NifDataset d : datasets) {
+                retriever.retrieve(d);
+            }
+        }
+
         for (NifDataset d : datasets) {
             for (Metric m : metrics) {
                 d = m.calculate(d);

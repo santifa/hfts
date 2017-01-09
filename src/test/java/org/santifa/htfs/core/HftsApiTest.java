@@ -2,10 +2,7 @@ package org.santifa.htfs.core;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.santifa.htfs.core.metric.Ambiguity;
-import org.santifa.htfs.core.metric.Density;
-import org.santifa.htfs.core.metric.Diversity;
-import org.santifa.htfs.core.metric.NotAnnotated;
+import org.santifa.htfs.core.metric.*;
 import org.santifa.htfs.core.utils.DictionaryConnector;
 
 import java.io.IOException;
@@ -89,6 +86,19 @@ public class HftsApiTest {
         HftsApi api = new HftsApi().withDataset(dataset)
                 .withMetric(new NotAnnotated(), new Density(),
                         new Ambiguity(connector), new Diversity(connector));
+        List<NifDataset> results = api.run();
+
+        for (NifDataset ds : results) {
+            System.out.println("##### Printing dataset " + ds.getName());
+            System.out.println(ds.write());
+        }
+    }
+
+    @Test
+    public void runHftsApiTyper() {
+        NifDataset dataset = NifDatasetTest.getTestDataset();
+        HftsApi api = new HftsApi().withDataset(dataset).withSameAsRetrival()
+                .withMetric(Typer.getDefaultTyper());
         List<NifDataset> results = api.run();
 
         for (NifDataset ds : results) {

@@ -258,4 +258,20 @@ public class NifDataset {
         ExtendedTurtleNifWriter writer = new ExtendedTurtleNifWriter();
         return writer.writeNIF(this);
     }
+
+    @Override
+    public String toString() {
+        return "NifDataset{" +
+                "name='" + name + '\'' +
+                ", documents=" + documents +
+                ", markings=" + markings +
+                ", notAnnotatedDocs=" + notAnnotatedDocs +
+                ", macroDensity=" + macroDensity +
+                ", averageMacroDiversityOfEntities=" + averageMacroDiversityOfEntities +
+                ", averageMacroDiversityOfSurfaceForms=" + averageMacroDiversityOfSurfaceForms +
+                ", averageMacroAmbiguityOfEntities=" + averageMacroAmbiguityOfEntities +
+                ", averageMacroAmbiguityOfSurfaceForms=" + averageMacroAmbiguityOfSurfaceForms +
+                ", changed=" + changed +
+                '}';
+    }
 }
