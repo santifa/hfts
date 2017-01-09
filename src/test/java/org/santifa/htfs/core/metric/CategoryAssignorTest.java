@@ -7,11 +7,11 @@ import org.santifa.htfs.core.NifDatasetTest;
 /**
  * Created by ratzeputz on 09.01.17.
  */
-public class TyperTest {
+public class CategoryAssignorTest {
 
     @Test
     public void calculate() throws Exception {
-        Metric typer = Typer.getDefaultTyper();
+        Metric typer = CategoryAssignor.getDefaultTyper();
         NifDataset dataset = NifDatasetTest.getTestDataset();
 
         dataset = typer.calculate(dataset);

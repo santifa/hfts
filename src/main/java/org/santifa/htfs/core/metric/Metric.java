@@ -7,5 +7,10 @@ import org.santifa.htfs.core.NifDataset;
  */
 public interface Metric {
 
-    public NifDataset calculate(NifDataset dataset);
+    NifDataset calculate(NifDataset dataset);
+
+    NifDataset calculateMicro(NifDataset dataset);
+
+    NifDataset calculateMacro(NifDataset dataset);
+
 }

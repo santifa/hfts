@@ -98,7 +98,7 @@ public class HftsApiTest {
     public void runHftsApiTyper() {
         NifDataset dataset = NifDatasetTest.getTestDataset();
         HftsApi api = new HftsApi().withDataset(dataset).withSameAsRetrival()
-                .withMetric(Typer.getDefaultTyper());
+                .withMetric(CategoryAssignor.getDefaultTyper());
         List<NifDataset> results = api.run();
 
         for (NifDataset ds : results) {

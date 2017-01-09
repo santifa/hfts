@@ -1,11 +1,13 @@
 package org.santifa.htfs.core.metric;
 
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import org.aksw.gerbil.transfer.nif.Document;
 import org.aksw.gerbil.transfer.nif.MeaningSpan;
+import org.aksw.gerbil.transfer.nif.vocabulary.NIF;
 import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
-import org.santifa.htfs.core.utils.DictionaryConnector;
 import org.santifa.htfs.core.NifDataset;
+import org.santifa.htfs.core.utils.DictionaryConnector;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -17,15 +19,19 @@ import java.util.List;
 /**
  * Created by ratzeputz on 30.12.16.
  */
-public class Diversity implements Metric {
+public class Diversity extends AbstractMetric {
 
     DictionaryConnector connector;
 
     public Diversity(DictionaryConnector connector) {
+        super(ResourceFactory.createProperty(NIF.getURI(), "microDiversity"),
+                ResourceFactory.createProperty(NIF.getURI(), "macroDiversity"));
         this.connector = connector;
     }
 
     public Diversity(Path entityFile, Path surfaceFormFile) throws IOException {
+        super(ResourceFactory.createProperty(NIF.getURI(), "microDiversity"),
+                ResourceFactory.createProperty(NIF.getURI(), "macroDiversity"));
         this.connector = new DictionaryConnector(entityFile, surfaceFormFile);
     }
 
@@ -95,6 +101,16 @@ public class Diversity implements Metric {
         Logger.debug("Macro diversity of entities for {} is {}", dataset.getName(), dataset.getAverageMacroDiversityOfEntities());
         Logger.debug("Macro diversity of surface forms for {} is {}", dataset.getName(), dataset.getAverageMacroDiversityOfSurfaceForms());
         return dataset;
+    }
+
+    @Override
+    public NifDataset calculateMicro(NifDataset dataset) {
+        return null;
+    }
+
+    @Override
+    public NifDataset calculateMacro(NifDataset dataset) {
+        return null;
     }
 
     private String getEntityName(String s) {
