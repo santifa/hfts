@@ -27,8 +27,8 @@ properties to store meta informations in documents.
 The only new base class is `nif:Dataset` which is represented as `nif:{Dataset Name}`.
 The properties describing the meta informations are related to this object.
 
-The extended ontology file can be found [here](https://github.com/santifa/hfts/ont/nif-core-meta.owl).
-Also the properties are further explained within the [metrics document](https://github.com/santifa/hfts/Metrics.md).
+The extended ontology file can be found [here](https://github.com/santifa/hfts/blob/master/ont/nif-core-meta.owl).
+Also the properties are further explained within the [metrics document](https://github.com/santifa/hfts/blob/master/Metrics.md).
 
 ## Core API
 
@@ -44,7 +44,7 @@ tools researchers proposed multiple metrics. A quick excerpt:
 * PageRank and HIT Score
 * Ambiguity
 
-The metrics provided by this library as well as an explanation of the metrics can be found [here](https://github.com/santifa/hfts/Metrics.md)
+The metrics provided by this library as well as an explanation of the metrics can be found [here](https://github.com/santifa/hfts/blob/master/Metrics.md)
 
 ### Installation
 
@@ -103,4 +103,3 @@ Some drawbacks and remarks:
 
 Feel free to fill a bug report, propose a new metric or 
 make a pull request.
-
