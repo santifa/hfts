@@ -2,17 +2,29 @@
 # Metrics
 
 This documents describes the metrics which are used to generate meta informations about
-collections of documents or the documents themselves. Also 
+collections of documents or the documents themselves. Also the corresponding nif properties are
+mentioned.
 
 ## Background 
 
 Entity linking tools are evaluated with datasets which are crafted either by hand or multiple
+other entity linking tools. Although these datasets are carefully crafted some misconceptions
+or false assumptions can arise. In order to guide other researcher when choosing the
+dataset for testing their tools some metrics have been proposed. These metrics obtain
+informations about collections of documents and the entities. All of the metrics
+in this library have been proposed in [1], [2], [3].
 
 ### Micro and Macro
 
+
+
 ### Not annotated documents
 
+* `notAnnotated`
+
 ### Density
+
+* `macroDensity`
 
 ### PageRank and HIT Score
 
@@ -20,16 +32,15 @@ Entity linking tools are evaluated with datasets which are crafted either by han
 
 ### Ambiguity
 
-### Diversity
-
-### Maximum Recall
-
-* `notAnnotated`
-* `macroDensity`
 * `macroAmbiguityEntities`
 * `macroAmbiguitySurfaceForms`
+
+### Diversity
+
 * `macroDiversityEntities`
 * `macroDiversitySurfaceForms`
+
+### Maximum Recall
 
 ## Implementing new metrics
 
