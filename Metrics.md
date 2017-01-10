@@ -105,7 +105,9 @@ n simple example could be:
     }
 
 The metrics interface defines micro and macro version if this is not applicable booth shall
-call the normal calculation.
+call the normal calculation otherwise the calculation method shall call booth the micro and the macro version.  
+
+For further example take a look into the provided implementations.
 ___
 
 [1] M. van Erp, P. Mendes, H. Paulheim, F. Ilievski, J. Plu, G. Rizzo, and J. Waitelonis. Evaluating entity linking: An analysis of current benchmark datasets and a roadmap for doing a better job. In Proc. of 10th edition of the Language Resources and Evaluation Conference, Portoroz, Slovenia, 2016.

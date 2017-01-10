@@ -91,6 +91,9 @@ Also `owl:sameAs` retrival is provided with [http://sameas.org/](http://sameas.o
 
     api.withSameAsRetrival();
     
+### Extension
+
+The library can be extended with every possible metric. See the [metrics document](https://github.com/santifa/hfts/blob/master/Metrics.md) for further information.
 
 ### Remarks
 
