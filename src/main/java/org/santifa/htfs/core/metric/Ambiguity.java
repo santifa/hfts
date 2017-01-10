@@ -11,7 +11,6 @@ import org.santifa.htfs.core.NifDataset;
 import org.santifa.htfs.core.utils.DictionaryConnector;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -41,11 +40,10 @@ public class Ambiguity implements Metric {
 
     public static Ambiguity getDefaultAmbiguity() {
         try {
-            return new Ambiguity(Paths.get(Diversity.class.getClass().getResource("/filter/ambiguity_e").toURI()),
-                    Paths.get(Diversity.class.getClass().getResource("/filter/ambiguity_sf").toURI()));
-        } catch (IOException | URISyntaxException e) {
+            return new Ambiguity(Paths.get("data", "ambiguity_e"), Paths.get("data", "ambiguity_sf"));
+        } catch (IOException e) {
             Logger.error("Failed to load internal entity file {} and surface form file {} with {}",
-                    "/filter/ambiguity_e", "/filter/ambiguity_sf", e);
+                    "data/ambiguity_e", "data/ambiguity_sf", e);
         }
         return null;
     }

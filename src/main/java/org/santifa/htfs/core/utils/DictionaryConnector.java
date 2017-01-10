@@ -6,7 +6,6 @@ import org.pmw.tinylog.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -54,11 +53,10 @@ public class DictionaryConnector {
      */
     public static DictionaryConnector getDefaultConnector() {
         try {
-            return new DictionaryConnector(Paths.get(DictionaryConnector.class.getClass().getResource("/filter/ambiguity_e").toURI()),
-                    Paths.get(DictionaryConnector.class.getClass().getResource("/filter/ambiguity_sf").toURI()));
-        } catch (IOException | URISyntaxException e) {
+            return new DictionaryConnector(Paths.get("data", "ambiguity_e"), Paths.get("data", "ambiguity_sf"));
+        } catch (IOException e) {
             Logger.error("Failed to load internal entity file {} and surface form file {} with {}",
-                    "/filter/ambiguity_e", "/filter/ambiguity_sf", e);
+                    "data/ambiguity_e", "data/ambiguity_sf", e);
         }
         return null;
     }
