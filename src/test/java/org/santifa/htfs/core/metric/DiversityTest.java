@@ -44,21 +44,21 @@ public class DiversityTest {
         testset4.changeDocuments().get(1).setMarkings(new ArrayList<>());
 
         return Arrays.asList(new Object[][] {
-                {NifDatasetTest.getTestDataset(), 0.03787878787878788, 9.738979176990524E-4},
-                {testset1, 0.0, 0.0},
-                {testset2, 0.0, 0.0},
-                {testset3, 0.06581439393939394, 0.007760031877746056},
-                {testset4, 0.03787878787878788, 9.738979176990524E-4}
+                {NifDatasetTest.getTestDataset(), "0.03787878787878788", "9.738979176990524E-4"},
+                {testset1, "0.0", "0.0"},
+                {testset2, "0.0", "0.0"},
+                {testset3, "0.06581439393939394", "0.007760031877746056"},
+                {testset4, "0.03787878787878788", "9.738979176990524E-4"}
         });
     }
 
     private NifDataset dataset;
 
-    private double expectedEntitiesDiversity;
+    private String expectedEntitiesDiversity;
 
-    private double expectedSfDiversity;
+    private String expectedSfDiversity;
 
-    public DiversityTest(NifDataset dataset, double expectedEntitiesDiversity, double expectedSfDiversity) {
+    public DiversityTest(NifDataset dataset, String expectedEntitiesDiversity, String expectedSfDiversity) {
         this.dataset = dataset;
         this.expectedEntitiesDiversity = expectedEntitiesDiversity;
         this.expectedSfDiversity = expectedSfDiversity;
@@ -67,8 +67,8 @@ public class DiversityTest {
     @Test
     public void calculate() throws Exception {
         dataset = diversity.calculate(dataset);
-        Assert.assertThat(dataset.getAverageMacroDiversityOfEntities(), is(expectedEntitiesDiversity));
-        Assert.assertThat(dataset.getAverageMacroDiversityOfSurfaceForms(), is(expectedSfDiversity));
+        Assert.assertThat(dataset.getMetaInformations().get(Diversity.macroDiversityE), is(expectedEntitiesDiversity));
+        Assert.assertThat(dataset.getMetaInformations().get(Diversity.macroDiversitySF), is(expectedSfDiversity));
     }
 
 }

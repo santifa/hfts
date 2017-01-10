@@ -32,6 +32,10 @@ public class HftsApi {
 
     private boolean sameAs = false;
 
+    private boolean microOnly = false;
+
+    private boolean macroOnly = false;
+
     /**
      * Instantiates a new Hfts api
      * which can be used multiple times.
@@ -100,6 +104,18 @@ public class HftsApi {
         return this;
     }
 
+    public HftsApi microOnly() {
+        this.microOnly = true;
+        this.macroOnly = false;
+        return this;
+    }
+
+    public HftsApi macroOnly() {
+        this.macroOnly = true;
+        this.microOnly = false;
+        return this;
+    }
+
     /**
      * Process the data sets.
      * <br/>
@@ -120,7 +136,15 @@ public class HftsApi {
 
         for (NifDataset d : datasets) {
             for (Metric m : metrics) {
+
+            if (macroOnly) {
+                d = m.calculateMacro(d);
+            } else if (microOnly) {
+                d = m.calculateMicro(d);
+            } else {
                 d = m.calculate(d);
+            }
+
             }
             result.add(d);
         }

@@ -71,12 +71,12 @@ public class HftsApiTest {
         Assert.assertThat(results.size(), is(1));
         dataset = results.get(0);
         Assert.assertThat(dataset.getName(), is("test"));
-        Assert.assertThat(dataset.getMacroDensity(), is(0.16666666666666666));
-        Assert.assertThat(dataset.getNotAnnotatedDocs(), is(0.0));
-        Assert.assertThat(dataset.getAverageMacroAmbiguityOfEntities(), is(27.5));
-        Assert.assertThat(dataset.getAverageMacroAmbiguityOfSurfaceForms(), is(1926.0));
-        Assert.assertThat(dataset.getAverageMacroDiversityOfEntities(), is(0.03787878787878788));
-        Assert.assertThat(dataset.getAverageMacroDiversityOfSurfaceForms(), is(9.738979176990524E-4));
+        Assert.assertThat(dataset.getMetaInformations().get(Density.macroDensity), is(0.16666666666666666));
+        Assert.assertThat(dataset.getMetaInformations().get(NotAnnotated.notAnnotatedProperty), is(0.0));
+        Assert.assertThat(dataset.getMetaInformations().get(Ambiguity.macroAmbiguityE), is(27.5));
+        Assert.assertThat(dataset.getMetaInformations().get(Ambiguity.macroAmbiguitySF), is(1926.0));
+        Assert.assertThat(dataset.getMetaInformations().get(Diversity.macroDiversityE), is(0.03787878787878788));
+        Assert.assertThat(dataset.getMetaInformations().get(Diversity.macroDiversitySF), is(9.738979176990524E-4));
     }
 
     @Test

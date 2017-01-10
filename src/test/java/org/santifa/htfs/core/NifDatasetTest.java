@@ -5,6 +5,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
+import org.santifa.htfs.core.metric.Ambiguity;
+import org.santifa.htfs.core.metric.Density;
+import org.santifa.htfs.core.metric.Diversity;
+import org.santifa.htfs.core.metric.NotAnnotated;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -82,12 +86,12 @@ public class NifDatasetTest {
     @Test
     public void testWriting() {
         NifDataset dataset = getTestDataset();
-        dataset.setNotAnnotatedDocs(0.0);
-        dataset.setMacroDensity(0.1);
-        dataset.setAverageMacroAmbiguityOfEntities(0.2);
-        dataset.setAverageMacroAmbiguityOfSurfaceForms(0.3);
-        dataset.setAverageMacroDiversityOfEntities(0.4);
-        dataset.setAverageMacroDiversityOfSurfaceForms(0.5);
+        dataset.getMetaInformations().put(NotAnnotated.notAnnotatedProperty, "0.0");
+        dataset.getMetaInformations().put(Density.macroDensity, "0.1");
+        dataset.getMetaInformations().put(Ambiguity.macroAmbiguityE, "0.2");
+        dataset.getMetaInformations().put(Ambiguity.macroAmbiguitySF, "0.3");
+        dataset.getMetaInformations().put(Diversity.macroDiversityE, "0.4");
+        dataset.getMetaInformations().put(Diversity.macroDiversitySF, "0.5");
         String result = dataset.write();
         System.out.println(result);
     }

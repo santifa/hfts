@@ -53,7 +53,11 @@ Clone the repository and then
     cd hfts
     mvn clean install -DskipTests
     
-Get the dictonary data for the ambiguity and diversity metric from [here]() (not done yet).
+To get all metrics working you'll further need the dictionary data for ambiguity, diversity and
+popularity. This package contains the source data as well as the scripts to produce the neccessary
+format for the library.  
+
+Get the data for the metric from [here]() (not done yet).
 In order to run the tests you have to place the dictionary data
 in the `hfts/data` directory.
 

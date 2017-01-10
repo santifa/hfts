@@ -24,45 +24,89 @@ Their're corresponding NIF properties for each version.
 
 ### Not annotated documents
 
-* `notAnnotated`
+This metric shows the relation between documents without annotations and all documents
+within a dataset. Most times documents without annotations are leading to and increased 
+false-positive rate which in terms cause a loss of precision.  
+
+The nif predicate is `nif:notAnnotated`.
 
 ### Density
 
-* `macroDensity`
+A low density meaning a poor annotated text can misslead an evaluation in terms
+of increasing the false-positive rate as well as a drop in the precision.
+To get a basic introspection the density is the relation between the amount
+of annotations and words within the dataset.
 
-### PageRank and HIT Score
+The used nif predicates are `nif:macroDensity` and `nif:microDensity`.
 
 ### Types
 
+Some entity linking tools are only applicable in a certain domain. 
+In order to choose the appropriate dataset for evaluation and benchmarking
+in such cases an overview about the types for the used entities has to be known.  
+These types are extracted from the DBpedia using a simple SPARQL query.  
+
+The used nif predicate is the already present `itsrdf:taClassRef`.
+
 ### Ambiguity
 
-* `macroAmbiguityEntities`
-* `macroAmbiguitySurfaceForms`
+The ambiguity of a word describes either the amount of possible synonyms for an entity meaning 
+different textual representations for one formal entity. Or the amount of homonyms for a surface form
+meaning the different entities which can be described by the same textual representation.
+This first one is also called the likelihood of confusion for an entity and the second one the likelihood
+of confusion for a surface form.  
+
+The four nif predicates are `nif:macroAmbiguityEntities`, `nif:macroAmbiguitySurfaceForms`, `nif:microAmbiguityEntities`, `nif:microAmbiguitySurfaceForms`.
 
 ### Diversity
 
-* `macroDiversityEntities`
-* `macroDiversitySurfaceForms`
+The diversity is a measure of how commonly a specific surface form is really meant for an entity
+with respect to other possible surface forms. A low diversity in a dataset leads to a low variance
+for an automated disambiguation system and possible over-fitting. Similar to the likelihood of confusion.
+The diversity of entity denotes to the amount of surface forms used for one specific entity in
+the dataset in with respect to all possible surface forms referencing that entity in the dictionary.
+On the other side the diversity of surface forms denotes the amount of all used entities for a specific
+surface form with repsect to all possible entities denoted by this surface form.
+
+The four nif predicates are `nif:macroDiversityEntities`, `nif:macroDiversitySurfaceForms`,
+`nif:microDiversityEntities`, `nif:microDiversitySurfaceForms`.
+
+### PageRank and HIT Score
 
 ### Maximum Recall
 
 ## Implementing new metrics
 
+New metrics are implemented by the interface `Metric` each Metric should provide the properties
+for the resulting NIF datasets.  
 
+n simple example could be:
 
-Some of the proposed metrics comes in two flavours a micro and a macro version.
-Where the macro is the average about all documents and each document has the same influence.
-The micro metric takes all documents into account when calculated and bigger documents
-have more influence.
+    public class NotAnnotated implements Metric {
 
-* Not annotated documents: Measures the amount of documents without annotations.
-* Density: Shows the relative amount of annotations per word
-* Popularity (HITS/PageRank): Adds the HITScore and/or PageRank to the entities.
-* Types: Adds the type of an entity to them.
-* Maximum Recall: Determines the maximal recall achievable with this dataset.
-* Likelihood of confusion: 
-* Level of diversity:
+        public final static Property sampleProp = ResourceFactory.createProperty(NIF.getURI(), "sampleProp");
 
+        @Override
+        public NifDataset calculate(NifDataset dataset) {
+            /* do some calculation and store the result as meta information */
+            dataset.getMetaInformations().put(sampleProp, String.valueOf(result));
+            return dataset;
+        }
+
+        @Override
+        public NifDataset calculateMicro(NifDataset dataset) {
+            return calculate(dataset);
+        }
+
+        @Override
+        public NifDataset calculateMacro(NifDataset dataset) {
+            return calculate(dataset);
+        }
+    }
+
+The metrics interface defines micro and macro version if this is not applicable booth shall
+call the normal calculation.
+___
 
 [1] M. van Erp, P. Mendes, H. Paulheim, F. Ilievski, J. Plu, G. Rizzo, and J. Waitelonis. Evaluating entity linking: An analysis of current benchmark datasets and a roadmap for doing a better job. In Proc. of 10th edition of the Language Resources and Evaluation Conference, Portoroz, Slovenia, 2016.
 
