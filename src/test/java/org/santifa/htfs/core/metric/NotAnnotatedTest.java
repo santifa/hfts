@@ -42,19 +42,19 @@ public class NotAnnotatedTest {
         testset4.getDocuments().get(1).setMarkings(new ArrayList<>());
 
         return Arrays.asList(new Object[][] {
-                {NifDatasetTest.getTestDataset(), 0.0},
-                {testset1, 1.0},
-                {testset2, 1.0},
-                {testset3, 0.0},
-                {testset4, 0.6666666666666666}
+                {NifDatasetTest.getTestDataset(), "0.0"},
+                {testset1, "1.0"},
+                {testset2, "1.0"},
+                {testset3, "0.0"},
+                {testset4, "0.6666666666666666"}
         });
     }
 
     private NifDataset dataset;
 
-    private double expectation;
+    private String expectation;
 
-    public NotAnnotatedTest(NifDataset dataset, double expectation) {
+    public NotAnnotatedTest(NifDataset dataset, String expectation) {
         this.dataset = dataset;
         this.expectation = expectation;
     }
@@ -63,6 +63,6 @@ public class NotAnnotatedTest {
     public void testNotAnnotatedMetric() {
         Metric metric = new NotAnnotated();
         dataset = metric.calculate(dataset);
-        Assert.assertThat(dataset.getNotAnnotatedDocs(), is(expectation));
+        Assert.assertThat(dataset.getMetaInformations().get(NotAnnotated.notAnnotatedProperty), is(expectation));
     }
 }

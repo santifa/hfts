@@ -42,27 +42,31 @@ public class DensityTest {
         testset4.changeDocuments().get(1).setMarkings(new ArrayList<>());
 
         return Arrays.asList(new Object[][] {
-                {NifDatasetTest.getTestDataset(), 0.16666666666666666},
-                {testset1, 0.0},
-                {testset2, 0.0},
-                {testset3, 0.1875},
-                {testset4, 0.0625}
+                {NifDatasetTest.getTestDataset(), "0.16666666666666666", "0.16666666666666666"},
+                {testset1, "0.0", "0.0"},
+                {testset2, "0.0", "0.0"},
+                {testset3, "0.19444444444444442", "0.1875"},
+                {testset4, "0.05555555555555555", "0.0625"}
         });
     }
 
     private NifDataset dataset;
 
-    private double expactation;
+    private String expectationMicro;
 
-    public DensityTest(NifDataset dataset, double expectation) {
+    private String expectationMacro;
+
+    public DensityTest(NifDataset dataset, String expectationMicro, String expectationMacro) {
         this.dataset = dataset;
-        this.expactation = expectation;
+        this.expectationMacro = expectationMacro;
+        this.expectationMicro = expectationMicro;
     }
 
     @Test
     public void testDensityCalculation() {
         Metric density = new Density();
         dataset = density.calculate(dataset);
-        Assert.assertThat(dataset.getMacroDensity(), is(expactation));
+        Assert.assertThat(dataset.getMetaInformations().get(Density.macroDensity), is(expectationMacro));
+        Assert.assertThat(dataset.getMetaInformations().get(Density.microDensity), is(expectationMicro));
     }
 }

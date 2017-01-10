@@ -39,22 +39,12 @@ public class ExtendedTurtleNifWriter extends TurtleNIFWriter {
         /* create a dataset property */
         Resource ds = ResourceFactory.createResource(NIF.getURI() + "dataset/" + dataset.getName());
         Property dsProp = ResourceFactory.createProperty(NIF.getURI(), "dataset");
+        nifModel.add(ds, RDF.type, dsProp);
 
         /* metrics */
-        Property notAnnotated = ResourceFactory.createProperty(NIF.getURI(), "notAnnotated");
-        Property density = ResourceFactory.createProperty(NIF.getURI(), "macroDensity");
-        Property ambOfSf = ResourceFactory.createProperty(NIF.getURI(), "macroAmbiguitySurfaceForms");
-        Property ambOfE = ResourceFactory.createProperty(NIF.getURI(), "macroAmbiguityEntities");
-        Property divOfE = ResourceFactory.createProperty(NIF.getURI(), "macroDiversityOfEntities");
-        Property divOfSf = ResourceFactory.createProperty(NIF.getURI(), "macroDiversitySurfaceForms");
-
-        nifModel.add(ds, RDF.type, dsProp);
-        nifModel.add(ds, notAnnotated, String.valueOf(dataset.getNotAnnotatedDocs()));
-        nifModel.add(ds, density, String.valueOf(dataset.getMacroDensity()));
-        nifModel.add(ds, ambOfE, String.valueOf(dataset.getAverageMacroAmbiguityOfEntities()));
-        nifModel.add(ds, ambOfSf, String.valueOf(dataset.getAverageMacroAmbiguityOfSurfaceForms()));
-        nifModel.add(ds, divOfE, String.valueOf(dataset.getAverageMacroDiversityOfEntities()));
-        nifModel.add(ds, divOfSf, String.valueOf(dataset.getAverageMacroDiversityOfSurfaceForms()));
+        for (Property metaInformation : dataset.getMetaInformations().keySet()) {
+            nifModel.add(ds, metaInformation, dataset.getMetaInformations().get(metaInformation));
+        }
         return nifModel;
     }
 

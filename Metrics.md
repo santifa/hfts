@@ -16,7 +16,11 @@ in this library have been proposed in [1], [2], [3].
 
 ### Micro and Macro
 
-
+Some of the proposed metrics have two versions a micro and a macro version.
+The micro version of a metric takes the whole dataset as input as it was one annotated text.
+While at the macro version the metric is calculated for each document and then the average
+is determined.  
+Their're corresponding NIF properties for each version.
 
 ### Not annotated documents
 

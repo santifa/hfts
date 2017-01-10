@@ -1,5 +1,6 @@
 package org.santifa.htfs.core;
 
+import com.hp.hpl.jena.rdf.model.Property;
 import org.aksw.gerbil.io.nif.impl.TurtleNIFParser;
 import org.aksw.gerbil.transfer.nif.Document;
 import org.aksw.gerbil.transfer.nif.Marking;
@@ -14,6 +15,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -32,6 +34,8 @@ public class NifDataset {
     private List<Document> documents;
 
     private List<Marking> markings;
+
+    private HashMap<Property, String> metaInformations;
 
     private double notAnnotatedDocs = 0.0;
 
@@ -58,6 +62,7 @@ public class NifDataset {
         this.name = name;
         this.documents = parse(Files.newInputStream(data));
         this.markings = referenceMarkings(documents);
+        this.metaInformations = new HashMap<>();
     }
 
     /**
@@ -70,6 +75,7 @@ public class NifDataset {
         this.name = name;
         this.documents = parse(new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8"))));
         this.markings = referenceMarkings(documents);
+        this.metaInformations = new HashMap<>();
     }
 
     private List<Marking> referenceMarkings(List<Document> docs) {
@@ -123,6 +129,10 @@ public class NifDataset {
             markings = referenceMarkings(documents);
         }
         return markings;
+    }
+
+    public HashMap<Property, String> getMetaInformations() {
+        return metaInformations;
     }
 
     /**
