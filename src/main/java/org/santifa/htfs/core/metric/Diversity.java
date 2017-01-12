@@ -13,6 +13,7 @@ import org.santifa.htfs.core.utils.DictionaryConnector;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -56,56 +57,67 @@ public class Diversity implements Metric {
 
     @Override
     public NifDataset calculateMicro(NifDataset dataset) {
-        HashMap<String, Integer> knownEntities = new HashMap<>();
-        HashMap<String, Integer> knownSurfaceForms = new HashMap<>();
+        double microDivE = 0.0;
+        double microDivSf = 0.0;
 
         /* count all surface forms and entities present in the data set */
         for (Document d : dataset.getDocuments()) {
             List<MeaningSpan> meanings = d.getMarkings(MeaningSpan.class);
+            HashMap<String, List<String>> knownEntities = new HashMap<>();
+            HashMap<String, List<String>> knownSurfaceForms = new HashMap<>();
 
             for (MeaningSpan meaning : meanings) {
                 String s = getEntityName(meaning.getUri());
                 String sf = StringUtils.substring(d.getText(), meaning.getStartPosition(),
                         meaning.getStartPosition() + meaning.getLength()).toLowerCase();
 
+               /* add a known surface form to known entities */
                 if (knownEntities.containsKey(s)) {
-                    knownEntities.put(s, knownEntities.get(s) + 1);
+                    if (!knownEntities.get(s).contains(sf)) {
+                        knownEntities.get(s).add(sf);
+                    }
                 } else {
-                    knownEntities.put(s, 1);
+                    knownEntities.put(s, new ArrayList<>());
+                    knownEntities.get(s).add(sf);
+
                 }
 
+                /* add entities to known surface forms */
                 if (knownSurfaceForms.containsKey(sf)) {
-                    knownSurfaceForms.put(sf, knownSurfaceForms.get(sf) + 1);
+                    if (knownSurfaceForms.get(sf).contains(s)) {
+                        knownSurfaceForms.get(sf).add(s);
+                    }
                 } else {
-                    knownSurfaceForms.put(sf, 1);
+                    knownSurfaceForms.put(sf, new ArrayList<>());
+                    knownSurfaceForms.get(sf).add(s);
                 }
             }
-        }
 
-        int counter = 0;
-        double averageMacroEntityDiversity = 0.0;
-        for (String entity : knownEntities.keySet()) {
-            if (connector.getEntityMappping().containsKey(entity)) {
-                averageMacroEntityDiversity += (double) knownEntities.get(entity) / (double) connector.getEntityMappping().get(entity);
-                counter++;
+            double averageMacroEntityDiversity = 0.0;
+            for (String entity : knownEntities.keySet()) {
+                if (connector.getEntityMappping().containsKey(entity)) {
+                    averageMacroEntityDiversity += (double) knownEntities.get(entity).size() / (double) connector.getEntityMappping().get(entity);
+                }
             }
-        }
-        if (counter != 0) {
-            dataset.getMetaInformations().put(macroDiversityE, String.valueOf(averageMacroEntityDiversity / (double) counter));
-        }
+            microDivE += averageMacroEntityDiversity;
 
-        counter = 0;
-        double averageMacroSurfaceFormDiversity = 0.0;
-        for (String surfaceForm : knownSurfaceForms.keySet()) {
-            if (connector.getSfMapping().containsKey(surfaceForm)) {
-                averageMacroSurfaceFormDiversity += (double) knownSurfaceForms.get(surfaceForm) / (double) connector.getSfMapping().get(surfaceForm);
-                counter++;
+            double averageMacroSurfaceFormDiversity = 0.0;
+            for (String surfaceForm : knownSurfaceForms.keySet()) {
+                if (connector.getSfMapping().containsKey(surfaceForm)) {
+                   averageMacroSurfaceFormDiversity += (double) knownSurfaceForms.get(surfaceForm).size() / (double) connector.getSfMapping().get(surfaceForm);
+                }
             }
+            microDivSf += averageMacroSurfaceFormDiversity;
         }
 
-        if (counter != 0) {
-            dataset.getMetaInformations().put(macroDiversitySF, String.valueOf(averageMacroSurfaceFormDiversity/ (double) counter));
+        if (!dataset.getDocuments().isEmpty()) {
+            dataset.getMetaInformations().put(microDiversityE, String.valueOf(microDivE / (double) dataset.getDocuments().size()));
+            dataset.getMetaInformations().put(microDiversitySF, String.valueOf(microDivSf/ (double) dataset.getDocuments().size()));
+        } else {
+            dataset.getMetaInformations().put(microDiversityE, String.valueOf(microDivE));
+            dataset.getMetaInformations().put(microDiversitySF, String.valueOf(microDivSf));
         }
+
         Logger.debug("Macro diversity of entities for {} is {}", dataset.getName(), dataset);
         Logger.debug("Macro diversity of surface forms for {} is {}", dataset.getName(), dataset);
         return dataset;
@@ -113,8 +125,8 @@ public class Diversity implements Metric {
 
     @Override
     public NifDataset calculateMacro(NifDataset dataset) {
-        HashMap<String, Integer> knownEntities = new HashMap<>();
-        HashMap<String, Integer> knownSurfaceForms = new HashMap<>();
+        HashMap<String, List<String>> knownEntities = new HashMap<>();
+        HashMap<String, List<String>> knownSurfaceForms = new HashMap<>();
 
         /* count all surface forms and entities present in the data set */
         for (Document d : dataset.getDocuments()) {
@@ -125,46 +137,64 @@ public class Diversity implements Metric {
                 String sf = StringUtils.substring(d.getText(), meaning.getStartPosition(),
                         meaning.getStartPosition() + meaning.getLength()).toLowerCase();
 
+                /* add a known surface form to known entities */
                 if (knownEntities.containsKey(s)) {
-                    knownEntities.put(s, knownEntities.get(s) + 1);
+                    if (!knownEntities.get(s).contains(sf)) {
+                        knownEntities.get(s).add(sf);
+                    }
                 } else {
-                    knownEntities.put(s, 1);
+                    knownEntities.put(s, new ArrayList<>());
+                    knownEntities.get(s).add(sf);
+
                 }
 
+                /* add entities to known surface forms */
                 if (knownSurfaceForms.containsKey(sf)) {
-                    knownSurfaceForms.put(sf, knownSurfaceForms.get(sf) + 1);
+                    if (knownSurfaceForms.get(sf).contains(s)) {
+                        knownSurfaceForms.get(sf).add(s);
+                    }
                 } else {
-                    knownSurfaceForms.put(sf, 1);
+                    knownSurfaceForms.put(sf, new ArrayList<>());
+                    knownSurfaceForms.get(sf).add(s);
                 }
             }
         }
 
         int counter = 0;
+        double resultE = 0.0;
         double averageMacroEntityDiversity = 0.0;
         for (String entity : knownEntities.keySet()) {
             if (connector.getEntityMappping().containsKey(entity)) {
-                averageMacroEntityDiversity += (double) knownEntities.get(entity) / (double) connector.getEntityMappping().get(entity);
+                averageMacroEntityDiversity += (double) knownEntities.get(entity).size() / (double) connector.getEntityMappping().get(entity);
                 counter++;
             }
         }
+
         if (counter != 0) {
-            dataset.getMetaInformations().put(macroDiversityE, String.valueOf(averageMacroEntityDiversity / (double) counter));
+            resultE = averageMacroEntityDiversity / (double) counter;
+            dataset.getMetaInformations().put(macroDiversityE, String.valueOf(resultE));
+        } else {
+            dataset.getMetaInformations().put(macroDiversityE, String.valueOf(resultE));
         }
 
         counter = 0;
+        double resultSf = 0.0;
         double averageMacroSurfaceFormDiversity = 0.0;
         for (String surfaceForm : knownSurfaceForms.keySet()) {
             if (connector.getSfMapping().containsKey(surfaceForm)) {
-                averageMacroSurfaceFormDiversity += (double) knownSurfaceForms.get(surfaceForm) / (double) connector.getSfMapping().get(surfaceForm);
+                averageMacroSurfaceFormDiversity += (double) knownSurfaceForms.get(surfaceForm).size() / (double) connector.getSfMapping().get(surfaceForm);
                 counter++;
             }
         }
 
         if (counter != 0) {
-            dataset.getMetaInformations().put(macroDiversitySF, String.valueOf(averageMacroSurfaceFormDiversity/ (double) counter));
+            resultSf = averageMacroSurfaceFormDiversity/ (double) counter;
+            dataset.getMetaInformations().put(macroDiversitySF, String.valueOf(resultSf));
+        } else {
+            dataset.getMetaInformations().put(macroDiversitySF, String.valueOf(resultSf));
         }
-        Logger.debug("Macro diversity of entities for {} is {}", dataset.getName(), dataset);
-        Logger.debug("Macro diversity of surface forms for {} is {}", dataset.getName(), dataset);
+        Logger.debug("Macro diversity of entities for {} is {}", dataset.getName(), resultE);
+        Logger.debug("Macro diversity of surface forms for {} is {}", dataset.getName(), resultSf);
         return dataset;
     }
 

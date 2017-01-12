@@ -39,7 +39,10 @@ public class ExtendedTurtleNifWriter extends TurtleNIFWriter {
         /* create a dataset property */
         Resource ds = ResourceFactory.createResource(NIF.getURI() + "dataset/" + dataset.getName());
         Property dsProp = ResourceFactory.createProperty(NIF.getURI(), "dataset");
-        nifModel.add(ds, RDF.type, dsProp);
+
+        if (!dataset.getMetaInformations().isEmpty()) {
+            nifModel.add(ds, RDF.type, dsProp);
+        }
 
         /* metrics */
         for (Property metaInformation : dataset.getMetaInformations().keySet()) {

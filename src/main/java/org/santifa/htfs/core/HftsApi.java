@@ -36,6 +36,8 @@ public class HftsApi {
 
     private boolean macroOnly = false;
 
+    private boolean preserve = false;
+
     /**
      * Instantiates a new Hfts api
      * which can be used multiple times.
@@ -116,6 +118,11 @@ public class HftsApi {
         return this;
     }
 
+    public HftsApi preserveMetrics() {
+        this.preserve = true;
+        return this;
+    }
+
     /**
      * Process the data sets.
      * <br/>
@@ -127,23 +134,20 @@ public class HftsApi {
     public List<NifDataset> run() {
         List<NifDataset> result = new ArrayList<>(datasets.size());
 
-        if (sameAs) {
-            /* do some sameAs retrieval */
-            for (NifDataset d : datasets) {
-                retriever.retrieve(d);
-            }
-        }
-
         for (NifDataset d : datasets) {
             for (Metric m : metrics) {
 
-            if (macroOnly) {
-                d = m.calculateMacro(d);
-            } else if (microOnly) {
-                d = m.calculateMicro(d);
-            } else {
-                d = m.calculate(d);
-            }
+                if (sameAs) {
+                    retriever.retrieve(d);
+                }
+
+                if (macroOnly) {
+                    d = m.calculateMacro(d);
+                } else if (microOnly) {
+                    d = m.calculateMicro(d);
+                } else {
+                    d = m.calculate(d);
+                }
 
             }
             result.add(d);
@@ -151,7 +155,11 @@ public class HftsApi {
 
         /* clear the metrics and data sets for the next run */
         datasets.clear();
-        metrics.clear();
+
+        if (!preserve) {
+            metrics.clear();
+        }
+
         return result;
     }
 }

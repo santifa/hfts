@@ -44,31 +44,40 @@ public class DiversityTest {
         testset4.changeDocuments().get(1).setMarkings(new ArrayList<>());
 
         return Arrays.asList(new Object[][] {
-                {NifDatasetTest.getTestDataset(), "0.03787878787878788", "9.738979176990524E-4"},
-                {testset1, "0.0", "0.0"},
-                {testset2, "0.0", "0.0"},
-                {testset3, "0.06581439393939394", "0.007760031877746056"},
-                {testset4, "0.03787878787878788", "9.738979176990524E-4"}
+                {NifDatasetTest.getTestDataset(), "9.738979176990524E-4", "9.738979176990524E-4", "0.0019477958353981049", "0.0019477958353981049"},
+                {testset1, "0.0", "0.0", "0.0", "0.0"},
+                {testset2, "0.0", "0.0", "0.0", "0.0"},
+                {testset3, "0.007760031877746056", "0.007760031877746056", "0.010346709170328074", "0.010346709170328074"},
+                {testset4, "9.738979176990524E-4", "9.738979176990524E-4", "6.49265278466035E-4", "6.49265278466035E-4"}
         });
     }
 
     private NifDataset dataset;
 
-    private String expectedEntitiesDiversity;
+    private String expectedMacroEntitiesDiversity;
 
-    private String expectedSfDiversity;
+    private String expectedMacroSfDiversity;
 
-    public DiversityTest(NifDataset dataset, String expectedEntitiesDiversity, String expectedSfDiversity) {
+    private String expectedMicroEntitiesDiversity;
+
+    private String expectedMicroSfDiversity;
+
+    public DiversityTest(NifDataset dataset, String expectedMacroEntitiesDiversity, String expectedMacroSfDiversity,
+                        String expectedMicroEntitiesDiversity, String expectedMicroSfDiversity) {
         this.dataset = dataset;
-        this.expectedEntitiesDiversity = expectedEntitiesDiversity;
-        this.expectedSfDiversity = expectedSfDiversity;
+        this.expectedMacroEntitiesDiversity = expectedMacroEntitiesDiversity;
+        this.expectedMacroSfDiversity = expectedMacroSfDiversity;
+        this.expectedMicroEntitiesDiversity = expectedMicroEntitiesDiversity;
+        this.expectedMicroSfDiversity = expectedMicroSfDiversity;
     }
 
     @Test
     public void calculate() throws Exception {
         dataset = diversity.calculate(dataset);
-        Assert.assertThat(dataset.getMetaInformations().get(Diversity.macroDiversityE), is(expectedEntitiesDiversity));
-        Assert.assertThat(dataset.getMetaInformations().get(Diversity.macroDiversitySF), is(expectedSfDiversity));
+        Assert.assertThat(dataset.getMetaInformations().get(Diversity.macroDiversityE), is(expectedMacroEntitiesDiversity));
+        Assert.assertThat(dataset.getMetaInformations().get(Diversity.macroDiversitySF), is(expectedMacroSfDiversity));
+        Assert.assertThat(dataset.getMetaInformations().get(Diversity.microDiversityE), is(expectedMicroEntitiesDiversity));
+        Assert.assertThat(dataset.getMetaInformations().get(Diversity.microDiversitySF), is(expectedMicroSfDiversity));
     }
 
 }

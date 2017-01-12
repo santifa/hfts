@@ -59,7 +59,7 @@ format for the library.
 
 Get the data for the metric from [here]() (not done yet).
 In order to run the tests you have to place the dictionary data
-in the `hfts/data` directory.
+in the `hfts/data` directory otherwise only provide the paths.
 
 ### Usage
 
