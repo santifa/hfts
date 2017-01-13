@@ -12,6 +12,7 @@ import org.santifa.htfs.core.utils.Grep;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -30,6 +31,14 @@ public class PopularityAssignor implements Metric {
     public PopularityAssignor(Path file, Property property) {
         this.file = file;
         this.property = property;
+    }
+
+    public static PopularityAssignor getPageRankAssignor() {
+        return new PopularityAssignor(Paths.get("../data/pagerank_scores_en_2015.ttl"), pagerank);
+    }
+
+    public static PopularityAssignor getHitsAssignor() {
+        return new PopularityAssignor(Paths.get("../data/hits_scores_en_2015.ttl"), hits);
     }
 
     @Override

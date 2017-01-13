@@ -38,7 +38,7 @@ public class CategoryAssignor implements Metric {
     }
 
 
-    public static CategoryAssignor getDefaultTyper() {
+    public static CategoryAssignor getDefaultAssignor() {
         String query = "prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
                 "select distinct ?e ?t where { values ?e {##} . ?e rdf:type ?t . }";
         return new CategoryAssignor("http://dbpedia.org/sparql", "http://dbpedia.org", query);

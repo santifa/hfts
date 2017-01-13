@@ -11,7 +11,7 @@ public class CategoryAssignorTest {
 
     @Test
     public void calculate() throws Exception {
-        Metric typer = CategoryAssignor.getDefaultTyper();
+        Metric typer = CategoryAssignor.getDefaultAssignor();
         NifDataset dataset = NifDatasetTest.getTestDataset();
 
         dataset = typer.calculate(dataset);

@@ -24,4 +24,25 @@
             <version>2.2.0</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <id>hfts-cli</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>org.santifa.hfts.cli.Cli</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
