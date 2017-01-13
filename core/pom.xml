@@ -10,6 +10,7 @@
         <version>0.1</version>
     </parent>
     <artifactId>hfts-core</artifactId>
+    <name>Hfts core library</name>
 
     <!-- aksw repos for nif -->
     <repositories>
