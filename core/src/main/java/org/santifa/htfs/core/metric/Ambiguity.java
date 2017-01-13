@@ -40,10 +40,10 @@ public class Ambiguity implements Metric {
 
     public static Ambiguity getDefaultAmbiguity() {
         try {
-            return new Ambiguity(Paths.get("data", "ambiguity_e"), Paths.get("data", "ambiguity_sf"));
+            return new Ambiguity(Paths.get("..", "data", "ambiguity_e"), Paths.get("..", "data", "ambiguity_sf"));
         } catch (IOException e) {
             Logger.error("Failed to load internal entity file {} and surface form file {} with {}",
-                    "data/ambiguity_e", "data/ambiguity_sf", e);
+                    "../data/ambiguity_e", "../data/ambiguity_sf", e);
         }
         return null;
     }

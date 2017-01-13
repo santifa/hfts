@@ -12,52 +12,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-
-
-    <!-- aksw repos for nif -->
-    <repositories>
-        <repository>
-            <id>maven.aksw.internal</id>
-            <name>University Leipzig, AKSW Maven2 Repository</name>
-            <url>http://maven.aksw.org/repository/internal</url>
-        </repository>
-        <repository>
-            <id>maven.aksw.snapshots</id>
-            <name>University Leipzig, AKSW Maven2 Repository</name>
-            <url>http://maven.aksw.org/repository/snapshots</url>
-        </repository>
-    </repositories>
-
-    <dependencies>
-        <!-- logging -->
-        <dependency>
-            <groupId>org.tinylog</groupId>
-            <artifactId>tinylog</artifactId>
-            <version>1.1</version>
-        </dependency>
-
-        <!-- same as retrieval -->
-        <dependency>
-            <groupId>org.99soft.semweb</groupId>
-            <artifactId>sameas4j</artifactId>
-            <version>2.0</version>
-        </dependency>
-
-        <!-- gerbil nif dataset implementation -->
-        <dependency>
-            <groupId>org.aksw</groupId>
-            <artifactId>gerbil.nif.transfer</artifactId>
-            <version>1.2.2</version>
-        </dependency>
-
-        <!-- string handling -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.5</version>
-        </dependency>
+    <modules>
+        <module>core</module>
+        <module>cli</module>
+    </modules>
 
         <!-- test dep -->
+    <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

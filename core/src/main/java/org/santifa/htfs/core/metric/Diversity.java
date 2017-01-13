@@ -39,11 +39,11 @@ public class Diversity implements Metric {
 
     public static Diversity getDefaultDiversity() {
         try {
-            return new Diversity(Paths.get("data", "ambiguity_e"),
-                    Paths.get("data", "ambiguity_sf"));
+            return new Diversity(Paths.get("..", "data", "ambiguity_e"),
+                    Paths.get("..", "data", "ambiguity_sf"));
         } catch (IOException e) {
             Logger.error("Failed to load internal entity file {} and surface form file {} with {}",
-                    "data/ambiguity_e", "data/ambiguity_sf", e);
+                    "../data/ambiguity_e", "../data/ambiguity_sf", e);
         }
         return null;
     }
