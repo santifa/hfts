@@ -7,15 +7,14 @@ import com.hp.hpl.jena.query.ResultSet;
 import org.aksw.gerbil.transfer.nif.Document;
 import org.aksw.gerbil.transfer.nif.Marking;
 import org.aksw.gerbil.transfer.nif.MeaningSpan;
-import org.aksw.gerbil.transfer.nif.data.TypedNamedEntity;
 import org.apache.jena.iri.IRI;
 import org.apache.jena.iri.IRIFactory;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
+import org.santifa.hfts.core.nif.MetaNamedEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -72,27 +71,14 @@ public class CategoryAssignor implements Metric {
         HashMap<String, List<String>> typedEntities = chunk(entities);
 
         for (Document d : dataset.changeDocuments()) {
-            List<Marking> markings = new ArrayList<>();
-            for (Marking m : d.getMarkings()) {
-                if (m instanceof MeaningSpan) {
-                    /* create a new typed entity */
-                    TypedNamedEntity typedNamedEntity = new TypedNamedEntity(
-                            ((MeaningSpan) m).getStartPosition(), ((MeaningSpan) m).getLength(),
-                            ((MeaningSpan) m).getUris(), new HashSet<>());
-
-                    /* if we have the types for some uri, add it */
-                    for (String uri : ((MeaningSpan) m).getUris()) {
-                        if (typedEntities.containsKey(uri)) {
-                            typedNamedEntity.getTypes().addAll(typedEntities.get(uri));
-                        }
+            for (MetaNamedEntity m : d.getMarkings(MetaNamedEntity.class)) {
+                /* if we have the types for some uri, add it */
+                for (String uri : m.getUris()) {
+                    if (typedEntities.containsKey(uri)) {
+                        m.getTypes().addAll(typedEntities.get(uri));
                     }
-                    markings.add(typedNamedEntity);
-                } else {
-                    /* preserve all other markings which are not named entities */
-                    markings.add(m);
                 }
             }
-            d.setMarkings(markings);
         }
 
         return dataset;

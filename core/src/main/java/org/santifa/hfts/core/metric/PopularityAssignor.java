@@ -1,13 +1,13 @@
 package org.santifa.hfts.core.metric;
 
 import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import org.aksw.gerbil.transfer.nif.Document;
 import org.aksw.gerbil.transfer.nif.Marking;
 import org.aksw.gerbil.transfer.nif.Meaning;
-import org.aksw.gerbil.transfer.nif.vocabulary.NIF;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
+import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.MetaNamedEntity;
 import org.santifa.hfts.core.utils.Grep;
 
 import java.io.IOException;
@@ -20,10 +20,6 @@ import java.util.List;
  */
 public class PopularityAssignor implements Metric {
 
-    public static final Property pagerank = ResourceFactory.createProperty(NIF.getURI(), "pagerank");
-
-    public static final Property hits = ResourceFactory.createProperty(NIF.getURI(), "hits");
-
     private Path file;
 
     private Property property;
@@ -34,11 +30,11 @@ public class PopularityAssignor implements Metric {
     }
 
     public static PopularityAssignor getPageRankAssignor() {
-        return new PopularityAssignor(Paths.get("../data/pagerank_scores_en_2015.ttl"), pagerank);
+        return new PopularityAssignor(Paths.get("../data/pagerank_scores_en_2015.ttl"), ExtendedNif.pagerank);
     }
 
     public static PopularityAssignor getHitsAssignor() {
-        return new PopularityAssignor(Paths.get("../data/hits_scores_en_2015.ttl"), hits);
+        return new PopularityAssignor(Paths.get("../data/hits_scores_en_2015.ttl"), ExtendedNif.hits);
     }
 
     @Override
@@ -46,12 +42,15 @@ public class PopularityAssignor implements Metric {
         List<Marking> meanings = dataset.getMarkings();
         StringBuilder regex = new StringBuilder();
 
-        /* collect all entities */
+        /* collect all entity uris from dbpedia */
         regex.append('(');
         for (Marking m : meanings) {
             if (m instanceof Meaning) {
+
                 for (String uri : ((Meaning) m).getUris()) {
-                    regex.append(uri).append("|");
+                    if (uri.startsWith("http://dbpedia.org")) {
+                        regex.append(uri).append("|");
+                    }
                 }
             }
         }
@@ -64,8 +63,7 @@ public class PopularityAssignor implements Metric {
 
             /* go through dataset and found matched uris */
             for (Document d : dataset.changeDocuments()) {
-                for (Meaning m : d.getMarkings(Meaning.class)) {
-
+                for (MetaNamedEntity m : d.getMarkings(MetaNamedEntity.class)) {
                     /* check which uris where found */
                     for (String s : matches) {
                         /* get the uri and check the meaning set */
@@ -73,7 +71,7 @@ public class PopularityAssignor implements Metric {
 
                         if (m.getUris().contains(uri)) {
                             String popularity = s.substring(s.indexOf('>', s.indexOf('>') + 1) + 3, s.indexOf('^') - 1);
-                            System.out.println(uri + ":" + Double.valueOf(popularity));
+                            m.getMetaInformations().put(property, popularity);
                         }
                     }
                 }

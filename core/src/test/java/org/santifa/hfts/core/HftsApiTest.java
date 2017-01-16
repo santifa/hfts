@@ -2,7 +2,10 @@ package org.santifa.hfts.core;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.pmw.tinylog.Level;
+import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.metric.*;
+import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.utils.DictionaryConnector;
 
 import java.io.IOException;
@@ -19,6 +22,10 @@ import static org.hamcrest.core.Is.is;
  * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 public class HftsApiTest {
+
+    static {
+        Logger.getConfiguration().level(Level.DEBUG).activate();
+    }
 
     @Test
     public void testDatasetLoading() throws URISyntaxException, IOException {
@@ -71,12 +78,12 @@ public class HftsApiTest {
         Assert.assertThat(results.size(), is(1));
         dataset = results.get(0);
         Assert.assertThat(dataset.getName(), is("test"));
-        Assert.assertThat(dataset.getMetaInformations().get(Density.macroDensity), is(0.16666666666666666));
-        Assert.assertThat(dataset.getMetaInformations().get(NotAnnotated.notAnnotatedProperty), is(0.0));
-        Assert.assertThat(dataset.getMetaInformations().get(Ambiguity.macroAmbiguityE), is(27.5));
-        Assert.assertThat(dataset.getMetaInformations().get(Ambiguity.macroAmbiguitySF), is(1926.0));
-        Assert.assertThat(dataset.getMetaInformations().get(Diversity.macroDiversityE), is(0.03787878787878788));
-        Assert.assertThat(dataset.getMetaInformations().get(Diversity.macroDiversitySF), is(9.738979176990524E-4));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDensity), is(0.16666666666666666));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.notAnnotatedProperty), is(0.0));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguityE), is(27.5));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguitySF), is(1926.0));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDiversityE), is(0.03787878787878788));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDiversitySF), is(9.738979176990524E-4));
     }
 
     @Test
@@ -85,7 +92,9 @@ public class HftsApiTest {
         DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
         HftsApi api = new HftsApi().withDataset(dataset)
                 .withMetric(new NotAnnotated(), new Density(),
-                        new Ambiguity(connector), new Diversity(connector));
+                        new Ambiguity(connector), new Diversity(connector),
+                        CategoryAssignor.getDefaultAssignor(), PopularityAssignor.getPageRankAssignor(),
+                        PopularityAssignor.getHitsAssignor());
         List<NifDataset> results = api.run();
 
         for (NifDataset ds : results) {
@@ -97,8 +106,8 @@ public class HftsApiTest {
     @Test
     public void runHftsApiTyper() {
         NifDataset dataset = NifDatasetTest.getTestDataset();
-        HftsApi api = new HftsApi().withDataset(dataset).withSameAsRetrival()
-                .withMetric(CategoryAssignor.getDefaultAssignor());
+        HftsApi api = new HftsApi().withDataset(dataset)
+                .withMetric(CategoryAssignor.getDefaultAssignor(), PopularityAssignor.getPageRankAssignor());
         List<NifDataset> results = api.run();
 
         for (NifDataset ds : results) {

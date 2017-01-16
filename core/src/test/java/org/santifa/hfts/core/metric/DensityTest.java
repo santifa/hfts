@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.NifDatasetTest;
+import org.santifa.hfts.core.nif.ExtendedNif;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -66,7 +67,7 @@ public class DensityTest {
     public void testDensityCalculation() {
         Metric density = new Density();
         dataset = density.calculate(dataset);
-        Assert.assertThat(dataset.getMetaInformations().get(Density.macroDensity), is(expectationMacro));
-        Assert.assertThat(dataset.getMetaInformations().get(Density.microDensity), is(expectationMicro));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDensity), is(expectationMacro));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.microDensity), is(expectationMicro));
     }
 }

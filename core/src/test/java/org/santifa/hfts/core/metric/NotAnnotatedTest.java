@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.NifDatasetTest;
+import org.santifa.hfts.core.nif.ExtendedNif;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -63,6 +64,6 @@ public class NotAnnotatedTest {
     public void testNotAnnotatedMetric() {
         Metric metric = new NotAnnotated();
         dataset = metric.calculate(dataset);
-        Assert.assertThat(dataset.getMetaInformations().get(NotAnnotated.notAnnotatedProperty), is(expectation));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.notAnnotatedProperty), is(expectation));
     }
 }

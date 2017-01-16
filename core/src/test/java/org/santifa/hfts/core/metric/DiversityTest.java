@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.NifDatasetTest;
+import org.santifa.hfts.core.nif.ExtendedNif;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -74,10 +75,10 @@ public class DiversityTest {
     @Test
     public void calculate() throws Exception {
         dataset = diversity.calculate(dataset);
-        Assert.assertThat(dataset.getMetaInformations().get(Diversity.macroDiversityE), is(expectedMacroEntitiesDiversity));
-        Assert.assertThat(dataset.getMetaInformations().get(Diversity.macroDiversitySF), is(expectedMacroSfDiversity));
-        Assert.assertThat(dataset.getMetaInformations().get(Diversity.microDiversityE), is(expectedMicroEntitiesDiversity));
-        Assert.assertThat(dataset.getMetaInformations().get(Diversity.microDiversitySF), is(expectedMicroSfDiversity));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDiversityE), is(expectedMacroEntitiesDiversity));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDiversitySF), is(expectedMacroSfDiversity));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.microDiversityE), is(expectedMicroEntitiesDiversity));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.microDiversitySF), is(expectedMicroSfDiversity));
     }
 
 }

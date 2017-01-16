@@ -4,9 +4,11 @@ import com.hp.hpl.jena.rdf.model.Property;
 import org.aksw.gerbil.io.nif.impl.TurtleNIFParser;
 import org.aksw.gerbil.transfer.nif.Document;
 import org.aksw.gerbil.transfer.nif.Marking;
+import org.aksw.gerbil.transfer.nif.MeaningSpan;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.metric.Metric;
-import org.santifa.hfts.core.utils.ExtendedTurtleNifWriter;
+import org.santifa.hfts.core.nif.MetaNamedEntity;
+import org.santifa.hfts.core.nif.writers.ExtendedTurtleNifWriter;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -127,7 +130,24 @@ public class NifDataset {
     private List<Document> parse(InputStream data) {
         Logger.debug("Parsing {} dataset", name);
         TurtleNIFParser parser = new TurtleNIFParser();
-        return parser.parseNIF(data);
+        List<Document> docs = parser.parseNIF(data);
+
+        for (Document d : docs) {
+            List<Marking> markings = new ArrayList<>();
+            for (Marking m : d.getMarkings()) {
+                /* for the start only handle meaning spans */
+                if (m instanceof MeaningSpan) {
+                    markings.add(new MetaNamedEntity(((MeaningSpan) m).getStartPosition(), ((MeaningSpan) m).getLength(),
+                            ((MeaningSpan) m).getUris(), new HashSet<>()));
+                } else {
+                    /* preserve all other markings */
+                    markings.add(m);
+                }
+            }
+            d.setMarkings(markings);
+        }
+
+        return docs;
     }
 
     /**

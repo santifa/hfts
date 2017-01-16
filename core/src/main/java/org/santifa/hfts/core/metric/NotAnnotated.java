@@ -1,18 +1,14 @@
 package org.santifa.hfts.core.metric;
 
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import org.aksw.gerbil.transfer.nif.Document;
-import org.aksw.gerbil.transfer.nif.vocabulary.NIF;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
+import org.santifa.hfts.core.nif.ExtendedNif;
 
 /**
  * Created by ratzeputz on 30.12.16.
  */
 public class NotAnnotated implements Metric {
-
-    public final static Property notAnnotatedProperty = ResourceFactory.createProperty(NIF.getURI(), "notAnnotatedProperty");
 
     @Override
     public NifDataset calculate(NifDataset dataset) {
@@ -25,7 +21,7 @@ public class NotAnnotated implements Metric {
 
         /* determine the ratio between empty documents and all documents */
         double result = (double) emptydocs / (double) dataset.getDocuments().size();
-        dataset.getMetaInformations().put(notAnnotatedProperty, String.valueOf(result));
+        dataset.getMetaInformations().put(ExtendedNif.notAnnotatedProperty, String.valueOf(result));
         Logger.debug("Macro not-annotated for {} is {}", dataset.getName(), result);
         return dataset;
     }

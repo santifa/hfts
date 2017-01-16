@@ -5,10 +5,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
-import org.santifa.hfts.core.metric.Density;
-import org.santifa.hfts.core.metric.Ambiguity;
-import org.santifa.hfts.core.metric.Diversity;
-import org.santifa.hfts.core.metric.NotAnnotated;
+import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.MetaNamedEntity;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -81,17 +79,18 @@ public class NifDatasetTest {
         Assert.assertThat(d.getDocumentURI(), is("http://www.mpi-inf.mpg.de/yago-naga/aida/download/KORE50.tar.gz/AIDA.tsv/CEL01"));
         Assert.assertThat(dataset.getMarkings().size(), is(2));
         Assert.assertThat(d.getText(), is("David and Victoria named their children Brooklyn, Romeo, Cruz, and Harper Seven."));
+        Assert.assertThat(d.getMarkings(MetaNamedEntity.class).size(), is(2));
     }
 
     @Test
     public void testWriting() {
         NifDataset dataset = getTestDataset();
-        dataset.getMetaInformations().put(NotAnnotated.notAnnotatedProperty, "0.0");
-        dataset.getMetaInformations().put(Density.macroDensity, "0.1");
-        dataset.getMetaInformations().put(Ambiguity.macroAmbiguityE, "0.2");
-        dataset.getMetaInformations().put(Ambiguity.macroAmbiguitySF, "0.3");
-        dataset.getMetaInformations().put(Diversity.macroDiversityE, "0.4");
-        dataset.getMetaInformations().put(Diversity.macroDiversitySF, "0.5");
+        dataset.getMetaInformations().put(ExtendedNif.notAnnotatedProperty, "0.0");
+        dataset.getMetaInformations().put(ExtendedNif.macroDensity, "0.1");
+        dataset.getMetaInformations().put(ExtendedNif.macroAmbiguityE, "0.2");
+        dataset.getMetaInformations().put(ExtendedNif.macroAmbiguitySF, "0.3");
+        dataset.getMetaInformations().put(ExtendedNif.macroDiversityE, "0.4");
+        dataset.getMetaInformations().put(ExtendedNif.macroDiversitySF, "0.5");
         String result = dataset.write();
         System.out.println(result);
     }
@@ -135,5 +134,4 @@ public class NifDatasetTest {
 
         return new NifDataset("test", data);
     }
-
 }

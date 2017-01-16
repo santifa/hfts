@@ -1,13 +1,11 @@
 package org.santifa.hfts.core.metric;
 
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import org.aksw.gerbil.transfer.nif.Document;
-import org.aksw.gerbil.transfer.nif.MeaningSpan;
-import org.aksw.gerbil.transfer.nif.vocabulary.NIF;
 import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
+import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.MetaNamedEntity;
 import org.santifa.hfts.core.utils.DictionaryConnector;
 
 import java.io.IOException;
@@ -22,12 +20,7 @@ import java.util.List;
  */
 public class Diversity implements Metric {
 
-    public static final Property microDiversityE = ResourceFactory.createProperty(NIF.getURI(), "microDiversity");
-    public static final Property microDiversitySF = ResourceFactory.createProperty(NIF.getURI(), "microDiversity");
-    public static final Property macroDiversityE = ResourceFactory.createProperty(NIF.getURI(), "macroDiversity");
-    public static final Property macroDiversitySF = ResourceFactory.createProperty(NIF.getURI(), "macroDiversity");
-
-    DictionaryConnector connector;
+    private DictionaryConnector connector;
 
     public Diversity(DictionaryConnector connector) {
         this.connector = connector;
@@ -62,11 +55,11 @@ public class Diversity implements Metric {
 
         /* count all surface forms and entities present in the data set */
         for (Document d : dataset.getDocuments()) {
-            List<MeaningSpan> meanings = d.getMarkings(MeaningSpan.class);
+            List<MetaNamedEntity> meanings = d.getMarkings(MetaNamedEntity.class);
             HashMap<String, List<String>> knownEntities = new HashMap<>();
             HashMap<String, List<String>> knownSurfaceForms = new HashMap<>();
 
-            for (MeaningSpan meaning : meanings) {
+            for (MetaNamedEntity meaning : meanings) {
                 String s = getEntityName(meaning.getUri());
                 String sf = StringUtils.substring(d.getText(), meaning.getStartPosition(),
                         meaning.getStartPosition() + meaning.getLength()).toLowerCase();
@@ -111,11 +104,11 @@ public class Diversity implements Metric {
         }
 
         if (!dataset.getDocuments().isEmpty()) {
-            dataset.getMetaInformations().put(microDiversityE, String.valueOf(microDivE / (double) dataset.getDocuments().size()));
-            dataset.getMetaInformations().put(microDiversitySF, String.valueOf(microDivSf/ (double) dataset.getDocuments().size()));
+            dataset.getMetaInformations().put(ExtendedNif.microDiversityE, String.valueOf(microDivE / (double) dataset.getDocuments().size()));
+            dataset.getMetaInformations().put(ExtendedNif.microDiversitySF, String.valueOf(microDivSf/ (double) dataset.getDocuments().size()));
         } else {
-            dataset.getMetaInformations().put(microDiversityE, String.valueOf(microDivE));
-            dataset.getMetaInformations().put(microDiversitySF, String.valueOf(microDivSf));
+            dataset.getMetaInformations().put(ExtendedNif.microDiversityE, String.valueOf(microDivE));
+            dataset.getMetaInformations().put(ExtendedNif.microDiversitySF, String.valueOf(microDivSf));
         }
 
         Logger.debug("Macro diversity of entities for {} is {}", dataset.getName(), dataset);
@@ -130,9 +123,9 @@ public class Diversity implements Metric {
 
         /* count all surface forms and entities present in the data set */
         for (Document d : dataset.getDocuments()) {
-            List<MeaningSpan> meanings = d.getMarkings(MeaningSpan.class);
+            List<MetaNamedEntity> meanings = d.getMarkings(MetaNamedEntity.class);
 
-            for (MeaningSpan meaning : meanings) {
+            for (MetaNamedEntity meaning : meanings) {
                 String s = getEntityName(meaning.getUri());
                 String sf = StringUtils.substring(d.getText(), meaning.getStartPosition(),
                         meaning.getStartPosition() + meaning.getLength()).toLowerCase();
@@ -172,9 +165,9 @@ public class Diversity implements Metric {
 
         if (counter != 0) {
             resultE = averageMacroEntityDiversity / (double) counter;
-            dataset.getMetaInformations().put(macroDiversityE, String.valueOf(resultE));
+            dataset.getMetaInformations().put(ExtendedNif.macroDiversityE, String.valueOf(resultE));
         } else {
-            dataset.getMetaInformations().put(macroDiversityE, String.valueOf(resultE));
+            dataset.getMetaInformations().put(ExtendedNif.macroDiversityE, String.valueOf(resultE));
         }
 
         counter = 0;
@@ -189,9 +182,9 @@ public class Diversity implements Metric {
 
         if (counter != 0) {
             resultSf = averageMacroSurfaceFormDiversity/ (double) counter;
-            dataset.getMetaInformations().put(macroDiversitySF, String.valueOf(resultSf));
+            dataset.getMetaInformations().put(ExtendedNif.macroDiversitySF, String.valueOf(resultSf));
         } else {
-            dataset.getMetaInformations().put(macroDiversitySF, String.valueOf(resultSf));
+            dataset.getMetaInformations().put(ExtendedNif.macroDiversitySF, String.valueOf(resultSf));
         }
         Logger.debug("Macro diversity of entities for {} is {}", dataset.getName(), resultE);
         Logger.debug("Macro diversity of surface forms for {} is {}", dataset.getName(), resultSf);

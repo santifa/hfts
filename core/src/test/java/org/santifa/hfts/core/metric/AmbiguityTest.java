@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.NifDatasetTest;
+import org.santifa.hfts.core.nif.ExtendedNif;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -73,9 +74,9 @@ public class AmbiguityTest {
     @Test
     public void calculate() throws Exception {
         dataset = ambiguity.calculate(dataset);
-        Assert.assertThat(dataset.getMetaInformations().get(Ambiguity.macroAmbiguityE), is(expectedMacroEntityAmb));
-        Assert.assertThat(dataset.getMetaInformations().get(Ambiguity.macroAmbiguitySF), is(expectedMacroSfAmb));
-        Assert.assertThat(dataset.getMetaInformations().get(Ambiguity.microAmbiguityE), is(expectedMicroEntityAmb));
-        Assert.assertThat(dataset.getMetaInformations().get(Ambiguity.microAmbiguitySF), is(expectedMicroSfAmb));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguityE), is(expectedMacroEntityAmb));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguitySF), is(expectedMacroSfAmb));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.microAmbiguityE), is(expectedMicroEntityAmb));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.microAmbiguitySF), is(expectedMicroSfAmb));
     }
 }

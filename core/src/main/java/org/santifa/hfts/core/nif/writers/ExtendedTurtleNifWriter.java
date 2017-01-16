@@ -1,13 +1,13 @@
-package org.santifa.hfts.core.utils;
+package org.santifa.hfts.core.nif.writers;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
+import org.aksw.gerbil.io.nif.DocumentWriter;
 import org.aksw.gerbil.io.nif.impl.TurtleNIFWriter;
 import org.aksw.gerbil.transfer.nif.vocabulary.NIF;
-import org.apache.jena.riot.Lang;
 import org.santifa.hfts.core.NifDataset;
 
 import java.io.OutputStream;
@@ -22,9 +22,15 @@ import java.io.StringWriter;
  * <p>
  * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
-public class ExtendedTurtleNifWriter extends TurtleNIFWriter {
+public class ExtendedTurtleNifWriter extends ExtendedAbstractNIFWriter {
 
-    private String lang = Lang.TURTLE.getName();
+    private static final String HTTP_CONTENT_TYPE = "application/x-turtle";
+    private static final String LANGUAGE = "TTL";
+    private static final DocumentWriter writer = new ExtendedDocumentWriter(new ExtendedAnnotationWriterImpl());
+
+    public ExtendedTurtleNifWriter() {
+        super(HTTP_CONTENT_TYPE, LANGUAGE, writer);
+    }
 
     /**
      * Create a {@link Model} from the {@link org.aksw.gerbil.transfer.nif.Document}s
@@ -61,7 +67,7 @@ public class ExtendedTurtleNifWriter extends TurtleNIFWriter {
     public String writeNIF(NifDataset dataset) {
         Model nifModel = extendModel(dataset);
         StringWriter writer = new StringWriter();
-        nifModel.write(writer, lang);
+        nifModel.write(writer, LANGUAGE);
         return writer.toString();
     }
 
@@ -74,6 +80,6 @@ public class ExtendedTurtleNifWriter extends TurtleNIFWriter {
      */
     public void writeNIF(NifDataset dataset, OutputStream os) {
         Model nifModel = extendModel(dataset);
-        nifModel.write(os, lang);
+        nifModel.write(os, LANGUAGE);
     }
 }

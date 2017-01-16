@@ -136,11 +136,6 @@ public class HftsApi {
 
         for (NifDataset d : datasets) {
             for (Metric m : metrics) {
-
-                if (sameAs) {
-                    retriever.retrieve(d);
-                }
-
                 if (macroOnly) {
                     d = m.calculateMacro(d);
                 } else if (microOnly) {
@@ -149,6 +144,11 @@ public class HftsApi {
                     d = m.calculate(d);
                 }
 
+            }
+
+            /* do as last, can confuse some metrics and lowers the performance */
+            if (sameAs) {
+                retriever.retrieve(d);
             }
             result.add(d);
         }
