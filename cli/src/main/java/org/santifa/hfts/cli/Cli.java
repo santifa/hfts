@@ -26,7 +26,7 @@ import java.util.List;
 @Command(name = "run", description = "Run the hfts api on some datasets.")
 public class Cli implements Runnable {
 
-    @Option(name = {"-v", "--verbose"}, description = "Produce verbose output.")
+    @Option(name = {"-v", "--setVerbose"}, description = "Produce setVerbose output.")
     private boolean verbose = false;
 
     @Option(name = "--macro", description = "Run macro calculation only.")
@@ -49,17 +49,17 @@ public class Cli implements Runnable {
     @com.github.rvesse.airline.annotations.restrictions.Path(mustExist = true)
     private List<File> datasets = new ArrayList<>();
 
-    private static void verbose() {
-        Logger.getConfiguration().level(Level.DEBUG);
+    private static void setVerbose(boolean verbose) {
+        if (verbose) {
+            Logger.getConfiguration().level(Level.DEBUG);
+        }
     }
 
     @Override
     public void run() {
         Logger.info("Started hfts api...");
-        if (verbose) {
-            verbose();
-        }
-        Logger.debug("Running in verbose mode...");
+        setVerbose(verbose);
+        Logger.debug("Running in setVerbose mode...");
         Logger.debug("Processing {} datasets...", datasets);
 
         HftsApi api = new HftsApi();
