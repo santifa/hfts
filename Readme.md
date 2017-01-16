@@ -106,6 +106,22 @@ Some drawbacks and remarks:
 * after a run the datasets and metrics are cleared from the api and
  the api can be used in further rounds.
 
+### CLI
+
+We also provide a basic command-line interface which
+takes a list of NIF documents and writes them in return to a
+file with the same name in the `cli` directory.
+
+    cd cli
+    ./hfts <arguments> <datasets>
+    
+Arguments:
+* `-v`: Enable verbose mode
+* `--macro`: Only calculate macro metrics
+* `--micro`: Only calculate micro metrics
+* `--sameAs`: Do owl:sameAs retrieval for the entity URIs
+* `-m`: Provide a comma-separated list of metrics. Available are notannotated, density, hits, pagerank, type, diversity, ambiguity
+
 ## Contributions
 
 Feel free to fill a bug report, propose a new metric or 
