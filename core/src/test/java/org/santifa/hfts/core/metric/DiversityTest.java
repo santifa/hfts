@@ -45,11 +45,11 @@ public class DiversityTest {
         testset4.getDocuments().get(1).setMarkings(new ArrayList<>());
 
         return Arrays.asList(new Object[][] {
-                {NifDatasetTest.getTestDataset(), "0.03787878787878788", "0.26666666666666666"},
+                {NifDatasetTest.getTestDataset(), "0.03787878787878788", "9.738979176990524E-4"},
                 {testset1, "0.0", "0.0"},
                 {testset2, "0.0", "0.0"},
                 {testset3, "0.04387626262626263", "0.005822619863630071"},
-                {testset4, "0.03787878787878788", "0.26666666666666666"}
+                {testset4, "0.03787878787878788", "9.738979176990524E-4"}
         });
     }
 
@@ -59,10 +59,10 @@ public class DiversityTest {
 
     private String expectedMacroSfDiversity;
 
-    public DiversityTest(NifDataset dataset, String expectedMacroEntitiesDiversity, String expectedMacroSfDiversity) {
+    public DiversityTest(NifDataset dataset, String expectedDiversityEntities, String expectedDiversitySurfaceForms) {
         this.dataset = dataset;
-        this.expectedMacroEntitiesDiversity = expectedMacroEntitiesDiversity;
-        this.expectedMacroSfDiversity = expectedMacroSfDiversity;
+        this.expectedMacroEntitiesDiversity = expectedDiversityEntities;
+        this.expectedMacroSfDiversity = expectedDiversitySurfaceForms;
     }
 
     @Test
