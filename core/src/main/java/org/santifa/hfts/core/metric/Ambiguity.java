@@ -76,7 +76,7 @@ public class Ambiguity implements Metric {
                         surfaceForms += connector.getSfMapping().get(sf);
                     }
                 } catch (IOException io) {
-                    io.printStackTrace();
+                    Logger.error("Failed to load connector. ", e);
                 }
             }
 

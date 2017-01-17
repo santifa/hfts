@@ -89,8 +89,8 @@ public class NifDatasetTest {
         dataset.getMetaInformations().put(ExtendedNif.macroDensity, "0.1");
         dataset.getMetaInformations().put(ExtendedNif.macroAmbiguityEntities, "0.2");
         dataset.getMetaInformations().put(ExtendedNif.macroAmbiguitySurfaceForms, "0.3");
-        dataset.getMetaInformations().put(ExtendedNif.macroDiversityE, "0.4");
-        dataset.getMetaInformations().put(ExtendedNif.macroDiversitySF, "0.5");
+        dataset.getMetaInformations().put(ExtendedNif.diversityEntities, "0.4");
+        dataset.getMetaInformations().put(ExtendedNif.diversitySurfaceForms, "0.5");
         String result = dataset.write();
         System.out.println(result);
     }

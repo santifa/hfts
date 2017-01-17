@@ -83,8 +83,8 @@ public class HftsApiTest {
         Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.notAnnotatedProperty), is(0.0));
         Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguityEntities), is(27.5));
         Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguitySurfaceForms), is(1926.0));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDiversityE), is(0.03787878787878788));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDiversitySF), is(9.738979176990524E-4));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.diversityEntities), is(0.03787878787878788));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.diversitySurfaceForms), is(9.738979176990524E-4));
     }
 
     @Test

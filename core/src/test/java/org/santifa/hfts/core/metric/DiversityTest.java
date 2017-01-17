@@ -45,11 +45,11 @@ public class DiversityTest {
         testset4.getDocuments().get(1).setMarkings(new ArrayList<>());
 
         return Arrays.asList(new Object[][] {
-                {NifDatasetTest.getTestDataset(), "9.738979176990524E-4", "9.738979176990524E-4", "0.0019477958353981049", "0.0019477958353981049"},
-                {testset1, "0.0", "0.0", "0.0", "0.0"},
-                {testset2, "0.0", "0.0", "0.0", "0.0"},
-                {testset3, "0.007760031877746056", "0.007760031877746056", "0.010346709170328074", "0.010346709170328074"},
-                {testset4, "9.738979176990524E-4", "9.738979176990524E-4", "6.49265278466035E-4", "6.49265278466035E-4"}
+                {NifDatasetTest.getTestDataset(), "0.03787878787878788", "0.26666666666666666"},
+                {testset1, "0.0", "0.0"},
+                {testset2, "0.0", "0.0"},
+                {testset3, "0.04387626262626263", "0.005822619863630071"},
+                {testset4, "0.03787878787878788", "0.26666666666666666"}
         });
     }
 
@@ -59,26 +59,18 @@ public class DiversityTest {
 
     private String expectedMacroSfDiversity;
 
-    private String expectedMicroEntitiesDiversity;
-
-    private String expectedMicroSfDiversity;
-
-    public DiversityTest(NifDataset dataset, String expectedMacroEntitiesDiversity, String expectedMacroSfDiversity,
-                        String expectedMicroEntitiesDiversity, String expectedMicroSfDiversity) {
+    public DiversityTest(NifDataset dataset, String expectedMacroEntitiesDiversity, String expectedMacroSfDiversity) {
         this.dataset = dataset;
         this.expectedMacroEntitiesDiversity = expectedMacroEntitiesDiversity;
         this.expectedMacroSfDiversity = expectedMacroSfDiversity;
-        this.expectedMicroEntitiesDiversity = expectedMicroEntitiesDiversity;
-        this.expectedMicroSfDiversity = expectedMicroSfDiversity;
     }
 
     @Test
     public void calculate() throws Exception {
         dataset = diversity.calculate(dataset);
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDiversityE), is(expectedMacroEntitiesDiversity));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDiversitySF), is(expectedMacroSfDiversity));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.microDiversityE), is(expectedMicroEntitiesDiversity));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.microDiversitySF), is(expectedMicroSfDiversity));
+        dataset.write(System.out);
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.diversityEntities), is(expectedMacroEntitiesDiversity));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.diversitySurfaceForms), is(expectedMacroSfDiversity));
     }
 
 }

@@ -20,15 +20,9 @@ public class ExtendedNif {
     public static final Property pagerank = ResourceFactory.createProperty(NIF.getURI(), "pagerank");
     public static final Property hits = ResourceFactory.createProperty(NIF.getURI(), "hits");
 
-    /* diversity properties for document level */
-    public static final Property diversityE = ResourceFactory.createProperty(NIF.getURI(), "diversityE");
-    public static final Property diversitySF = ResourceFactory.createProperty(NIF.getURI(), "diversitySF");
-    /* dataset level */
-    public static final Property microDiversityE = ResourceFactory.createProperty(NIF.getURI(), "microDiversityE");
-    public static final Property microDiversitySF = ResourceFactory.createProperty(NIF.getURI(), "microDiversitySF");
-    public static final Property macroDiversityE = ResourceFactory.createProperty(NIF.getURI(), "macroDiversityE");
-    public static final Property macroDiversitySF = ResourceFactory.createProperty(NIF.getURI(), "macroDiversitySF");
-
+    /* diversity properties for dataset level  */
+    public static final Property diversityEntities = ResourceFactory.createProperty(NIF.getURI(), "diversityEntities");
+    public static final Property diversitySurfaceForms = ResourceFactory.createProperty(NIF.getURI(), "diversitySurfaceForms");
 
     /* ambiguity properties document and annotation level */
     public static final Property ambiguityEntities = ResourceFactory.createProperty(NIF.getURI(), "ambiguityEntities");
