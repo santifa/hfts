@@ -130,9 +130,9 @@ make a pull request.
 
 ## TODO
 
--[ ] MaxRecall
--[x] DocumentLevel Density, Ambiguity
--[x] AnnotationLevel Ambiguity
--[ ] Webservice
--[ ] irregular typing of meta properties at writing nif
--[ ] extensible reading and writing of nif + easier data structure
+- [ ] MaxRecall  
+- [x] DocumentLevel Density, Ambiguity  
+- [x] AnnotationLevel Ambiguity  
+- [ ] Webservice  
+- [ ] irregular typing of meta properties at writing nif  
+- [ ] extensible reading and writing of nif + easier data structure  
