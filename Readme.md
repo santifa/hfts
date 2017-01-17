@@ -3,6 +3,7 @@
 This is a small library to extend [NIF](http://persistence.uni-leipzig.org/nlp2rdf)
 datasets with meta informations. It is designed to be integrated in other tools
 like [GERBIL](gerbil.aksw.org). Also it should be easily extended with further meta inforamtions. 
+Consider everything is unstable at the moment and in permanent change!
 
 ## Background
 
