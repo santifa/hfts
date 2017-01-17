@@ -1,6 +1,7 @@
 package org.santifa.hfts.core.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.pmw.tinylog.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,17 +20,17 @@ public class PopularityConnector {
 
     private Path p;
     /**
-     * Instantiates a new dictionary connector.
+     * Instantiates a new lazy popularity connector.
      * Provide two files which first column is a number
      * and the second one containing a word surrounded by '<>'.
      *
      */
     public PopularityConnector(Path mappingFile) {
         this.p = mappingFile;
-        //readAmbiguityFile(mappingFile);
     }
 
-    private void readAmbiguityFile(Path file) throws IOException {
+    private void readPopularityFile(Path file) throws IOException {
+        Logger.debug("Loading file {}", file);
         BufferedReader reader = Files.newBufferedReader(file);
         String s;
 
@@ -48,13 +49,14 @@ public class PopularityConnector {
      */
     public HashMap<String, String> getMappping() throws IOException {
         if (!loaded) {
-            readAmbiguityFile(p);
+            readPopularityFile(p);
             loaded = true;
         }
         return mapping;
     }
 
     public void flush() {
+        Logger.debug("Flushing popularity dictionary...");
         mapping.clear();
     }
 

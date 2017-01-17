@@ -31,8 +31,9 @@ public class DictionaryConnector {
 
     private Path entityFile;
     private Path surfaceFormFile;
+
     /**
-     * Instantiates a new dictionary connector.
+     * Instantiates a new lazy dictionary connector.
      * Provide two files which first column is a number
      * and the second one containing a word surrounded by '<>'.
      *
@@ -43,8 +44,6 @@ public class DictionaryConnector {
     public DictionaryConnector(Path entityFile, Path surfaceFormFile) throws IOException {
         this.entityFile = entityFile;
         this.surfaceFormFile = surfaceFormFile;
-    //    readAmbiguityFile(entityFile, entityMappping);
-    //    readAmbiguityFile(surfaceFormFile, sfMapping);
     }
 
     /**
@@ -66,6 +65,7 @@ public class DictionaryConnector {
     }
 
     private void readAmbiguityFile(Path file, HashMap<String, Integer> map) throws IOException {
+        Logger.debug("Loading file {}", file);
         BufferedReader reader = Files.newBufferedReader(file);
         String line;
 
@@ -107,6 +107,7 @@ public class DictionaryConnector {
     }
 
     public void flush() {
+        Logger.debug("Flushing Dictionary...");
         entityMappping.clear();
         sfMapping.clear();
     }

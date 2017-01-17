@@ -14,6 +14,7 @@ import org.aksw.gerbil.transfer.nif.Meaning;
 import org.aksw.gerbil.transfer.nif.Span;
 import org.aksw.gerbil.transfer.nif.data.Annotation;
 import org.aksw.gerbil.transfer.nif.vocabulary.NIF;
+import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.nif.MetaDocument;
 
 /**
@@ -47,8 +48,9 @@ public class ExtendedDocumentWriter extends DocumentWriter {
         // TODO add predominant language
         // http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#predLang
         if (document instanceof MetaDocument) {
-            for (Property p : ((MetaDocument) document).getMetaInformations().keySet()) {
-                nifModel.add(documentResource, p, ((MetaDocument) document).getMetaInformations().get(p));
+            MetaDocument doc = (MetaDocument) document;
+            for (Property p : doc.getMetaInformations().keySet()) {
+                nifModel.add(documentResource, p, ExtendedNif.getTypedLiteral(p, doc.getMetaInformations().get(p)));
             }
         }
 

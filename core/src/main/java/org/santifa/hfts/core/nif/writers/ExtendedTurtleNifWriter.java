@@ -10,6 +10,7 @@ import org.aksw.gerbil.io.nif.impl.TurtleNIFWriter;
 import org.aksw.gerbil.transfer.nif.Document;
 import org.aksw.gerbil.transfer.nif.vocabulary.NIF;
 import org.santifa.hfts.core.NifDataset;
+import org.santifa.hfts.core.nif.ExtendedNif;
 
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -60,7 +61,7 @@ public class ExtendedTurtleNifWriter extends ExtendedAbstractNIFWriter {
 
         /* metrics */
         for (Property metaInformation : dataset.getMetaInformations().keySet()) {
-            nifModel.add(ds, metaInformation, dataset.getMetaInformations().get(metaInformation));
+            nifModel.add(ds, metaInformation, ExtendedNif.getTypedLiteral(metaInformation, dataset.getMetaInformations().get(metaInformation)));
         }
         return nifModel;
     }

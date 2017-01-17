@@ -90,7 +90,7 @@ public class Cli implements Runnable {
         if (metrics.isEmpty()) {
             Logger.debug("Running all metrics.");
             DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
-            api.withMetric(new NotAnnotated(), new Density(), new Ambiguity(connector), new Diversity(connector),
+            api.withMetric(new NotAnnotated(), new Density(), new Ambiguity(connector, false), new Diversity(connector, true),
                     CategoryAssignor.getDefaultAssignor(), PopularityAssignor.getHitsAssignor(), PopularityAssignor.getPageRankAssignor());
         } else {
             DictionaryConnector conn = null;
@@ -111,13 +111,13 @@ public class Cli implements Runnable {
                         if (conn == null) {
                             conn = DictionaryConnector.getDefaultConnector();
                         }
-                        api.withMetric(new Diversity(conn));
+                        api.withMetric(new Diversity(conn, true));
                         break;
                     case "ambiguity":
                         if (conn == null) {
                             conn = DictionaryConnector.getDefaultConnector();
                         }
-                        api.withMetric(new Ambiguity(conn));
+                        api.withMetric(new Ambiguity(conn, true));
                         break;
                     default: Logger.debug("Not recognized metric {}...", m);
                         break;

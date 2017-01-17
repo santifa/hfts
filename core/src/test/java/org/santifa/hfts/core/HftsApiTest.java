@@ -7,6 +7,7 @@ import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.metric.*;
 import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.utils.DictionaryConnector;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -79,12 +80,12 @@ public class HftsApiTest {
         Assert.assertThat(results.size(), is(1));
         dataset = results.get(0);
         Assert.assertThat(dataset.getName(), is("test"));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDensity), is(0.16666666666666666));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.notAnnotatedProperty), is(0.0));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguityEntities), is(27.5));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguitySurfaceForms), is(1926.0));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.diversityEntities), is(0.03787878787878788));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.diversitySurfaceForms), is(9.738979176990524E-4));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDensity), is("0.16666666666666666"));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.notAnnotatedProperty), is("0.0"));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguityEntities), is("27.5"));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguitySurfaceForms), is("1926.0"));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.diversityEntities), is("0.03787878787878788"));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.diversitySurfaceForms), is("9.738979176990524E-4"));
     }
 
     @Test
@@ -101,7 +102,7 @@ public class HftsApiTest {
     }
 
     @Test
-    public void runHftsApi() throws IOException, URISyntaxException {
+    public void testHftsApi() throws IOException, URISyntaxException {
         Path file = Paths.get(getClass().getResource("/kore50-nif-short.ttl").toURI());
         //NifDataset dataset = NifDatasetTest.getTestDataset();
         DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
@@ -119,4 +120,29 @@ public class HftsApiTest {
             ds.write(new FileOutputStream(ds.getName() + "test.ttl"));
         }
     }
+
+    @Test
+    public void runHftsApi() throws IOException, URISyntaxException {
+        Path file = Paths.get("../data/N3/wes2015-dataset-nif.ttl");
+        Path file2 = Paths.get("../data/N3/RSS-500.ttl");
+
+        DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
+        String filename = StringUtils.substringBeforeLast(file.toFile().getName(), ".");
+        String filename2 = StringUtils.substringBeforeLast(file2.toFile().getName(), ".");
+
+        HftsApi api = new HftsApi().withDataset(filename, file)//.withDataset(filename2, file2)
+                .withMetric(new NotAnnotated(), new Density(),
+                        new Ambiguity(connector, false), new Diversity(connector, true),
+                        CategoryAssignor.getDefaultAssignor(),
+                        PopularityAssignor.getPageRankAssignor(),
+                        PopularityAssignor.getHitsAssignor()
+                );
+        List<NifDataset> results = api.run();
+
+        for (NifDataset ds : results) {
+            System.out.println("##### Printing dataset " + ds.getName());
+            ds.write(new FileOutputStream(ds.getName() + "-ext.ttl"));
+        }
+    }
+
 }

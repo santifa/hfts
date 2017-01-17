@@ -136,9 +136,9 @@ public class HftsApi {
         List<NifDataset> result = new ArrayList<>(datasets.size());
 
         for (NifDataset d : datasets) {
-            for (Metric m : metrics) {
-                Logger.debug("Procssesing dataset {}...", d.getName());
+            Logger.debug("Procssesing dataset {}...", d.getName());
 
+            for (Metric m : metrics) {
                 if (macroOnly) {
                     d = m.calculateMacro(d);
                 } else if (microOnly) {
@@ -151,8 +151,8 @@ public class HftsApi {
                 if (sameAs) {
                     retriever.retrieve(d);
                 }
-                result.add(d);
             }
+            result.add(d);
         }
 
         /* clear the metrics and data sets for the next run */

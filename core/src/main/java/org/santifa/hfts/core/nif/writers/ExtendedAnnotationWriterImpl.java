@@ -3,10 +3,10 @@ package org.santifa.hfts.core.nif.writers;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import org.aksw.gerbil.io.nif.AnnotationWriter;
 import org.aksw.gerbil.io.nif.utils.NIFUriHelper;
 import org.aksw.gerbil.transfer.nif.Span;
+import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.nif.MetaSpan;
 
 import java.util.HashMap;
@@ -33,8 +33,8 @@ public class ExtendedAnnotationWriterImpl extends AnnotationWriter {
         /* store every meta property */
         if (span instanceof MetaSpan) {
             HashMap<Property, String> metaInformations = ((MetaSpan) span).getMetaInformations();
-            for (Property property : metaInformations.keySet()) {
-                nifModel.add(spanAsResource, property, ResourceFactory.createPlainLiteral(metaInformations.get(property)));
+            for (Property p : metaInformations.keySet()) {
+                nifModel.add(spanAsResource, p, ExtendedNif.getTypedLiteral(p, metaInformations.get(p)));
             }
         }
     }
