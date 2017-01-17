@@ -1,5 +1,6 @@
 package org.santifa.hfts.core;
 
+import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.metric.Metric;
 
 import java.io.IOException;
@@ -135,6 +136,7 @@ public class HftsApi {
         List<NifDataset> result = new ArrayList<>(datasets.size());
 
         for (NifDataset d : datasets) {
+            Logger.debug("Procssesing dataset {}...", d.getName());
             for (Metric m : metrics) {
                 if (macroOnly) {
                     d = m.calculateMacro(d);

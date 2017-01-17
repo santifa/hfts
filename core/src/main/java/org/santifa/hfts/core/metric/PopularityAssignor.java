@@ -1,14 +1,11 @@
 package org.santifa.hfts.core.metric;
 
 import com.hp.hpl.jena.rdf.model.Property;
-import org.aksw.gerbil.transfer.nif.Document;
-import org.aksw.gerbil.transfer.nif.Marking;
-import org.aksw.gerbil.transfer.nif.Meaning;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
-import org.santifa.hfts.core.utils.Grep;
+import org.santifa.hfts.core.utils.PopularityConnector;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -24,8 +21,11 @@ public class PopularityAssignor implements Metric {
 
     private Property property;
 
+    private PopularityConnector connector;
+
     public PopularityAssignor(Path file, Property property) {
         this.file = file;
+        this.connector = new PopularityConnector(file);
         this.property = property;
     }
 
@@ -39,48 +39,20 @@ public class PopularityAssignor implements Metric {
 
     @Override
     public NifDataset calculate(NifDataset dataset) {
-        List<Marking> meanings = dataset.getMarkings();
-        StringBuilder regex = new StringBuilder();
+        List<MetaNamedEntity> meanings = dataset.getMarkings();
+        Logger.debug("Assign popularity {} to dataset {}", property, dataset.getName());
 
-        /* collect all entity uris from dbpedia */
-        regex.append('(');
-        for (Marking m : meanings) {
-            if (m instanceof Meaning) {
-
-                for (String uri : ((Meaning) m).getUris()) {
-                    if (uri.startsWith("http://dbpedia.org")) {
-                        regex.append(uri).append("|");
-                    }
-                }
-            }
-        }
-        regex.deleteCharAt(regex.length() - 1).append(')');
-
-        Grep g = new Grep();
         try {
-            /* grep for the entity uris */
-            List<String> matches = g.grep(file, regex.toString());
-
-            /* go through dataset and found matched uris */
-            for (Document d : dataset.changeDocuments()) {
-                for (MetaNamedEntity m : d.getMarkings(MetaNamedEntity.class)) {
-                    /* check which uris where found */
-                    for (String s : matches) {
-                        /* get the uri and check the meaning set */
-                        String uri = s.substring(s.indexOf('<') + 1, s.indexOf('>', s.indexOf('<')));
-
-                        if (m.getUris().contains(uri)) {
-                            String popularity = s.substring(s.indexOf('>', s.indexOf('>') + 1) + 3, s.indexOf('^') - 1);
-                            m.getMetaInformations().put(property, popularity);
-                        }
-                    }
+            for (MetaNamedEntity m : meanings) {
+                if (connector.getMappping().containsKey(m.getUri())) {
+                    m.getMetaInformations().put(property, connector.getMappping().get((m.getUri())));
                 }
             }
-
         } catch (IOException e) {
-            Logger.error("Failed to grep through the popularity file {} with regex {}", file, regex.toString());
+            Logger.error("Popularity file {} not loaded.", file);
         }
 
+        connector.flush();
         return dataset;
     }
 

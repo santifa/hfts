@@ -7,11 +7,14 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import org.aksw.gerbil.io.nif.DocumentWriter;
 import org.aksw.gerbil.io.nif.impl.TurtleNIFWriter;
+import org.aksw.gerbil.transfer.nif.Document;
 import org.aksw.gerbil.transfer.nif.vocabulary.NIF;
 import org.santifa.hfts.core.NifDataset;
 
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A very quick extension to the {@link TurtleNIFWriter}.
@@ -40,7 +43,12 @@ public class ExtendedTurtleNifWriter extends ExtendedAbstractNIFWriter {
      * @return the model
      */
     public Model extendModel(NifDataset dataset) {
-        Model nifModel = createNIFModel(dataset.getDocuments());
+        List<Document> docs = new ArrayList<>();
+        for (Document d : dataset.getDocuments()) {
+            docs.add(d);
+        }
+
+        Model nifModel = createNIFModel(docs);
 
         /* create a dataset property */
         Resource ds = ResourceFactory.createResource(NIF.getURI() + "dataset/" + dataset.getName());

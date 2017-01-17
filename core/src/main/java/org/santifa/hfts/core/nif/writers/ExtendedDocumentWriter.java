@@ -2,6 +2,7 @@ package org.santifa.hfts.core.nif.writers;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 import org.aksw.gerbil.io.nif.AnnotationWriter;
@@ -13,6 +14,7 @@ import org.aksw.gerbil.transfer.nif.Meaning;
 import org.aksw.gerbil.transfer.nif.Span;
 import org.aksw.gerbil.transfer.nif.data.Annotation;
 import org.aksw.gerbil.transfer.nif.vocabulary.NIF;
+import org.santifa.hfts.core.nif.MetaDocument;
 
 /**
  * Created by ratzeputz on 16.01.17.
@@ -44,6 +46,11 @@ public class ExtendedDocumentWriter extends DocumentWriter {
                 nifModel.createTypedLiteral(end, XSDDatatype.XSDnonNegativeInteger));
         // TODO add predominant language
         // http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#predLang
+        if (document instanceof MetaDocument) {
+            for (Property p : ((MetaDocument) document).getMetaInformations().keySet()) {
+                nifModel.add(documentResource, p, ((MetaDocument) document).getMetaInformations().get(p));
+            }
+        }
 
         // add annotations
         int meaningId = 0;

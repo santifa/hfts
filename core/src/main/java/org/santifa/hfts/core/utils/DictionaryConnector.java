@@ -29,6 +29,8 @@ public class DictionaryConnector {
 
     private HashMap<String, Integer> sfMapping = new HashMap<>();
 
+    private Path entityFile;
+    private Path surfaceFormFile;
     /**
      * Instantiates a new dictionary connector.
      * Provide two files which first column is a number
@@ -39,8 +41,10 @@ public class DictionaryConnector {
      * @throws IOException the io exception
      */
     public DictionaryConnector(Path entityFile, Path surfaceFormFile) throws IOException {
-        readAmbiguityFile(entityFile, entityMappping);
-        readAmbiguityFile(surfaceFormFile, sfMapping);
+        this.entityFile = entityFile;
+        this.surfaceFormFile = surfaceFormFile;
+    //    readAmbiguityFile(entityFile, entityMappping);
+    //    readAmbiguityFile(surfaceFormFile, sfMapping);
     }
 
     /**
@@ -81,7 +85,11 @@ public class DictionaryConnector {
      *
      * @return the entity map
      */
-    public HashMap<String, Integer> getEntityMappping() {
+    public HashMap<String, Integer> getEntityMappping() throws IOException {
+        if (entityMappping.isEmpty()) {
+            readAmbiguityFile(entityFile, entityMappping);
+        }
+
         return entityMappping;
     }
 
@@ -91,7 +99,15 @@ public class DictionaryConnector {
      *
      * @return the surface form map
      */
-    public HashMap<String, Integer> getSfMapping() {
+    public HashMap<String, Integer> getSfMapping() throws IOException {
+        if (sfMapping.isEmpty()) {
+            readAmbiguityFile(surfaceFormFile, sfMapping);
+        }
         return sfMapping;
+    }
+
+    public void flush() {
+        entityMappping.clear();
+        sfMapping.clear();
     }
 }

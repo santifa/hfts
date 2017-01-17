@@ -1,7 +1,6 @@
 package org.santifa.hfts.core.metric;
 
 import org.aksw.gerbil.transfer.nif.Marking;
-import org.aksw.gerbil.transfer.nif.data.DocumentImpl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +8,7 @@ import org.junit.runners.Parameterized;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.NifDatasetTest;
 import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.MetaDocument;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -31,18 +31,18 @@ public class DiversityTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() throws URISyntaxException, IOException {
         NifDataset testset1 = NifDatasetTest.getTestDataset();
-        testset1.changeDocuments().get(0).setMarkings(new ArrayList<>());
+        testset1.getDocuments().get(0).setMarkings(new ArrayList<>());
 
         NifDataset testset2 = NifDatasetTest.getTestDataset();
-        testset2.changeDocuments().get(0).setMarkings(new ArrayList<>());
-        testset2.changeDocuments().add(new DocumentImpl("", "", new ArrayList<Marking>()));
+        testset2.getDocuments().get(0).setMarkings(new ArrayList<>());
+        testset2.getDocuments().add(new MetaDocument("", "", new ArrayList<Marking>()));
 
         Path file = Paths.get(NotAnnotated.class.getResource("/kore50-nif-short.ttl").toURI());
         NifDataset testset3 = new NifDataset("test", file);
 
         NifDataset testset4 = new NifDataset("test", file);
-        testset4.changeDocuments().get(0).setMarkings(new ArrayList<>());
-        testset4.changeDocuments().get(1).setMarkings(new ArrayList<>());
+        testset4.getDocuments().get(0).setMarkings(new ArrayList<>());
+        testset4.getDocuments().get(1).setMarkings(new ArrayList<>());
 
         return Arrays.asList(new Object[][] {
                 {NifDatasetTest.getTestDataset(), "9.738979176990524E-4", "9.738979176990524E-4", "0.0019477958353981049", "0.0019477958353981049"},

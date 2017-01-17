@@ -7,6 +7,7 @@ import org.aksw.gerbil.transfer.nif.Marking;
 import org.aksw.gerbil.transfer.nif.MeaningSpan;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.metric.Metric;
+import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 import org.santifa.hfts.core.nif.writers.ExtendedTurtleNifWriter;
 
@@ -35,13 +36,11 @@ public class NifDataset {
 
     private String name;
 
-    private List<Document> documents;
+    private List<MetaDocument> documents;
 
-    private List<Marking> markings;
+    private List<MetaNamedEntity> markings;
 
     private HashMap<Property, String> metaInformations;
-
-    private boolean changed = false;
 
     /**
      * Instantiates a new Nif dataset.
@@ -70,10 +69,15 @@ public class NifDataset {
         this.metaInformations = new HashMap<>();
     }
 
-    private List<Marking> referenceMarkings(List<Document> docs) {
-        List<Marking> markings = new ArrayList<>();
+    public void reload() {
+        this.getMarkings().clear();
+        referenceMarkings(this.getDocuments());
+    }
+
+    private List<MetaNamedEntity> referenceMarkings(List<MetaDocument> docs) {
+        List<MetaNamedEntity> markings = new ArrayList<>();
         for (Document doc : docs) {
-            markings.addAll(doc.getMarkings());
+            markings.addAll(doc.getMarkings(MetaNamedEntity.class));
         }
         return markings;
     }
@@ -94,19 +98,7 @@ public class NifDataset {
      *
      * @return the documents
      */
-    public List<Document> getDocuments() {
-        return documents;
-    }
-
-    /**
-     * Due to the internal usage a cross reference to the
-     * {@link Marking}s of a document is stored. So use this
-     * method if the documents get changed.
-     *
-     * @return the list
-     */
-    public List<Document> changeDocuments() {
-        changed = true;
+    public List<MetaDocument> getDocuments() {
         return documents;
     }
 
@@ -116,23 +108,23 @@ public class NifDataset {
      *
      * @return the markings
      */
-    public List<Marking> getMarkings() {
-        if (changed) {
-            markings = referenceMarkings(documents);
-        }
-        return markings;
+    public List<MetaNamedEntity> getMarkings() {
+        return referenceMarkings(documents);
     }
 
     public HashMap<Property, String> getMetaInformations() {
         return metaInformations;
     }
 
-    private List<Document> parse(InputStream data) {
+    private List<MetaDocument> parse(InputStream data) {
         Logger.debug("Parsing {} dataset", name);
         TurtleNIFParser parser = new TurtleNIFParser();
         List<Document> docs = parser.parseNIF(data);
+        List<MetaDocument> metaDocs = new ArrayList<>(docs.size());
 
         for (Document d : docs) {
+            MetaDocument doc = new MetaDocument(d.getText(), d.getDocumentURI(), null);
+
             List<Marking> markings = new ArrayList<>();
             for (Marking m : d.getMarkings()) {
                 /* for the start only handle meaning spans */
@@ -144,10 +136,11 @@ public class NifDataset {
                     markings.add(m);
                 }
             }
-            d.setMarkings(markings);
+            doc.setMarkings(markings);
+            metaDocs.add(doc);
         }
-
-        return docs;
+        //System.out.println(docs);
+        return metaDocs;
     }
 
     /**

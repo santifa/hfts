@@ -4,9 +4,6 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
-import org.aksw.gerbil.transfer.nif.Document;
-import org.aksw.gerbil.transfer.nif.Marking;
-import org.aksw.gerbil.transfer.nif.MeaningSpan;
 import org.apache.jena.iri.IRI;
 import org.apache.jena.iri.IRIFactory;
 import org.pmw.tinylog.Logger;
@@ -60,23 +57,19 @@ public class CategoryAssignor implements Metric {
 
     private NifDataset type(NifDataset dataset) {
         List<String> entities = new ArrayList<>();
+        Logger.debug("Assign categories to dataset {}", dataset.getName());
 
         /* get all meanings for the chunk */
-        for (Marking m : dataset.getMarkings()) {
-            if (m instanceof MeaningSpan) {
-                entities.addAll(((MeaningSpan) m).getUris());
-            }
+        for (MetaNamedEntity m : dataset.getMarkings()) {
+            entities.addAll(m.getUris());
         }
 
         HashMap<String, List<String>> typedEntities = chunk(entities);
 
-        for (Document d : dataset.changeDocuments()) {
-            for (MetaNamedEntity m : d.getMarkings(MetaNamedEntity.class)) {
-                /* if we have the types for some uri, add it */
-                for (String uri : m.getUris()) {
-                    if (typedEntities.containsKey(uri)) {
-                        m.getTypes().addAll(typedEntities.get(uri));
-                    }
+        for (MetaNamedEntity m : dataset.getMarkings()) {
+            for (String uri : m.getUris()) {
+                if (typedEntities.containsKey(uri)) {
+                    m.getTypes().addAll(typedEntities.get(uri));
                 }
             }
         }

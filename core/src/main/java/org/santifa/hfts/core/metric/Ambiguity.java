@@ -21,17 +21,21 @@ public class Ambiguity implements Metric {
 
     private DictionaryConnector connector;
 
-    public Ambiguity(DictionaryConnector connector) {
+    private boolean flush = false;
+
+    public Ambiguity(DictionaryConnector connector, boolean flush) {
         this.connector = connector;
+        this.flush = flush;
     }
 
-    public Ambiguity(Path entityFile, Path surfaceFormFile) throws IOException {
+    public Ambiguity(Path entityFile, Path surfaceFormFile, boolean flush) throws IOException {
         this.connector = new DictionaryConnector(entityFile, surfaceFormFile);
+        this.flush = flush;
     }
 
     public static Ambiguity getDefaultAmbiguity() {
         try {
-            return new Ambiguity(Paths.get("..", "data", "ambiguity_e"), Paths.get("..", "data", "ambiguity_sf"));
+            return new Ambiguity(Paths.get("..", "data", "ambiguity_e"), Paths.get("..", "data", "ambiguity_sf"), true);
         } catch (IOException e) {
             Logger.error("Failed to load internal entity file {} and surface form file {} with {}",
                     "../data/ambiguity_e", "../data/ambiguity_sf", e);
@@ -43,6 +47,9 @@ public class Ambiguity implements Metric {
     public NifDataset calculate(NifDataset dataset) {
         dataset = calculateMicro(dataset);
         dataset = calculateMacro(dataset);
+        if (flush) {
+            connector.flush();
+        }
        return dataset;
     }
 
@@ -54,27 +61,32 @@ public class Ambiguity implements Metric {
         for (Document d : dataset.getDocuments()) {
             int ambiguityEntities = 0;
             int ambiguitySf = 0;
-            List<MetaNamedEntity> meanings = d.getMarkings(MetaNamedEntity.class);
 
             /* add every annotation ambiguity and increase number of stored ambiguities */
-            for (MetaNamedEntity meaning : meanings) {
+            for (MetaNamedEntity meaning : dataset.getMarkings()) {
                 String s = getEntityName(meaning.getUri());
                 String sf = StringUtils.substring(d.getText(), meaning.getStartPosition(),
                         meaning.getStartPosition() + meaning.getLength()).toLowerCase();
                 sf = StringUtils.replace(sf, "_", " ");
+                try {
 
-                if (connector.getEntityMappping().containsKey(s)) {
-                    ambiguityEntities += connector.getEntityMappping().get(s);
-                }
+                    if (connector.getEntityMappping().containsKey(s)) {
+                        ambiguityEntities += connector.getEntityMappping().get(s);
+
+                    }
 
 
-                if (connector.getSfMapping().containsKey(sf)) {
-                    ambiguitySf += connector.getSfMapping().get(sf);
-                }
+                    if (connector.getSfMapping().containsKey(sf)) {
+                        ambiguitySf += connector.getSfMapping().get(sf);
+                    }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            if (meanings.size() != 0) {
-                entities += (double) ambiguityEntities / (double) meanings.size();
-                surfaceForms += (double) ambiguitySf / (double) meanings.size();
+
+        }
+            if (dataset.getMarkings().size() != 0) {
+                entities += (double) ambiguityEntities / (double) dataset.getMarkings().size();
+                surfaceForms += (double) ambiguitySf / (double) dataset.getMarkings().size();
             }
         }
 
@@ -111,14 +123,19 @@ public class Ambiguity implements Metric {
                         meaning.getStartPosition() + meaning.getLength()).toLowerCase();
                 sf = StringUtils.replace(sf, "_", " ");
 
-                if (connector.getEntityMappping().containsKey(s)) {
-                    ambiguityEntities += connector.getEntityMappping().get(s);
-                }
+                try {
+                    if (connector.getEntityMappping().containsKey(s)) {
+                        ambiguityEntities += connector.getEntityMappping().get(s);
+                    }
 
 
-                if (connector.getSfMapping().containsKey(sf)) {
-                    ambiguitySf += connector.getSfMapping().get(sf);
+                    if (connector.getSfMapping().containsKey(sf)) {
+                        ambiguitySf += connector.getSfMapping().get(sf);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+
             }
             counter += meanings.size();
         }

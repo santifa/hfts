@@ -1,7 +1,5 @@
 package org.santifa.hfts.core.metric;
 
-import org.aksw.gerbil.transfer.nif.Marking;
-import org.aksw.gerbil.transfer.nif.data.DocumentImpl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +7,7 @@ import org.junit.runners.Parameterized;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.NifDatasetTest;
 import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.MetaDocument;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -29,18 +28,22 @@ public class DensityTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() throws URISyntaxException, IOException {
         NifDataset testset1 = NifDatasetTest.getTestDataset();
-        testset1.changeDocuments().get(0).setMarkings(new ArrayList<>());
+        testset1.getDocuments().get(0).setMarkings(new ArrayList<>());
+        testset1.reload();
 
         NifDataset testset2 = NifDatasetTest.getTestDataset();
-        testset2.changeDocuments().get(0).setMarkings(new ArrayList<>());
-        testset2.changeDocuments().add(new DocumentImpl("", "", new ArrayList<Marking>()));
+        testset2.getDocuments().get(0).setMarkings(new ArrayList<>());
+        testset2.getDocuments().add(new MetaDocument("", "", new ArrayList<>()));
+        testset2.reload();
 
         Path file = Paths.get(NotAnnotated.class.getResource("/kore50-nif-short.ttl").toURI());
         NifDataset testset3 = new NifDataset("test", file);
+        testset3.reload();
 
         NifDataset testset4 = new NifDataset("test", file);
-        testset4.changeDocuments().get(0).setMarkings(new ArrayList<>());
-        testset4.changeDocuments().get(1).setMarkings(new ArrayList<>());
+        testset4.getDocuments().get(0).setMarkings(new ArrayList<>());
+        testset4.getDocuments().get(1).setMarkings(new ArrayList<>());
+        testset4.reload();
 
         return Arrays.asList(new Object[][] {
                 {NifDatasetTest.getTestDataset(), "0.16666666666666666", "0.16666666666666666"},
@@ -57,7 +60,7 @@ public class DensityTest {
 
     private String expectationMacro;
 
-    public DensityTest(NifDataset dataset, String expectationMicro, String expectationMacro) {
+    public DensityTest(NifDataset dataset, String expectationMacro, String expectationMicro) {
         this.dataset = dataset;
         this.expectationMacro = expectationMacro;
         this.expectationMicro = expectationMicro;
@@ -67,6 +70,7 @@ public class DensityTest {
     public void testDensityCalculation() {
         Metric density = new Density();
         dataset = density.calculate(dataset);
+        dataset.write(System.out);
         Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDensity), is(expectationMacro));
         Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.microDensity), is(expectationMicro));
     }

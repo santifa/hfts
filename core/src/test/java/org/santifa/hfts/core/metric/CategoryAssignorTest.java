@@ -15,7 +15,7 @@ public class CategoryAssignorTest {
         NifDataset dataset = NifDatasetTest.getTestDataset();
 
         dataset = typer.calculate(dataset);
-        System.out.println(dataset);
+        System.out.println(dataset.write());
     }
 
 }

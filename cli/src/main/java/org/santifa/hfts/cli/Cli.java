@@ -8,6 +8,7 @@ import com.github.rvesse.airline.annotations.restrictions.MutuallyExclusiveWith;
 import com.github.rvesse.airline.annotations.restrictions.Required;
 import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
+import org.pmw.tinylog.writers.ConsoleWriter;
 import org.santifa.hfts.core.HftsApi;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.metric.*;
@@ -51,7 +52,7 @@ public class Cli implements Runnable {
 
     private static void setVerbose(boolean verbose) {
         if (verbose) {
-            Logger.getConfiguration().level(Level.DEBUG);
+            Logger.getConfiguration().writer(new ConsoleWriter()).level(Level.DEBUG).activate();
         }
     }
 
@@ -87,6 +88,7 @@ public class Cli implements Runnable {
 
         /* handle metrics selection */
         if (metrics.isEmpty()) {
+            Logger.debug("Running all metrics.");
             DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
             api.withMetric(new NotAnnotated(), new Density(), new Ambiguity(connector), new Diversity(connector),
                     CategoryAssignor.getDefaultAssignor(), PopularityAssignor.getHitsAssignor(), PopularityAssignor.getPageRankAssignor());

@@ -19,7 +19,6 @@ public class PopularityAssignorTest {
         NifDataset testdata = NifDatasetTest.getTestDataset();
         PopularityAssignor pagerank = new PopularityAssignor(Paths.get("../data/pagerank_scores_en_2015.ttl"), ExtendedNif.pagerank);
         testdata = pagerank.calculate(testdata);
-        System.out.println(testdata);
         testdata.write(System.out);
     }
 
@@ -29,6 +28,7 @@ public class PopularityAssignorTest {
         NifDataset testdata = new NifDataset("test", Paths.get(this.getClass().getResource("/kore50-nif-short.ttl").toURI()));
         PopularityAssignor pagerank = new PopularityAssignor(Paths.get("../data/pagerank_scores_en_2015.ttl"), ExtendedNif.pagerank);
         testdata = pagerank.calculate(testdata);
+        testdata.write(System.out);
     }
 
     @Test
@@ -36,6 +36,7 @@ public class PopularityAssignorTest {
         NifDataset testdata = NifDatasetTest.getTestDataset();
         PopularityAssignor hits = new PopularityAssignor(Paths.get("../data/hits_scores_en_2015.ttl"), ExtendedNif.hits);
         testdata = hits.calculate(testdata);
+        testdata.write(System.out);
     }
 
     @Test
@@ -43,5 +44,6 @@ public class PopularityAssignorTest {
         NifDataset testdata = new NifDataset("test", Paths.get(this.getClass().getResource("/kore50-nif-short.ttl").toURI()));
         PopularityAssignor hits = new PopularityAssignor(Paths.get("../data/hits_scores_en_2015.ttl"), ExtendedNif.hits);
         testdata = hits.calculate(testdata);
+        testdata.write(System.out);
     }
 }

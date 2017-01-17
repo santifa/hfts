@@ -8,6 +8,7 @@ import org.santifa.hfts.core.metric.*;
 import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.utils.DictionaryConnector;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -72,7 +73,7 @@ public class HftsApiTest {
         DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
         HftsApi api = new HftsApi().withDataset(dataset)
                 .withMetric(new NotAnnotated(), new Density(),
-                            new Ambiguity(connector), new Diversity(connector));
+                            new Ambiguity(connector, false), new Diversity(connector));
         List<NifDataset> results = api.run();
 
         Assert.assertThat(results.size(), is(1));
@@ -87,23 +88,6 @@ public class HftsApiTest {
     }
 
     @Test
-    public void runHftsApi() {
-        NifDataset dataset = NifDatasetTest.getTestDataset();
-        DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
-        HftsApi api = new HftsApi().withDataset(dataset)
-                .withMetric(new NotAnnotated(), new Density(),
-                        new Ambiguity(connector), new Diversity(connector),
-                        CategoryAssignor.getDefaultAssignor(), PopularityAssignor.getPageRankAssignor(),
-                        PopularityAssignor.getHitsAssignor());
-        List<NifDataset> results = api.run();
-
-        for (NifDataset ds : results) {
-            System.out.println("##### Printing dataset " + ds.getName());
-            System.out.println(ds.write());
-        }
-    }
-
-    @Test
     public void runHftsApiTyper() {
         NifDataset dataset = NifDatasetTest.getTestDataset();
         HftsApi api = new HftsApi().withDataset(dataset)
@@ -113,6 +97,26 @@ public class HftsApiTest {
         for (NifDataset ds : results) {
             System.out.println("##### Printing dataset " + ds.getName());
             System.out.println(ds.write());
+        }
+    }
+
+    @Test
+    public void runHftsApi() throws IOException, URISyntaxException {
+        Path file = Paths.get(getClass().getResource("/kore50-nif-short.ttl").toURI());
+        //NifDataset dataset = NifDatasetTest.getTestDataset();
+        DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
+        HftsApi api = new HftsApi().withDataset(file.toFile().getName(), file)
+                .withMetric(new NotAnnotated(), new Density(),
+                        new Ambiguity(connector, false), new Diversity(connector),
+                        CategoryAssignor.getDefaultAssignor(),
+                        PopularityAssignor.getPageRankAssignor(),
+                        PopularityAssignor.getHitsAssignor()
+                );
+        List<NifDataset> results = api.run();
+
+        for (NifDataset ds : results) {
+            System.out.println("##### Printing dataset " + ds.getName());
+            ds.write(new FileOutputStream(ds.getName() + "test.ttl"));
         }
     }
 }

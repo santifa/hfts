@@ -1,10 +1,9 @@
 package org.santifa.hfts.core;
 
-import org.aksw.gerbil.transfer.nif.Document;
-import org.aksw.gerbil.transfer.nif.Marking;
-import org.aksw.gerbil.transfer.nif.Meaning;
 import org.junit.Assert;
 import org.junit.Test;
+import org.santifa.hfts.core.nif.MetaDocument;
+import org.santifa.hfts.core.nif.MetaNamedEntity;
 
 import java.util.List;
 
@@ -21,13 +20,13 @@ public class SameAsRetrieverTest {
         SameAsRetriever retriever = new SameAsRetriever();
         retriever.retrieve(testDataset);
 
-        List<Document> documents = testDataset.getDocuments();
+        List<MetaDocument> documents = testDataset.getDocuments();
         Assert.assertThat(documents.size(), is(1));
         Assert.assertThat(testDataset.getMarkings().size(), is(2));
 
-        List<Marking> markings = testDataset.getMarkings();
-        Assert.assertThat(((Meaning) markings.get(0)).getUris().size(), is(111));
-        Assert.assertThat(((Meaning) markings.get(1)).getUris().size(), is(195));
+        List<MetaNamedEntity> markings = testDataset.getMarkings();
+        Assert.assertThat(markings.get(0).getUris().size(), is(111));
+        Assert.assertThat(markings.get(1).getUris().size(), is(195));
     }
 
 }
