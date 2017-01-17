@@ -123,7 +123,7 @@ public class HftsApiTest {
 
     @Test
     public void runHftsApi() throws IOException, URISyntaxException {
-        Path file = Paths.get("../data/N3/wes2015-dataset-nif.ttl");
+        Path file = Paths.get("../data/wes2015-dataset-nif.ttl");
         Path file2 = Paths.get("../data/N3/RSS-500.ttl");
 
         DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
