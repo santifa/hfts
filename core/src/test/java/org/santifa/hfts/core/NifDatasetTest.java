@@ -87,8 +87,8 @@ public class NifDatasetTest {
         NifDataset dataset = getTestDataset();
         dataset.getMetaInformations().put(ExtendedNif.notAnnotatedProperty, "0.0");
         dataset.getMetaInformations().put(ExtendedNif.macroDensity, "0.1");
-        dataset.getMetaInformations().put(ExtendedNif.macroAmbiguityE, "0.2");
-        dataset.getMetaInformations().put(ExtendedNif.macroAmbiguitySF, "0.3");
+        dataset.getMetaInformations().put(ExtendedNif.macroAmbiguityEntities, "0.2");
+        dataset.getMetaInformations().put(ExtendedNif.macroAmbiguitySurfaceForms, "0.3");
         dataset.getMetaInformations().put(ExtendedNif.macroDiversityE, "0.4");
         dataset.getMetaInformations().put(ExtendedNif.macroDiversitySF, "0.5");
         String result = dataset.write();

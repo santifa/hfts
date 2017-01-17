@@ -47,8 +47,8 @@ public class AmbiguityTest {
                 {NifDatasetTest.getTestDataset(), "27.5", "1926.0", "27.5", "1926.0"},
                 {testset1, "0.0", "0.0", "0.0", "0.0"},
                 {testset2, "0.0", "0.0", "0.0", "0.0"},
-                {testset3, "28.166666666666668", "1322.5", "28.166666666666668", "1322.5"},
-                {testset4, "27.5", "1926.0", "9.166666666666666", "642.0"}
+                {testset3, "9.388888888888888", "440.8333333333333", "28.166666666666668", "1322.5"},
+                {testset4, "9.166666666666666", "642.0", "27.5", "1926.0"}
         });
     }
 
@@ -74,9 +74,10 @@ public class AmbiguityTest {
     @Test
     public void calculate() throws Exception {
         dataset = ambiguity.calculate(dataset);
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguityE), is(expectedMacroEntityAmb));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguitySF), is(expectedMacroSfAmb));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.microAmbiguityE), is(expectedMicroEntityAmb));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.microAmbiguitySF), is(expectedMicroSfAmb));
+        dataset.write(System.out);
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguityEntities), is(expectedMacroEntityAmb));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguitySurfaceForms), is(expectedMacroSfAmb));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.microAmbiguityEntities), is(expectedMicroEntityAmb));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.microAmbiguitySurfaceForms), is(expectedMicroSfAmb));
     }
 }

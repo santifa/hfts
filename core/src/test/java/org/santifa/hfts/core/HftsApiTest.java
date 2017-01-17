@@ -73,7 +73,7 @@ public class HftsApiTest {
         DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
         HftsApi api = new HftsApi().withDataset(dataset)
                 .withMetric(new NotAnnotated(), new Density(),
-                            new Ambiguity(connector, false), new Diversity(connector));
+                            new Ambiguity(connector, false), new Diversity(connector, true));
         List<NifDataset> results = api.run();
 
         Assert.assertThat(results.size(), is(1));
@@ -81,8 +81,8 @@ public class HftsApiTest {
         Assert.assertThat(dataset.getName(), is("test"));
         Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDensity), is(0.16666666666666666));
         Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.notAnnotatedProperty), is(0.0));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguityE), is(27.5));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguitySF), is(1926.0));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguityEntities), is(27.5));
+        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguitySurfaceForms), is(1926.0));
         Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDiversityE), is(0.03787878787878788));
         Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDiversitySF), is(9.738979176990524E-4));
     }
@@ -107,7 +107,7 @@ public class HftsApiTest {
         DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
         HftsApi api = new HftsApi().withDataset(file.toFile().getName(), file)
                 .withMetric(new NotAnnotated(), new Density(),
-                        new Ambiguity(connector, false), new Diversity(connector),
+                        new Ambiguity(connector, false), new Diversity(connector, true),
                         CategoryAssignor.getDefaultAssignor(),
                         PopularityAssignor.getPageRankAssignor(),
                         PopularityAssignor.getHitsAssignor()

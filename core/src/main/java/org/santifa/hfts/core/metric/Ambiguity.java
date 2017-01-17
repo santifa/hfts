@@ -1,17 +1,16 @@
 package org.santifa.hfts.core.metric;
 
-import org.aksw.gerbil.transfer.nif.Document;
 import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 import org.santifa.hfts.core.utils.DictionaryConnector;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 /**
  * Created by ratzeputz on 30.12.16.
@@ -45,6 +44,7 @@ public class Ambiguity implements Metric {
 
     @Override
     public NifDataset calculate(NifDataset dataset) {
+        dataset = calculateDocumentLevel(dataset);
         dataset = calculateMicro(dataset);
         dataset = calculateMacro(dataset);
         if (flush) {
@@ -53,54 +53,70 @@ public class Ambiguity implements Metric {
        return dataset;
     }
 
-    @Override
-    public NifDataset calculateMicro(NifDataset dataset) {
-        double entities = 0.0;
-        double surfaceForms = 0.0;
+    private NifDataset calculateDocumentLevel(NifDataset dataset) {
+        for (MetaDocument d : dataset.getDocuments()) {
+            int entities = 0;
+            int surfaceForms = 0;
 
-        for (Document d : dataset.getDocuments()) {
-            int ambiguityEntities = 0;
-            int ambiguitySf = 0;
+            for (MetaNamedEntity entity : d.getMarkings(MetaNamedEntity.class)) {
+                String e = getEntityName(entity.getUri());
+                String sf = StringUtils.substring(d.getText(), entity.getStartPosition(),
+                        entity.getStartPosition() + entity.getLength()).toLowerCase();
+                sf = StringUtils.replace(sf, "_", " ").toLowerCase();
 
-            /* add every annotation ambiguity and increase number of stored ambiguities */
-            for (MetaNamedEntity meaning : dataset.getMarkings()) {
-                String s = getEntityName(meaning.getUri());
-                String sf = StringUtils.substring(d.getText(), meaning.getStartPosition(),
-                        meaning.getStartPosition() + meaning.getLength()).toLowerCase();
-                sf = StringUtils.replace(sf, "_", " ");
                 try {
-
-                    if (connector.getEntityMappping().containsKey(s)) {
-                        ambiguityEntities += connector.getEntityMappping().get(s);
+                    if (connector.getEntityMappping().containsKey(e)) {
+                        entity.getMetaInformations().put(ExtendedNif.ambiguityEntity, String.valueOf(connector.getEntityMappping().get(e)));
+                        entities += connector.getEntityMappping().get(e);
 
                     }
-
 
                     if (connector.getSfMapping().containsKey(sf)) {
-                        ambiguitySf += connector.getSfMapping().get(sf);
+                        entity.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForm, String.valueOf(connector.getSfMapping().get(sf)));
+                        surfaceForms += connector.getSfMapping().get(sf);
                     }
-            } catch (IOException e) {
-                e.printStackTrace();
+                } catch (IOException io) {
+                    io.printStackTrace();
+                }
             }
 
-        }
+            double resultEntities = 0.0;
+            double resultSurfaceForms = 0.0;
             if (dataset.getMarkings().size() != 0) {
-                entities += (double) ambiguityEntities / (double) dataset.getMarkings().size();
-                surfaceForms += (double) ambiguitySf / (double) dataset.getMarkings().size();
+                resultEntities = (double) entities / (double) dataset.getMarkings().size();
+                resultSurfaceForms = (double) surfaceForms / (double) dataset.getMarkings().size();
             }
+
+            d.getMetaInformations().put(ExtendedNif.ambiguityEntities, String.valueOf(resultEntities));
+            d.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForms, String.valueOf(resultSurfaceForms));
+            Logger.debug("Macro ambiguity of entities for {} is {}", d.getDocumentURI(), resultEntities);
+            Logger.debug("Macro ambiguity of surface forms for {} is {}", d.getDocumentURI(), resultSurfaceForms);
         }
+        return dataset;
+    }
+
+    @Override
+    public NifDataset calculateMicro(NifDataset dataset) {
+        int entities = 0;
+        int surfaceForms = 0;
+
+            /* add every annotation ambiguity and increase number of stored ambiguities */
+        System.out.println(dataset.getMarkings().size());
+        for (MetaNamedEntity meaning : dataset.getMarkings()) {
+            entities += Integer.valueOf(meaning.getMetaInformations().get(ExtendedNif.ambiguityEntity));
+            surfaceForms += Integer.valueOf(meaning.getMetaInformations().get(ExtendedNif.ambiguitySurfaceForm));
+        }
+
 
         double resultMicroEntities = 0.0;
-        if (!dataset.getDocuments().isEmpty()) {
-            resultMicroEntities = entities / (double) dataset.getDocuments().size();
-        }
-        dataset.getMetaInformations().put(ExtendedNif.microAmbiguityE, String.valueOf(resultMicroEntities));
-
         double resultMicroSurfaceForms = 0.0;
-        if (!dataset.getDocuments().isEmpty()) {
-            resultMicroSurfaceForms = surfaceForms / (double) dataset.getDocuments().size();
+        if (!dataset.getMarkings().isEmpty()) {
+            resultMicroEntities = (double) entities / (double) dataset.getMarkings().size();
+            resultMicroSurfaceForms = (double) surfaceForms / (double) dataset.getMarkings().size();
         }
-        dataset.getMetaInformations().put(ExtendedNif.microAmbiguitySF, String.valueOf(resultMicroSurfaceForms));
+
+        dataset.getMetaInformations().put(ExtendedNif.microAmbiguityEntities, String.valueOf(resultMicroEntities));
+        dataset.getMetaInformations().put(ExtendedNif.microAmbiguitySurfaceForms, String.valueOf(resultMicroSurfaceForms));
 
         Logger.debug("Macro ambiguity of entities for {} is {}", dataset.getName(), resultMicroEntities);
         Logger.debug("Macro ambiguity of surface forms for {} is {}", dataset.getName(), resultMicroSurfaceForms);
@@ -109,59 +125,34 @@ public class Ambiguity implements Metric {
 
     @Override
     public NifDataset calculateMacro(NifDataset dataset) {
-        int ambiguityEntities = 0;
-        int ambiguitySf = 0;
-        int counter = 0;
+        double ambiguityEntities = 0;
+        double ambiguitySurfaceForms = 0;
 
-        for (Document d : dataset.getDocuments()) {
-            List<MetaNamedEntity> meanings = d.getMarkings(MetaNamedEntity.class);
-
-            /* add every annotation ambiguity and increase number of stored ambiguities */
-            for (MetaNamedEntity meaning : meanings) {
-                String s = getEntityName(meaning.getUri());
-                String sf = StringUtils.substring(d.getText(), meaning.getStartPosition(),
-                        meaning.getStartPosition() + meaning.getLength()).toLowerCase();
-                sf = StringUtils.replace(sf, "_", " ");
-
-                try {
-                    if (connector.getEntityMappping().containsKey(s)) {
-                        ambiguityEntities += connector.getEntityMappping().get(s);
-                    }
-
-
-                    if (connector.getSfMapping().containsKey(sf)) {
-                        ambiguitySf += connector.getSfMapping().get(sf);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-            counter += meanings.size();
+        for (MetaDocument d : dataset.getDocuments()) {
+            ambiguityEntities += Double.valueOf(d.getMetaInformations().get(ExtendedNif.ambiguityEntities));
+            ambiguitySurfaceForms += Double.valueOf(d.getMetaInformations().get(ExtendedNif.ambiguitySurfaceForms));
         }
 
-        double resultMacroEntities = 0.0;
-        if (counter != 0.0) {
-            resultMacroEntities = (double) ambiguityEntities / (double) counter;
+        double resultEntities = 0.0;
+        double resultSurfaceForms = 0.0;
+        if (!dataset.getMarkings().isEmpty()) {
+            resultEntities = ambiguityEntities / (double) dataset.getDocuments().size();
+            resultSurfaceForms = ambiguitySurfaceForms / (double) dataset.getDocuments().size();
         }
-        dataset.getMetaInformations().put(ExtendedNif.macroAmbiguityE, String.valueOf(resultMacroEntities));
 
-        double resultMacroSurfaceForms = 0.0;
-        if (counter != 0.0) {
-            resultMacroSurfaceForms = (double) ambiguitySf / (double) counter;
-        }
-        dataset.getMetaInformations().put(ExtendedNif.macroAmbiguitySF, String.valueOf(resultMacroSurfaceForms));
+        dataset.getMetaInformations().put(ExtendedNif.macroAmbiguityEntities, String.valueOf(resultEntities));
+        dataset.getMetaInformations().put(ExtendedNif.macroAmbiguitySurfaceForms, String.valueOf(resultSurfaceForms));
 
-        Logger.debug("Macro ambiguity of entities for {} is {}", dataset.getName(), resultMacroEntities);
-        Logger.debug("Macro ambiguity of surface forms for {} is {}", dataset.getName(), resultMacroSurfaceForms);
+        Logger.debug("Macro ambiguity of entities for {} is {}", dataset.getName(), resultEntities);
+        Logger.debug("Macro ambiguity of surface forms for {} is {}", dataset.getName(), resultSurfaceForms);
         return dataset;
     }
 
     private String getEntityName(String s) {
         if (StringUtils.contains(s, "sentence-")) {
-            return StringUtils.substringAfterLast(s, "sentence-");
+            return StringUtils.substringAfterLast(s, "sentence-").toLowerCase();
         } else {
-            return StringUtils.substringAfterLast(s, "/");
+            return StringUtils.substringAfterLast(s, "/").toLowerCase();
         }
     }
 }

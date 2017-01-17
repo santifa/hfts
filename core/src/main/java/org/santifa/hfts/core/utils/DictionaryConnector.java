@@ -75,7 +75,7 @@ public class DictionaryConnector {
             Integer ambiguity = Integer.decode(split[0]);
             String entity = StringUtils.remove(split[1], "<");
             entity = StringUtils.remove(entity, ">");
-            map.put(entity, ambiguity);
+            map.put(entity.toLowerCase(), ambiguity);
         }
     }
 
