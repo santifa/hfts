@@ -25,6 +25,8 @@ import static org.hamcrest.core.Is.is;
 @RunWith(Parameterized.class)
 public class MaxRecallTest {
 
+    private static MaxRecall recall = MaxRecall.getDefaultMaxRecall(5);
+
     @Parameterized.Parameters
     public static Collection<Object[]> data() throws URISyntaxException, IOException {
         NifDataset testset1 = NifDatasetTest.getTestDataset();
@@ -68,7 +70,6 @@ public class MaxRecallTest {
 
     @Test
     public void testMaxRecall() {
-        MaxRecall recall = MaxRecall.getDefaultMaxRecall();
         dataset = recall.calculate(dataset);
         dataset.write(System.out);
         Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroMaxRecall), is(expectationMacro));

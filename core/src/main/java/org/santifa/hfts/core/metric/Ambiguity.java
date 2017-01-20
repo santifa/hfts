@@ -7,10 +7,7 @@ import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 import org.santifa.hfts.core.utils.DictionaryConnector;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import org.santifa.hfts.core.utils.NifHelper;
 
 /**
  * Created by ratzeputz on 30.12.16.
@@ -22,28 +19,14 @@ public class Ambiguity implements Metric {
 
     private DictionaryConnector connectorSf;
 
-    private boolean flush = false;
-
-    public Ambiguity(DictionaryConnector connectorEntity, DictionaryConnector connectorSf, boolean flush) {
+    public Ambiguity(DictionaryConnector connectorEntity, DictionaryConnector connectorSf) {
         this.connectorSf = connectorSf;
         this.connectorEntity = connectorEntity;
-        this.flush = flush;
     }
 
-    public Ambiguity(Path entityFile, Path surfaceFormFile, boolean flush) throws IOException {
-        this.connectorEntity = new DictionaryConnector(entityFile);
-        this.connectorSf = new DictionaryConnector(surfaceFormFile);
-        this.flush = flush;
-    }
-
-    public static Ambiguity getDefaultAmbiguity() {
-        try {
-            return new Ambiguity(Paths.get("..", "data", "ambiguity_e"), Paths.get("..", "data", "ambiguity_sf"), true);
-        } catch (IOException e) {
-            Logger.error("Failed to load internal entity file {} and surface form file {} with {}",
-                    "../data/ambiguity_e", "../data/ambiguity_sf", e);
-        }
-        return null;
+    public static Ambiguity getDefaultAmbiguity(int timeToLive) {
+            return new Ambiguity(DictionaryConnector.getDefaultEntityConnector(timeToLive),
+                    DictionaryConnector.getDefaultSFConnector(timeToLive));
     }
 
     @Override
@@ -51,10 +34,9 @@ public class Ambiguity implements Metric {
         dataset = calculateDocumentLevel(dataset);
         dataset = calculateMicro(dataset);
         dataset = calculateMacro(dataset);
-        if (flush) {
-            connectorEntity.flush();
-            connectorSf.flush();
-        }
+        connectorEntity.flush();
+        connectorSf.flush();
+
        return dataset;
     }
 
@@ -64,32 +46,31 @@ public class Ambiguity implements Metric {
             int surfaceForms = 0;
 
             for (MetaNamedEntity entity : d.getMarkings(MetaNamedEntity.class)) {
-                String e = getEntityName(entity.getUri());
-                String sf = StringUtils.substring(d.getText(), entity.getStartPosition(),
-                        entity.getStartPosition() + entity.getLength()).toLowerCase();
+                String e = NifHelper.getEntityName(entity.getUri());
+                String sf = NifHelper.getSurfaceForm(d.getText(), entity);
                 sf = StringUtils.replace(sf, "_", " ").toLowerCase();
 
-                try {
-                    if (connectorEntity.getMapping().containsKey(e)) {
-                        entity.getMetaInformations().put(ExtendedNif.ambiguityEntity, String.valueOf(connectorEntity.getMapping().get(e)));
-                        entities += connectorEntity.getMapping().get(e);
+             //   try {
+                    if (connectorEntity.contains(e)) {
+                        entity.getMetaInformations().put(ExtendedNif.ambiguityEntity, String.valueOf(connectorEntity.get(e)));
+                        entities += Integer.decode(connectorEntity.get(e));
                     } else {
                         /* set to at least one if we have no information */
                         entity.getMetaInformations().put(ExtendedNif.ambiguityEntity, "1");
                         entities++;
                     }
 
-                    if (connectorSf.getMapping().containsKey(sf)) {
-                        entity.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForm, String.valueOf(connectorSf.getMapping().get(sf)));
-                        surfaceForms += connectorSf.getMapping().get(sf);
+                    if (connectorSf.contains(sf)) {
+                        entity.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForm, String.valueOf(connectorSf.get(sf)));
+                        surfaceForms += Integer.decode(connectorSf.get(sf));
                     } else {
                         entity.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForm, "1");
                         surfaceForms++;
                     }
-                } catch (IOException io) {
+           /*     } catch (IOException io) {
                     Logger.error("Failed to load connector. ", e);
                 }
-            }
+            */}
 
             double resultEntities = 0.0;
             double resultSurfaceForms = 0.0;
@@ -153,17 +134,8 @@ public class Ambiguity implements Metric {
 
         dataset.getMetaInformations().put(ExtendedNif.macroAmbiguityEntities, String.valueOf(resultEntities));
         dataset.getMetaInformations().put(ExtendedNif.macroAmbiguitySurfaceForms, String.valueOf(resultSurfaceForms));
-
         Logger.debug("Macro ambiguity of entities for {} is {}", dataset.getName(), resultEntities);
         Logger.debug("Macro ambiguity of surface forms for {} is {}", dataset.getName(), resultSurfaceForms);
         return dataset;
-    }
-
-    private String getEntityName(String s) {
-        if (StringUtils.contains(s, "sentence-")) {
-            return StringUtils.substringAfterLast(s, "sentence-").toLowerCase();
-        } else {
-            return StringUtils.substringAfterLast(s, "/").toLowerCase();
-        }
     }
 }

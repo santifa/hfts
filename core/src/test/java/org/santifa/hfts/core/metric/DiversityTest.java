@@ -1,6 +1,5 @@
 package org.santifa.hfts.core.metric;
 
-import org.aksw.gerbil.transfer.nif.Marking;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +25,7 @@ import static org.hamcrest.core.Is.is;
 @RunWith(Parameterized.class)
 public class DiversityTest {
 
-    static Diversity diversity = Diversity.getDefaultDiversity();
+    static Diversity diversity = Diversity.getDefaultDiversity(5);
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() throws URISyntaxException, IOException {
@@ -35,7 +34,7 @@ public class DiversityTest {
 
         NifDataset testset2 = NifDatasetTest.getTestDataset();
         testset2.getDocuments().get(0).setMarkings(new ArrayList<>());
-        testset2.getDocuments().add(new MetaDocument("", "", new ArrayList<Marking>()));
+        testset2.getDocuments().add(new MetaDocument("", "", new ArrayList<>()));
 
         Path file = Paths.get(NotAnnotated.class.getResource("/kore50-nif-short.ttl").toURI());
         NifDataset testset3 = new NifDataset("test", file);

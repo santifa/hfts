@@ -25,6 +25,8 @@ import static org.hamcrest.core.Is.is;
 @RunWith(Parameterized.class)
 public class DensityTest {
 
+    private Metric density = new Density();
+
     @Parameterized.Parameters
     public static Collection<Object[]> data() throws URISyntaxException, IOException {
         NifDataset testset1 = NifDatasetTest.getTestDataset();
@@ -68,7 +70,6 @@ public class DensityTest {
 
     @Test
     public void testDensityCalculation() {
-        Metric density = new Density();
         dataset = density.calculate(dataset);
         dataset.write(System.out);
         Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDensity), is(expectationMacro));

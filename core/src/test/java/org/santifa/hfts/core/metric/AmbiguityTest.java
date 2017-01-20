@@ -25,7 +25,7 @@ import static org.hamcrest.core.Is.is;
 @RunWith(Parameterized.class)
 public class AmbiguityTest {
 
-    private static Ambiguity ambiguity = Ambiguity.getDefaultAmbiguity();
+    private static Ambiguity ambiguity = Ambiguity.getDefaultAmbiguity(5);
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() throws URISyntaxException, IOException {
@@ -47,7 +47,7 @@ public class AmbiguityTest {
                 {NifDatasetTest.getTestDataset(), "27.5", "1926.0", "27.5", "1926.0"},
                 {testset1, "0.0", "0.0", "0.0", "0.0"},
                 {testset2, "0.0", "0.0", "0.0", "0.0"},
-                {testset3, "9.388888888888888", "440.8333333333333", "28.166666666666668", "1322.5"},
+                {testset3, "28.166666666666668", "440.8333333333333", "28.166666666666668", "1322.5"},
                 {testset4, "9.166666666666666", "642.0", "27.5", "1926.0"}
         });
     }

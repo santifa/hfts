@@ -7,34 +7,30 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * Created by ratzeputz on 17.01.17.
  */
-public class PopularityConnector {
+public class PopularityConnector extends DictionaryConnector {
 
-    private HashMap<String, String> mapping = new HashMap<>();
 
-    private boolean loaded = false;
-
-    private Path p;
     /**
-     * Instantiates a new lazy popularity connector.
+     * Instantiates a new lazy dictionary connector.
      * Provide two files which first column is a number
      * and the second one containing a word surrounded by '<>'.
      *
+     * @param file
+     * @param timeToLive
+     * @throws IOException the io exception
      */
-    public PopularityConnector(Path mappingFile) {
-        this.p = mappingFile;
+    public PopularityConnector(Path file, int timeToLive) {
+        super(file, timeToLive);
     }
 
-    public void flush() {
-        Logger.debug("Flushing popularity dictionary...");
-        mapping.clear();
-    }
-
-    public void readFile(Path file) throws IOException {
+    @Override
+    protected void readFile(Path file, List<String> key, List<String> value) throws IOException {
         Logger.debug("Loading file {}", file);
         BufferedReader reader = Files.newBufferedReader(file);
         String s;
@@ -42,15 +38,18 @@ public class PopularityConnector {
         while ((s = reader.readLine()) != null) {
             String uri = StringUtils.substringBetween(s, "<", "> ");
             String popularity = StringUtils.substringBetween(s, "> \"", "\"^^");
-            this.mapping.put(uri, popularity);
+            //map.put(uri, popularity);
+            key.add(uri);
+            value.add(popularity);
         }
     }
 
-    public HashMap<String, String> getMapping() throws IOException {
-        if (!loaded) {
-            readFile(p);
-            loaded = true;
-        }
-        return mapping;
+    public static PopularityConnector getPageRankConnector(int timeToLive) {
+        return new PopularityConnector(Paths.get("../data/pagerank_scores_en_2015.ttl"), timeToLive);
+     }
+
+    public static PopularityConnector getHitsConnector(int timeToLive) {
+        return new PopularityConnector(Paths.get("../data/hits_scores_en_2015.ttl"), timeToLive);
     }
+
 }

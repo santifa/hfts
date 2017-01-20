@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * This class loads a simple text file containing occurrences
@@ -25,9 +27,15 @@ import java.util.HashMap;
  */
 public class DictionaryConnector {
 
-    private HashMap<String, Integer> mapping = new HashMap<>();
+    protected List<String> key = new ArrayList<>();
+
+    protected List<String> value = new ArrayList<>();
+
+    //protected HashMap<String, String> mapping = new HashMap<>();
 
     private Path file;
+
+    private int timeToLive;
 
     /**
      * Instantiates a new lazy dictionary connector.
@@ -36,8 +44,63 @@ public class DictionaryConnector {
      *
      * @throws IOException the io exception
      */
-    public DictionaryConnector(Path file) throws IOException {
-        this.file = file;
+    public DictionaryConnector(Path file, int timeToLive) {
+        try {
+            readFile(file, key, value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.timeToLive = timeToLive;
+    }
+
+    protected void readFile(Path file, List<String> key, List<String> value) throws IOException {
+        Logger.debug("Loading file {}", file);
+        BufferedReader reader = Files.newBufferedReader(file);
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            // a line has as first part the ambiguity counter and as second the entity name with < >
+            String[] split = StringUtils.split(line, " ");
+            value.add(split[0]);
+            String entity = StringUtils.remove(split[1], "<");
+            entity = StringUtils.remove(entity, ">");
+            key.add(entity.toLowerCase());
+        }
+    }
+
+
+
+    /**
+     * Gets the {@link HashMap} containing the Relation between
+     * one entity and multiple surface forms.
+     *
+     * @return the entity map
+     */
+ /*   public HashMap<String, String> getMapping() throws IOException {
+        if (key.isEmpty()) {
+            readFile(file, key, value);
+        }
+
+        return mapping;
+    }
+*/
+
+    public boolean contains(String e) {
+        return key.contains(e);
+    }
+
+    public String get(String e) {
+        int idx = key.indexOf(e);
+        return value.get(idx);
+    }
+
+    public void flush() {
+        this.timeToLive--;
+        if (timeToLive <= 0) {
+            Logger.debug("Flushing Dictionary...");
+            key.clear();
+            value.clear();
+        }
     }
 
     /**
@@ -48,58 +111,11 @@ public class DictionaryConnector {
      *
      * @return the default connector
      */
-    public static DictionaryConnector getDefaultEntityConnector() {
-        try {
-            return new DictionaryConnector(Paths.get("..","data", "ambiguity_e"));
-        } catch (IOException e) {
-            Logger.error("Failed to load internal entity file {} and surface form file {} with {}",
-                    "../data/ambiguity_e", "../data/ambiguity_sf", e);
-        }
-        return null;
+    public static DictionaryConnector getDefaultEntityConnector(int timeToLive) {
+        return new DictionaryConnector(Paths.get("..","data", "ambiguity_e"), timeToLive);
     }
 
-    public static DictionaryConnector getDefaultSFConnector() {
-        try {
-            return new DictionaryConnector(Paths.get("..", "data", "ambiguity_sf"));
-        } catch (IOException e) {
-            Logger.error("Failed to load internal entity file {} and surface form file {} with {}",
-                    "../data/ambiguity_e", "../data/ambiguity_sf", e);
-        }
-        return null;
-    }
-
-
-    private void readAmbiguityFile(Path file, HashMap<String, Integer> map) throws IOException {
-        Logger.debug("Loading file {}", file);
-        BufferedReader reader = Files.newBufferedReader(file);
-        String line;
-
-        while ((line = reader.readLine()) != null) {
-            // a line has as first part the ambiguity counter and as second the entity name with < >
-            String[] split = StringUtils.split(line, " ");
-            Integer ambiguity = Integer.decode(split[0]);
-            String entity = StringUtils.remove(split[1], "<");
-            entity = StringUtils.remove(entity, ">");
-            map.put(entity.toLowerCase(), ambiguity);
-        }
-    }
-
-    /**
-     * Gets the {@link HashMap} containing the Relation between
-     * one entity and multiple surface forms.
-     *
-     * @return the entity map
-     */
-    public HashMap<String, Integer> getMapping() throws IOException {
-        if (mapping.isEmpty()) {
-            readAmbiguityFile(file, mapping);
-        }
-
-        return mapping;
-    }
-
-    public void flush() {
-        Logger.debug("Flushing Dictionary...");
-        mapping.clear();
+    public static DictionaryConnector getDefaultSFConnector(int timeToLive) {
+        return new DictionaryConnector(Paths.get("..", "data", "ambiguity_sf"), timeToLive);
     }
 }

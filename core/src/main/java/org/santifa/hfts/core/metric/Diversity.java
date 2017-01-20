@@ -1,16 +1,13 @@
 package org.santifa.hfts.core.metric;
 
-import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 import org.santifa.hfts.core.utils.DictionaryConnector;
+import org.santifa.hfts.core.utils.NifHelper;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,30 +21,14 @@ public class Diversity implements Metric {
 
     private DictionaryConnector connectorSf;
 
-    private boolean flush = false;
-
-    public Diversity(DictionaryConnector connectorEntity, DictionaryConnector connectorSf, boolean flush) {
+    public Diversity(DictionaryConnector connectorEntity, DictionaryConnector connectorSf) {
         this.connectorEntity = connectorEntity;
         this.connectorSf = connectorSf;
-        this.flush = flush;
     }
 
-    public Diversity(Path entityFile, Path surfaceFormFile, boolean flush) throws IOException {
-        this.connectorEntity = new DictionaryConnector(entityFile);
-        this.connectorSf = new DictionaryConnector(surfaceFormFile);
-
-        this.flush = flush;
-    }
-
-    public static Diversity getDefaultDiversity() {
-        try {
-            return new Diversity(Paths.get("..", "data", "ambiguity_e"),
-                    Paths.get("..", "data", "ambiguity_sf"), true);
-        } catch (IOException e) {
-            Logger.error("Failed to load internal entity file {} and surface form file {} with {}",
-                    "../data/ambiguity_e", "../data/ambiguity_sf", e);
-        }
-        return null;
+    public static Diversity getDefaultDiversity(int timeToLive) {
+            return new Diversity(DictionaryConnector.getDefaultEntityConnector(timeToLive),
+                    DictionaryConnector.getDefaultSFConnector(timeToLive));
     }
 
     @Override
@@ -58,9 +39,8 @@ public class Diversity implements Metric {
         /* collect all possible surface forms and entities */
         for (MetaDocument d : dataset.getDocuments()) {
             for (MetaNamedEntity entity : d.getMarkings(MetaNamedEntity.class)) {
-                String s = getEntityName(entity.getUri()).toLowerCase();
-                String sf = StringUtils.substring(d.getText(), entity.getStartPosition(),
-                        entity.getStartPosition() + entity.getLength()).toLowerCase();
+                String s = NifHelper.getEntityName(entity.getUri()).toLowerCase();
+                String sf = NifHelper.getSurfaceForm(d.getText(), entity);
 
                 /* add a known surface form to known entities */
                 if (knownEntities.containsKey(s)) {
@@ -89,24 +69,23 @@ public class Diversity implements Metric {
         double diversitySurfaceForms = 0.0;
         for (MetaDocument d : dataset.getDocuments()) {
             for (MetaNamedEntity entity : d.getMarkings(MetaNamedEntity.class)) {
-                String s = getEntityName(entity.getUri()).toLowerCase();
-                String sf = StringUtils.substring(d.getText(), entity.getStartPosition(),
-                        entity.getStartPosition() + entity.getLength()).toLowerCase();
+                String s = NifHelper.getEntityName(entity.getUri()).toLowerCase();
+                String sf = NifHelper.getSurfaceForm(d.getText(), entity);
 
-                try {
+         //       try {
                     /* check if we have a known entity in dict and dataset */
-                    if (knownEntities.containsKey(s) && connectorEntity.getMapping().containsKey(s)) {
-                        diversityEntities += knownEntities.get(s).size() / Double.valueOf(connectorEntity.getMapping().get(s));
+                    if (knownEntities.containsKey(s) && connectorEntity.contains(s)) {
+                        diversityEntities += (double) knownEntities.get(s).size() / Double.valueOf(connectorEntity.get(s));
                     }
 
                     /* check if we have a known surface form in dict and dataset */
-                    if (knownSurfaceForms.containsKey(sf) && connectorSf.getMapping().containsKey(sf)) {
-                        diversitySurfaceForms += knownSurfaceForms.get(sf).size() / Double.valueOf(connectorSf.getMapping().get(sf));
+                    if (knownSurfaceForms.containsKey(sf) && connectorSf.contains(sf)) {
+                        diversitySurfaceForms += (double) knownSurfaceForms.get(sf).size() / Double.valueOf(connectorSf.get(sf));
                     }
 
-                } catch (IOException e) {
+             /*   } catch (IOException e) {
                     Logger.error("Failed to load connector. ", e);
-                }
+                }*/
             }
         }
 
@@ -123,10 +102,8 @@ public class Diversity implements Metric {
         Logger.debug("Macro diversity of surface forms for {} is {}", dataset.getName(), dataset.getMetaInformations().get(ExtendedNif.diversitySurfaceForms));
 
         /* flush if requested */
-        if (flush) {
-            connectorSf.flush();
-            connectorEntity.flush();
-        }
+        connectorSf.flush();
+        connectorEntity.flush();
         return dataset;
     }
 
@@ -138,13 +115,5 @@ public class Diversity implements Metric {
     @Override
     public NifDataset calculateMacro(NifDataset dataset) {
         return calculate(dataset);
-    }
-
-    private String getEntityName(String s) {
-        if (StringUtils.contains(s, "sentence-")) {
-            return StringUtils.substringAfterLast(s, "sentence-");
-        } else {
-            return StringUtils.substringAfterLast(s, "/");
-        }
     }
 }

@@ -1,16 +1,12 @@
 package org.santifa.hfts.core.metric;
 
-import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 import org.santifa.hfts.core.utils.DictionaryConnector;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import org.santifa.hfts.core.utils.NifHelper;
 
 /**
  * Created by ratzeputz on 16.01.17.
@@ -19,25 +15,12 @@ public class MaxRecall implements Metric {
 
     private DictionaryConnector connector;
 
-    private boolean flush = false;
-
-    public MaxRecall(DictionaryConnector connector, boolean flush) {
+    public MaxRecall(DictionaryConnector connector) {
         this.connector = connector;
-        this.flush = flush;
     }
 
-    public MaxRecall(Path file, boolean flush) throws IOException {
-        this.connector = new DictionaryConnector(file);
-        this.flush = flush;
-    }
-
-    public static MaxRecall getDefaultMaxRecall() {
-        try {
-            return new MaxRecall(Paths.get("..", "data", "ambiguity_sf"), true);
-        } catch (IOException e) {
-            Logger.error("Failed to load internal surface form file {} with {}", "../data/ambiguity_sf", e);
-        }
-        return null;
+    public static MaxRecall getDefaultMaxRecall(int timeToLive) {
+            return new MaxRecall(DictionaryConnector.getDefaultSFConnector(timeToLive));
     }
 
     @Override
@@ -46,9 +29,7 @@ public class MaxRecall implements Metric {
         calculateMacro(dataset);
         calculateMicro(dataset);
 
-        if (flush) {
-            connector.flush();
-        }
+        connector.flush();
         return dataset;
     }
 
@@ -58,17 +39,16 @@ public class MaxRecall implements Metric {
             int inDict = 0;
 
             for (MetaNamedEntity entity : d.getMarkings(MetaNamedEntity.class)) {
-                String sf = StringUtils.substring(d.getText(), entity.getStartPosition(),
-                        entity.getStartPosition() + entity.getLength()).toLowerCase();
+                String sf = NifHelper.getSurfaceForm(d.getText(), entity);
 
-                try {
+            //    try {
                     /* only approximate and not check every sf to entity relation */
-                    if (connector.getMapping().containsKey(sf)) {
+                    if (connector.contains(sf)) {
                         inDict++;
                     }
-                } catch (IOException e) {
+           /*     } catch (IOException e) {
                     Logger.error("Failed to load connector");
-                }
+                }*/
             }
 
             double maxRecall = 0.0;
@@ -87,17 +67,16 @@ public class MaxRecall implements Metric {
 
         for (MetaDocument d : dataset.getDocuments()) {
             for (MetaNamedEntity entity : d.getMarkings(MetaNamedEntity.class)) {
-                String sf = StringUtils.substring(d.getText(), entity.getStartPosition(),
-                        entity.getStartPosition() + entity.getLength()).toLowerCase();
+                String sf = NifHelper.getSurfaceForm(d.getText(), entity);
 
-                try {
+             //   try {
                     /* only approximate and not check every sf to entity relation */
-                    if (connector.getMapping().containsKey(sf)) {
+                    if (connector.contains(sf)) {
                         inDict++;
                     }
-                } catch (IOException e) {
+           /*     } catch (IOException e) {
                     Logger.error("Failed to load connector");
-                }
+                }*/
             }
         }
 

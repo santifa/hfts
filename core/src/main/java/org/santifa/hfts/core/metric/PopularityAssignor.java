@@ -5,11 +5,9 @@ import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
+import org.santifa.hfts.core.utils.DictionaryConnector;
 import org.santifa.hfts.core.utils.PopularityConnector;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -17,24 +15,13 @@ import java.util.List;
  */
 public class PopularityAssignor implements Metric {
 
-    private Path file;
-
     private Property property;
 
-    private PopularityConnector connector;
+    private DictionaryConnector connector;
 
-    public PopularityAssignor(Path file, Property property) {
-        this.file = file;
-        this.connector = new PopularityConnector(file);
+    public PopularityAssignor(DictionaryConnector connector, Property property) {
+        this.connector = connector;
         this.property = property;
-    }
-
-    public static PopularityAssignor getPageRankAssignor() {
-        return new PopularityAssignor(Paths.get("../data/pagerank_scores_en_2015.ttl"), ExtendedNif.pagerank);
-    }
-
-    public static PopularityAssignor getHitsAssignor() {
-        return new PopularityAssignor(Paths.get("../data/hits_scores_en_2015.ttl"), ExtendedNif.hits);
     }
 
     @Override
@@ -42,16 +29,16 @@ public class PopularityAssignor implements Metric {
         List<MetaNamedEntity> meanings = dataset.getMarkings();
         Logger.debug("Assign popularity {} to dataset {}", property, dataset.getName());
 
-        try {
+  //      try {
             for (MetaNamedEntity m : meanings) {
-                if (connector.getMapping().containsKey(m.getUri())) {
-                    m.getMetaInformations().put(property, connector.getMapping().get((m.getUri())));
+                if (connector.contains(m.getUri())) {
+                    m.getMetaInformations().put(property, connector.get((m.getUri())));
                 }
             }
-        } catch (IOException e) {
-            Logger.error("Popularity file {} not loaded.", file);
+/*        } catch (IOException e) {
+            Logger.error("Failed to access dict. ", e);
         }
-
+*/
         connector.flush();
         return dataset;
     }
@@ -64,5 +51,14 @@ public class PopularityAssignor implements Metric {
     @Override
     public NifDataset calculateMacro(NifDataset dataset) {
         return calculate(dataset);
+    }
+
+
+    public static PopularityAssignor getDefaultPageRank(int timeToLive) {
+        return new PopularityAssignor(PopularityConnector.getPageRankConnector(timeToLive), ExtendedNif.pagerank);
+    }
+
+    public static PopularityAssignor getDefaultHits(int timeToLive) {
+        return new PopularityAssignor(PopularityConnector.getHitsConnector(timeToLive), ExtendedNif.hits);
     }
 }

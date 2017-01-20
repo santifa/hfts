@@ -71,12 +71,12 @@ public class HftsApiTest {
     @Test
     public void testCalculation() {
         NifDataset dataset = NifDatasetTest.getTestDataset();
-        DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector();
-        DictionaryConnector connectorSf = DictionaryConnector.getDefaultSFConnector();
+        DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector(2);
+        DictionaryConnector connectorSf = DictionaryConnector.getDefaultSFConnector(2);
         HftsApi api = new HftsApi().withDataset(dataset)
                 .withMetric(new NotAnnotated(), new Density(),
-                            new Ambiguity(connectorEntity, connectorSf, false),
-                            new Diversity(connectorEntity, connectorSf, true));
+                            new Ambiguity(connectorEntity, connectorSf),
+                            new Diversity(connectorEntity, connectorSf));
         List<NifDataset> results = api.run();
 
         Assert.assertThat(results.size(), is(1));
@@ -94,7 +94,7 @@ public class HftsApiTest {
     public void runHftsApiTyper() {
         NifDataset dataset = NifDatasetTest.getTestDataset();
         HftsApi api = new HftsApi().withDataset(dataset)
-                .withMetric(CategoryAssignor.getDefaultAssignor(), PopularityAssignor.getPageRankAssignor());
+                .withMetric(CategoryAssignor.getDefaultAssignor(), PopularityAssignor.getDefaultPageRank(1));
         List<NifDataset> results = api.run();
 
         for (NifDataset ds : results) {
@@ -107,15 +107,15 @@ public class HftsApiTest {
     public void testHftsApi() throws IOException, URISyntaxException {
         Path file = Paths.get(getClass().getResource("/kore50-nif-short.ttl").toURI());
         //NifDataset dataset = NifDatasetTest.getTestDataset();
-        DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector();
-        DictionaryConnector connectorSf = DictionaryConnector.getDefaultSFConnector();
+        DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector(2);
+        DictionaryConnector connectorSf = DictionaryConnector.getDefaultSFConnector(2);
         HftsApi api = new HftsApi().withDataset(file.toFile().getName(), file)
                 .withMetric(new NotAnnotated(), new Density(),
-                        new Ambiguity(connectorEntity, connectorSf, false),
-                        new Diversity(connectorEntity, connectorSf, true),
+                        new Ambiguity(connectorEntity, connectorSf),
+                        new Diversity(connectorEntity, connectorSf),
                         CategoryAssignor.getDefaultAssignor(),
-                        PopularityAssignor.getPageRankAssignor(),
-                        PopularityAssignor.getHitsAssignor()
+                        PopularityAssignor.getDefaultPageRank(1),
+                        PopularityAssignor.getDefaultHits(1)
                 );
         List<NifDataset> results = api.run();
 
@@ -130,19 +130,19 @@ public class HftsApiTest {
         Path file = Paths.get("../data/wes2015-dataset-nif.ttl");
         Path file2 = Paths.get("../data/N3/RSS-500.ttl");
 
-        DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector();
-        DictionaryConnector connectorSf = DictionaryConnector.getDefaultSFConnector();
+        DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector(2);
+        DictionaryConnector connectorSf = DictionaryConnector.getDefaultSFConnector(3);
         String filename = StringUtils.substringBeforeLast(file.toFile().getName(), ".");
         String filename2 = StringUtils.substringBeforeLast(file2.toFile().getName(), ".");
 
         HftsApi api = new HftsApi().withDataset(filename, file)//.withDataset(filename2, file2)
                 .withMetric(new NotAnnotated(), new Density(),
-                        new Ambiguity(connectorEntity, connectorSf, false),
-                        new Diversity(connectorEntity, connectorSf, true),
-                        new MaxRecall(connectorSf, true),
+                        new Ambiguity(connectorEntity, connectorSf),
+                        new Diversity(connectorEntity, connectorSf),
+                        new MaxRecall(connectorSf),
                         CategoryAssignor.getDefaultAssignor(),
-                        PopularityAssignor.getPageRankAssignor(),
-                        PopularityAssignor.getHitsAssignor()
+                        PopularityAssignor.getDefaultPageRank(1),
+                        PopularityAssignor.getDefaultHits(1)
                 );
         List<NifDataset> results = api.run();
 
