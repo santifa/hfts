@@ -29,7 +29,12 @@ public class PopularityConnector {
         this.p = mappingFile;
     }
 
-    private void readPopularityFile(Path file) throws IOException {
+    public void flush() {
+        Logger.debug("Flushing popularity dictionary...");
+        mapping.clear();
+    }
+
+    public void readFile(Path file) throws IOException {
         Logger.debug("Loading file {}", file);
         BufferedReader reader = Files.newBufferedReader(file);
         String s;
@@ -41,23 +46,11 @@ public class PopularityConnector {
         }
     }
 
-    /**
-     * Gets the {@link HashMap} containing the Relation between
-     * one entity and multiple surface forms.
-     *
-     * @return the entity map
-     */
-    public HashMap<String, String> getMappping() throws IOException {
+    public HashMap<String, String> getMapping() throws IOException {
         if (!loaded) {
-            readPopularityFile(p);
+            readFile(p);
             loaded = true;
         }
         return mapping;
     }
-
-    public void flush() {
-        Logger.debug("Flushing popularity dictionary...");
-        mapping.clear();
-    }
-
 }

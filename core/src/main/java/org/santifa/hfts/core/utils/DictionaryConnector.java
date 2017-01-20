@@ -25,25 +25,19 @@ import java.util.HashMap;
  */
 public class DictionaryConnector {
 
-    private HashMap<String, Integer> entityMappping = new HashMap<>();
+    private HashMap<String, Integer> mapping = new HashMap<>();
 
-    private HashMap<String, Integer> sfMapping = new HashMap<>();
-
-    private Path entityFile;
-    private Path surfaceFormFile;
+    private Path file;
 
     /**
      * Instantiates a new lazy dictionary connector.
      * Provide two files which first column is a number
      * and the second one containing a word surrounded by '<>'.
      *
-     * @param entityFile      the entity mapping file
-     * @param surfaceFormFile the surface form mapping file
      * @throws IOException the io exception
      */
-    public DictionaryConnector(Path entityFile, Path surfaceFormFile) throws IOException {
-        this.entityFile = entityFile;
-        this.surfaceFormFile = surfaceFormFile;
+    public DictionaryConnector(Path file) throws IOException {
+        this.file = file;
     }
 
     /**
@@ -54,15 +48,26 @@ public class DictionaryConnector {
      *
      * @return the default connector
      */
-    public static DictionaryConnector getDefaultConnector() {
+    public static DictionaryConnector getDefaultEntityConnector() {
         try {
-            return new DictionaryConnector(Paths.get("..","data", "ambiguity_e"), Paths.get("..", "data", "ambiguity_sf"));
+            return new DictionaryConnector(Paths.get("..","data", "ambiguity_e"));
         } catch (IOException e) {
             Logger.error("Failed to load internal entity file {} and surface form file {} with {}",
                     "../data/ambiguity_e", "../data/ambiguity_sf", e);
         }
         return null;
     }
+
+    public static DictionaryConnector getDefaultSFConnector() {
+        try {
+            return new DictionaryConnector(Paths.get("..", "data", "ambiguity_sf"));
+        } catch (IOException e) {
+            Logger.error("Failed to load internal entity file {} and surface form file {} with {}",
+                    "../data/ambiguity_e", "../data/ambiguity_sf", e);
+        }
+        return null;
+    }
+
 
     private void readAmbiguityFile(Path file, HashMap<String, Integer> map) throws IOException {
         Logger.debug("Loading file {}", file);
@@ -85,30 +90,16 @@ public class DictionaryConnector {
      *
      * @return the entity map
      */
-    public HashMap<String, Integer> getEntityMappping() throws IOException {
-        if (entityMappping.isEmpty()) {
-            readAmbiguityFile(entityFile, entityMappping);
+    public HashMap<String, Integer> getMapping() throws IOException {
+        if (mapping.isEmpty()) {
+            readAmbiguityFile(file, mapping);
         }
 
-        return entityMappping;
-    }
-
-    /**
-     * Gets {@link HashMap} containing the relation between one
-     * surface form and multiple entities.
-     *
-     * @return the surface form map
-     */
-    public HashMap<String, Integer> getSfMapping() throws IOException {
-        if (sfMapping.isEmpty()) {
-            readAmbiguityFile(surfaceFormFile, sfMapping);
-        }
-        return sfMapping;
+        return mapping;
     }
 
     public void flush() {
         Logger.debug("Flushing Dictionary...");
-        entityMappping.clear();
-        sfMapping.clear();
+        mapping.clear();
     }
 }

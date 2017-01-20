@@ -18,17 +18,21 @@ import java.nio.file.Paths;
 public class Ambiguity implements Metric {
 
 
-    private DictionaryConnector connector;
+    private DictionaryConnector connectorEntity;
+
+    private DictionaryConnector connectorSf;
 
     private boolean flush = false;
 
-    public Ambiguity(DictionaryConnector connector, boolean flush) {
-        this.connector = connector;
+    public Ambiguity(DictionaryConnector connectorEntity, DictionaryConnector connectorSf, boolean flush) {
+        this.connectorSf = connectorSf;
+        this.connectorEntity = connectorEntity;
         this.flush = flush;
     }
 
     public Ambiguity(Path entityFile, Path surfaceFormFile, boolean flush) throws IOException {
-        this.connector = new DictionaryConnector(entityFile, surfaceFormFile);
+        this.connectorEntity = new DictionaryConnector(entityFile);
+        this.connectorSf = new DictionaryConnector(surfaceFormFile);
         this.flush = flush;
     }
 
@@ -48,7 +52,8 @@ public class Ambiguity implements Metric {
         dataset = calculateMicro(dataset);
         dataset = calculateMacro(dataset);
         if (flush) {
-            connector.flush();
+            connectorEntity.flush();
+            connectorSf.flush();
         }
        return dataset;
     }
@@ -65,18 +70,18 @@ public class Ambiguity implements Metric {
                 sf = StringUtils.replace(sf, "_", " ").toLowerCase();
 
                 try {
-                    if (connector.getEntityMappping().containsKey(e)) {
-                        entity.getMetaInformations().put(ExtendedNif.ambiguityEntity, String.valueOf(connector.getEntityMappping().get(e)));
-                        entities += connector.getEntityMappping().get(e);
+                    if (connectorEntity.getMapping().containsKey(e)) {
+                        entity.getMetaInformations().put(ExtendedNif.ambiguityEntity, String.valueOf(connectorEntity.getMapping().get(e)));
+                        entities += connectorEntity.getMapping().get(e);
                     } else {
                         /* set to at least one if we have no information */
                         entity.getMetaInformations().put(ExtendedNif.ambiguityEntity, "1");
                         entities++;
                     }
 
-                    if (connector.getSfMapping().containsKey(sf)) {
-                        entity.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForm, String.valueOf(connector.getSfMapping().get(sf)));
-                        surfaceForms += connector.getSfMapping().get(sf);
+                    if (connectorSf.getMapping().containsKey(sf)) {
+                        entity.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForm, String.valueOf(connectorSf.getMapping().get(sf)));
+                        surfaceForms += connectorSf.getMapping().get(sf);
                     } else {
                         entity.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForm, "1");
                         surfaceForms++;

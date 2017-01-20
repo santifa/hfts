@@ -44,8 +44,8 @@ public class PopularityAssignor implements Metric {
 
         try {
             for (MetaNamedEntity m : meanings) {
-                if (connector.getMappping().containsKey(m.getUri())) {
-                    m.getMetaInformations().put(property, connector.getMappping().get((m.getUri())));
+                if (connector.getMapping().containsKey(m.getUri())) {
+                    m.getMetaInformations().put(property, connector.getMapping().get((m.getUri())));
                 }
             }
         } catch (IOException e) {

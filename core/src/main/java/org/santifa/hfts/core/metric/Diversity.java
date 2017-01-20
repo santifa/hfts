@@ -20,17 +20,22 @@ import java.util.List;
  */
 public class Diversity implements Metric {
 
-    private DictionaryConnector connector;
+    private DictionaryConnector connectorEntity;
+
+    private DictionaryConnector connectorSf;
 
     private boolean flush = false;
 
-    public Diversity(DictionaryConnector connector, boolean flush) {
-        this.connector = connector;
+    public Diversity(DictionaryConnector connectorEntity, DictionaryConnector connectorSf, boolean flush) {
+        this.connectorEntity = connectorEntity;
+        this.connectorSf = connectorSf;
         this.flush = flush;
     }
 
     public Diversity(Path entityFile, Path surfaceFormFile, boolean flush) throws IOException {
-        this.connector = new DictionaryConnector(entityFile, surfaceFormFile);
+        this.connectorEntity = new DictionaryConnector(entityFile);
+        this.connectorSf = new DictionaryConnector(surfaceFormFile);
+
         this.flush = flush;
     }
 
@@ -90,13 +95,13 @@ public class Diversity implements Metric {
 
                 try {
                     /* check if we have a known entity in dict and dataset */
-                    if (knownEntities.containsKey(s) && connector.getEntityMappping().containsKey(s)) {
-                        diversityEntities += knownEntities.get(s).size() / Double.valueOf(connector.getEntityMappping().get(s));
+                    if (knownEntities.containsKey(s) && connectorEntity.getMapping().containsKey(s)) {
+                        diversityEntities += knownEntities.get(s).size() / Double.valueOf(connectorEntity.getMapping().get(s));
                     }
 
                     /* check if we have a known surface form in dict and dataset */
-                    if (knownSurfaceForms.containsKey(sf) && connector.getSfMapping().containsKey(sf)) {
-                        diversitySurfaceForms += knownSurfaceForms.get(sf).size() / Double.valueOf(connector.getSfMapping().get(sf));
+                    if (knownSurfaceForms.containsKey(sf) && connectorSf.getMapping().containsKey(sf)) {
+                        diversitySurfaceForms += knownSurfaceForms.get(sf).size() / Double.valueOf(connectorSf.getMapping().get(sf));
                     }
 
                 } catch (IOException e) {
@@ -119,7 +124,8 @@ public class Diversity implements Metric {
 
         /* flush if requested */
         if (flush) {
-            connector.flush();
+            connectorSf.flush();
+            connectorEntity.flush();
         }
         return dataset;
     }

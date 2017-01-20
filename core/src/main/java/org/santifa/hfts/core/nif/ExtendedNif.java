@@ -37,6 +37,11 @@ public class ExtendedNif {
     public static final Property macroAmbiguityEntities = ResourceFactory.createProperty(NIF.getURI(), "macroAmbiguityEntities");
     public static final Property macroAmbiguitySurfaceForms = ResourceFactory.createProperty(NIF.getURI(), "macroAmbiguitySurfaceForms");
 
+    /* document and dataset level */
+    public static final Property maxRecall = ResourceFactory.createProperty(NIF.getURI(), "maxRecall");
+    public static final Property macroMaxRecall = ResourceFactory.createProperty(NIF.getURI(), "macroMaxRecall");
+    public static final Property microMaxRecall = ResourceFactory.createProperty(NIF.getURI(), "microMaxRecall");
+
     public static Literal getTypedLiteral(Property p, String value) {
         if (p.getURI().equals(ambiguityEntity.getURI()) || p.getURI().equals(ambiguitySurfaceForm.getURI())) {
             return ResourceFactory.createTypedLiteral(value, XSDDatatype.XSDinteger);

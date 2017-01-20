@@ -71,10 +71,12 @@ public class HftsApiTest {
     @Test
     public void testCalculation() {
         NifDataset dataset = NifDatasetTest.getTestDataset();
-        DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
+        DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector();
+        DictionaryConnector connectorSf = DictionaryConnector.getDefaultSFConnector();
         HftsApi api = new HftsApi().withDataset(dataset)
                 .withMetric(new NotAnnotated(), new Density(),
-                            new Ambiguity(connector, false), new Diversity(connector, true));
+                            new Ambiguity(connectorEntity, connectorSf, false),
+                            new Diversity(connectorEntity, connectorSf, true));
         List<NifDataset> results = api.run();
 
         Assert.assertThat(results.size(), is(1));
@@ -105,10 +107,12 @@ public class HftsApiTest {
     public void testHftsApi() throws IOException, URISyntaxException {
         Path file = Paths.get(getClass().getResource("/kore50-nif-short.ttl").toURI());
         //NifDataset dataset = NifDatasetTest.getTestDataset();
-        DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
+        DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector();
+        DictionaryConnector connectorSf = DictionaryConnector.getDefaultSFConnector();
         HftsApi api = new HftsApi().withDataset(file.toFile().getName(), file)
                 .withMetric(new NotAnnotated(), new Density(),
-                        new Ambiguity(connector, false), new Diversity(connector, true),
+                        new Ambiguity(connectorEntity, connectorSf, false),
+                        new Diversity(connectorEntity, connectorSf, true),
                         CategoryAssignor.getDefaultAssignor(),
                         PopularityAssignor.getPageRankAssignor(),
                         PopularityAssignor.getHitsAssignor()
@@ -126,13 +130,16 @@ public class HftsApiTest {
         Path file = Paths.get("../data/wes2015-dataset-nif.ttl");
         Path file2 = Paths.get("../data/N3/RSS-500.ttl");
 
-        DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
+        DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector();
+        DictionaryConnector connectorSf = DictionaryConnector.getDefaultSFConnector();
         String filename = StringUtils.substringBeforeLast(file.toFile().getName(), ".");
         String filename2 = StringUtils.substringBeforeLast(file2.toFile().getName(), ".");
 
         HftsApi api = new HftsApi().withDataset(filename, file)//.withDataset(filename2, file2)
                 .withMetric(new NotAnnotated(), new Density(),
-                        new Ambiguity(connector, false), new Diversity(connector, true),
+                        new Ambiguity(connectorEntity, connectorSf, false),
+                        new Diversity(connectorEntity, connectorSf, true),
+                        new MaxRecall(connectorSf, true),
                         CategoryAssignor.getDefaultAssignor(),
                         PopularityAssignor.getPageRankAssignor(),
                         PopularityAssignor.getHitsAssignor()
