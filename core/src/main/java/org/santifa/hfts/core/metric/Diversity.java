@@ -69,23 +69,19 @@ public class Diversity implements Metric {
         double diversitySurfaceForms = 0.0;
         for (MetaDocument d : dataset.getDocuments()) {
             for (MetaNamedEntity entity : d.getMarkings(MetaNamedEntity.class)) {
+                int idx;
                 String s = NifHelper.getEntityName(entity.getUri()).toLowerCase();
                 String sf = NifHelper.getSurfaceForm(d.getText(), entity);
 
-         //       try {
-                    /* check if we have a known entity in dict and dataset */
-                    if (knownEntities.containsKey(s) && connectorEntity.contains(s)) {
-                        diversityEntities += (double) knownEntities.get(s).size() / Double.valueOf(connectorEntity.get(s));
-                    }
+                /* check if we have a known entity in dict and dataset */
+                if (knownEntities.containsKey(s) && ((idx = connectorEntity.contains(s)) != -1)) {
+                    diversityEntities += (double) knownEntities.get(s).size() / Double.valueOf(connectorEntity.get(idx));
+                }
 
-                    /* check if we have a known surface form in dict and dataset */
-                    if (knownSurfaceForms.containsKey(sf) && connectorSf.contains(sf)) {
-                        diversitySurfaceForms += (double) knownSurfaceForms.get(sf).size() / Double.valueOf(connectorSf.get(sf));
-                    }
-
-             /*   } catch (IOException e) {
-                    Logger.error("Failed to load connector. ", e);
-                }*/
+                /* check if we have a known surface form in dict and dataset */
+                if (knownSurfaceForms.containsKey(sf) && ((idx = connectorSf.contains(sf)) != -1)) {
+                    diversitySurfaceForms += (double) knownSurfaceForms.get(sf).size() / Double.valueOf(connectorSf.get(idx));
+                }
             }
         }
 

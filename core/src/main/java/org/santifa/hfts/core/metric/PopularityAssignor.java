@@ -29,16 +29,13 @@ public class PopularityAssignor implements Metric {
         List<MetaNamedEntity> meanings = dataset.getMarkings();
         Logger.debug("Assign popularity {} to dataset {}", property, dataset.getName());
 
-  //      try {
-            for (MetaNamedEntity m : meanings) {
-                if (connector.contains(m.getUri())) {
-                    m.getMetaInformations().put(property, connector.get((m.getUri())));
+        for (MetaNamedEntity m : meanings) {
+                int idx;
+                if ((idx = connector.contains(m.getUri())) != -1) {
+                    m.getMetaInformations().put(property, connector.get(idx));
                 }
             }
-/*        } catch (IOException e) {
-            Logger.error("Failed to access dict. ", e);
-        }
-*/
+
         connector.flush();
         return dataset;
     }

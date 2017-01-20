@@ -127,8 +127,8 @@ public class HftsApiTest {
 
     @Test
     public void runHftsApi() throws IOException, URISyntaxException {
-        Path file = Paths.get("../data/wes2015-dataset-nif.ttl");
-        Path file2 = Paths.get("../data/N3/RSS-500.ttl");
+        Path file2 = Paths.get("../data/wes2015-dataset-nif.ttl");
+        Path file = Paths.get("../data/kore50-nif.ttl");
 
         DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector(2);
         DictionaryConnector connectorSf = DictionaryConnector.getDefaultSFConnector(3);
@@ -137,10 +137,10 @@ public class HftsApiTest {
 
         HftsApi api = new HftsApi().withDataset(filename, file)//.withDataset(filename2, file2)
                 .withMetric(new NotAnnotated(), new Density(),
+                        CategoryAssignor.getDefaultAssignor(),
+                        new MaxRecall(connectorSf),
                         new Ambiguity(connectorEntity, connectorSf),
                         new Diversity(connectorEntity, connectorSf),
-                        new MaxRecall(connectorSf),
-                        CategoryAssignor.getDefaultAssignor(),
                         PopularityAssignor.getDefaultPageRank(1),
                         PopularityAssignor.getDefaultHits(1)
                 );

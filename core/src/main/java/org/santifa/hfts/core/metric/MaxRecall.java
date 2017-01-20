@@ -41,14 +41,10 @@ public class MaxRecall implements Metric {
             for (MetaNamedEntity entity : d.getMarkings(MetaNamedEntity.class)) {
                 String sf = NifHelper.getSurfaceForm(d.getText(), entity);
 
-            //    try {
-                    /* only approximate and not check every sf to entity relation */
-                    if (connector.contains(sf)) {
-                        inDict++;
-                    }
-           /*     } catch (IOException e) {
-                    Logger.error("Failed to load connector");
-                }*/
+                /* only approximate and not check every sf to entity relation */
+                if (connector.contains(sf) != -1) {
+                    inDict++;
+                }
             }
 
             double maxRecall = 0.0;
@@ -69,14 +65,10 @@ public class MaxRecall implements Metric {
             for (MetaNamedEntity entity : d.getMarkings(MetaNamedEntity.class)) {
                 String sf = NifHelper.getSurfaceForm(d.getText(), entity);
 
-             //   try {
-                    /* only approximate and not check every sf to entity relation */
-                    if (connector.contains(sf)) {
-                        inDict++;
-                    }
-           /*     } catch (IOException e) {
-                    Logger.error("Failed to load connector");
-                }*/
+                /* only approximate and not check every sf to entity relation */
+                if (connector.contains(sf) != -1) {
+                    inDict++;
+                }
             }
         }
 

@@ -41,36 +41,34 @@ public class Ambiguity implements Metric {
     }
 
     private NifDataset calculateDocumentLevel(NifDataset dataset) {
+
         for (MetaDocument d : dataset.getDocuments()) {
             int entities = 0;
             int surfaceForms = 0;
 
             for (MetaNamedEntity entity : d.getMarkings(MetaNamedEntity.class)) {
+                int idx;
                 String e = NifHelper.getEntityName(entity.getUri());
                 String sf = NifHelper.getSurfaceForm(d.getText(), entity);
                 sf = StringUtils.replace(sf, "_", " ").toLowerCase();
 
-             //   try {
-                    if (connectorEntity.contains(e)) {
-                        entity.getMetaInformations().put(ExtendedNif.ambiguityEntity, String.valueOf(connectorEntity.get(e)));
-                        entities += Integer.decode(connectorEntity.get(e));
-                    } else {
-                        /* set to at least one if we have no information */
-                        entity.getMetaInformations().put(ExtendedNif.ambiguityEntity, "1");
-                        entities++;
-                    }
-
-                    if (connectorSf.contains(sf)) {
-                        entity.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForm, String.valueOf(connectorSf.get(sf)));
-                        surfaceForms += Integer.decode(connectorSf.get(sf));
-                    } else {
-                        entity.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForm, "1");
-                        surfaceForms++;
-                    }
-           /*     } catch (IOException io) {
-                    Logger.error("Failed to load connector. ", e);
+                if ((idx = connectorEntity.contains(e)) != -1) {
+                    entity.getMetaInformations().put(ExtendedNif.ambiguityEntity, String.valueOf(connectorEntity.get(idx)));
+                    entities += Integer.decode(connectorEntity.get(idx));
+                } else {
+                    /* set to at least one if we have no information */
+                    entity.getMetaInformations().put(ExtendedNif.ambiguityEntity, "1");
+                    entities++;
                 }
-            */}
+
+                if ((idx = connectorSf.contains(sf)) != -1) {
+                    entity.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForm, String.valueOf(connectorSf.get(idx)));
+                    surfaceForms += Integer.decode(connectorSf.get(idx));
+                } else {
+                    entity.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForm, "1");
+                    surfaceForms++;
+                }
+          }
 
             double resultEntities = 0.0;
             double resultSurfaceForms = 0.0;
@@ -100,18 +98,19 @@ public class Ambiguity implements Metric {
         }
 
 
-        double resultMicroEntities = 0.0;
-        double resultMicroSurfaceForms = 0.0;
         if (!dataset.getMarkings().isEmpty()) {
-            resultMicroEntities = entities / (double) dataset.getMarkings().size();
-            resultMicroSurfaceForms = surfaceForms / (double) dataset.getMarkings().size();
+            entities = entities / (double) dataset.getMarkings().size();
+            surfaceForms = surfaceForms / (double) dataset.getMarkings().size();
+        } else {
+            entities = 0.0;
+            surfaceForms = 0.0;
         }
 
-        dataset.getMetaInformations().put(ExtendedNif.microAmbiguityEntities, String.valueOf(resultMicroEntities));
-        dataset.getMetaInformations().put(ExtendedNif.microAmbiguitySurfaceForms, String.valueOf(resultMicroSurfaceForms));
+        dataset.getMetaInformations().put(ExtendedNif.microAmbiguityEntities, String.valueOf(entities));
+        dataset.getMetaInformations().put(ExtendedNif.microAmbiguitySurfaceForms, String.valueOf(surfaceForms));
 
-        Logger.debug("Micro ambiguity of entities for {} is {}", dataset.getName(), resultMicroEntities);
-        Logger.debug("Micro ambiguity of surface forms for {} is {}", dataset.getName(), resultMicroSurfaceForms);
+        Logger.debug("Micro ambiguity of entities for {} is {}", dataset.getName(), entities);
+        Logger.debug("Micro ambiguity of surface forms for {} is {}", dataset.getName(), surfaceForms);
         return dataset;
     }
 

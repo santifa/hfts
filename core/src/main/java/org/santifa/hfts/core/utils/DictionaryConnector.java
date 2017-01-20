@@ -27,11 +27,7 @@ import java.util.List;
  */
 public class DictionaryConnector {
 
-    protected List<String> key = new ArrayList<>();
-
-    protected List<String> value = new ArrayList<>();
-
-    //protected HashMap<String, String> mapping = new HashMap<>();
+    protected List<Entry> key = new ArrayList<>(500000);
 
     private Path file;
 
@@ -45,15 +41,11 @@ public class DictionaryConnector {
      * @throws IOException the io exception
      */
     public DictionaryConnector(Path file, int timeToLive) {
-        try {
-            readFile(file, key, value);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.file = file;
         this.timeToLive = timeToLive;
     }
 
-    protected void readFile(Path file, List<String> key, List<String> value) throws IOException {
+    protected void readFile(Path file, List<Entry> key) throws IOException {
         Logger.debug("Loading file {}", file);
         BufferedReader reader = Files.newBufferedReader(file);
         String line;
@@ -61,37 +53,32 @@ public class DictionaryConnector {
         while ((line = reader.readLine()) != null) {
             // a line has as first part the ambiguity counter and as second the entity name with < >
             String[] split = StringUtils.split(line, " ");
-            value.add(split[0]);
+            //value.add(split[0]);
             String entity = StringUtils.remove(split[1], "<");
             entity = StringUtils.remove(entity, ">");
-            key.add(entity.toLowerCase());
+            key.add(new Entry(hash(entity.toLowerCase()), split[0]));
         }
     }
 
-
-
-    /**
-     * Gets the {@link HashMap} containing the Relation between
-     * one entity and multiple surface forms.
-     *
-     * @return the entity map
-     */
- /*   public HashMap<String, String> getMapping() throws IOException {
+    public void present() {
         if (key.isEmpty()) {
-            readFile(file, key, value);
+            try {
+                readFile(file, key);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
-        return mapping;
-    }
-*/
-
-    public boolean contains(String e) {
-        return key.contains(e);
     }
 
-    public String get(String e) {
-        int idx = key.indexOf(e);
-        return value.get(idx);
+    public int contains(String e) {
+        present();
+        return key.indexOf(new Entry(hash(e), null));
+    }
+
+    public String get(int idx) {
+        present();
+        //int idx = key.indexOf(new Entry(hash(e), null));
+        return key.get(idx).value;
     }
 
     public void flush() {
@@ -99,7 +86,7 @@ public class DictionaryConnector {
         if (timeToLive <= 0) {
             Logger.debug("Flushing Dictionary...");
             key.clear();
-            value.clear();
+            //value.clear();
         }
     }
 
@@ -117,5 +104,36 @@ public class DictionaryConnector {
 
     public static DictionaryConnector getDefaultSFConnector(int timeToLive) {
         return new DictionaryConnector(Paths.get("..", "data", "ambiguity_sf"), timeToLive);
+    }
+
+    protected int hash(Object key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+    }
+
+    protected class Entry {
+
+        private int hash;
+
+        private String value;
+
+        public Entry(int hash, String value) {
+            this.hash = hash;
+            this.value = value;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Entry entry = (Entry) o;
+            return hash == entry.hash;
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
     }
 }

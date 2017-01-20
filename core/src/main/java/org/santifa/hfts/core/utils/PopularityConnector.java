@@ -30,7 +30,7 @@ public class PopularityConnector extends DictionaryConnector {
     }
 
     @Override
-    protected void readFile(Path file, List<String> key, List<String> value) throws IOException {
+    protected void readFile(Path file, List<Entry> key) throws IOException {
         Logger.debug("Loading file {}", file);
         BufferedReader reader = Files.newBufferedReader(file);
         String s;
@@ -39,8 +39,8 @@ public class PopularityConnector extends DictionaryConnector {
             String uri = StringUtils.substringBetween(s, "<", "> ");
             String popularity = StringUtils.substringBetween(s, "> \"", "\"^^");
             //map.put(uri, popularity);
-            key.add(uri);
-            value.add(popularity);
+            key.add(new Entry(hash(uri), popularity));
+            //value.add(popularity);
         }
     }
 

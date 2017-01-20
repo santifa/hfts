@@ -18,10 +18,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * A {@link NifDataset} is an extension to the common
@@ -71,7 +68,7 @@ public class NifDataset {
 
     public void reload() {
         this.getMarkings().clear();
-        referenceMarkings(this.getDocuments());
+        this.markings = referenceMarkings(documents);
     }
 
     private List<MetaNamedEntity> referenceMarkings(List<MetaDocument> docs) {
@@ -109,7 +106,7 @@ public class NifDataset {
      * @return the markings
      */
     public List<MetaNamedEntity> getMarkings() {
-        return referenceMarkings(documents);
+        return markings;
     }
 
     public HashMap<Property, String> getMetaInformations() {
