@@ -6,7 +6,7 @@ import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 import org.santifa.hfts.core.utils.DictionaryConnector;
-import org.santifa.hfts.core.utils.NifHelper;
+import org.santifa.hfts.core.utils.HftsHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,8 +39,8 @@ public class Diversity implements Metric {
         /* collect all possible surface forms and entities */
         for (MetaDocument d : dataset.getDocuments()) {
             for (MetaNamedEntity entity : d.getMarkings(MetaNamedEntity.class)) {
-                String s = NifHelper.getEntityName(entity.getUri()).toLowerCase();
-                String sf = NifHelper.getSurfaceForm(d.getText(), entity);
+                String s = HftsHelper.getEntityName(entity.getUri()).toLowerCase();
+                String sf = HftsHelper.getSurfaceForm(d.getText(), entity);
 
                 /* add a known surface form to known entities */
                 if (knownEntities.containsKey(s)) {
@@ -70,8 +70,8 @@ public class Diversity implements Metric {
         for (MetaDocument d : dataset.getDocuments()) {
             for (MetaNamedEntity entity : d.getMarkings(MetaNamedEntity.class)) {
                 int idx;
-                String s = NifHelper.getEntityName(entity.getUri()).toLowerCase();
-                String sf = NifHelper.getSurfaceForm(d.getText(), entity);
+                String s = HftsHelper.getEntityName(entity.getUri()).toLowerCase();
+                String sf = HftsHelper.getSurfaceForm(d.getText(), entity);
 
                 /* check if we have a known entity in dict and dataset */
                 if (knownEntities.containsKey(s) && ((idx = connectorEntity.contains(s)) != -1)) {

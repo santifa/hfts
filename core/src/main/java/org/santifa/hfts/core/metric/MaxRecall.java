@@ -6,7 +6,7 @@ import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 import org.santifa.hfts.core.utils.DictionaryConnector;
-import org.santifa.hfts.core.utils.NifHelper;
+import org.santifa.hfts.core.utils.HftsHelper;
 
 /**
  * Created by ratzeputz on 16.01.17.
@@ -39,7 +39,7 @@ public class MaxRecall implements Metric {
             int inDict = 0;
 
             for (MetaNamedEntity entity : d.getMarkings(MetaNamedEntity.class)) {
-                String sf = NifHelper.getSurfaceForm(d.getText(), entity);
+                String sf = HftsHelper.getSurfaceForm(d.getText(), entity);
 
                 /* only approximate and not check every sf to entity relation */
                 if (connector.contains(sf) != -1) {
@@ -63,7 +63,7 @@ public class MaxRecall implements Metric {
 
         for (MetaDocument d : dataset.getDocuments()) {
             for (MetaNamedEntity entity : d.getMarkings(MetaNamedEntity.class)) {
-                String sf = NifHelper.getSurfaceForm(d.getText(), entity);
+                String sf = HftsHelper.getSurfaceForm(d.getText(), entity);
 
                 /* only approximate and not check every sf to entity relation */
                 if (connector.contains(sf) != -1) {
@@ -77,7 +77,7 @@ public class MaxRecall implements Metric {
             maxRecall = (double) inDict / (double) dataset.getMarkings().size();
         }
         dataset.getMetaInformations().put(ExtendedNif.microMaxRecall, String.valueOf(maxRecall));
-        Logger.debug("Max recall for document {} is {}", dataset.getName(), maxRecall);
+        Logger.debug("Micro max recall for dataset {} is {}", dataset.getName(), maxRecall);
         return dataset;
     }
 

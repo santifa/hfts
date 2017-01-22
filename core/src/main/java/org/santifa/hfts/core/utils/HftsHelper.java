@@ -6,7 +6,7 @@ import org.santifa.hfts.core.nif.MetaNamedEntity;
 /**
  * Created by ratzeputz on 20.01.17.
  */
-public class NifHelper {
+public class HftsHelper {
 
     public static String getEntityName(String s) {
         if (StringUtils.contains(s, "sentence-")) {

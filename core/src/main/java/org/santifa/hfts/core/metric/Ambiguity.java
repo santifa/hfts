@@ -7,7 +7,7 @@ import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 import org.santifa.hfts.core.utils.DictionaryConnector;
-import org.santifa.hfts.core.utils.NifHelper;
+import org.santifa.hfts.core.utils.HftsHelper;
 
 /**
  * Created by ratzeputz on 30.12.16.
@@ -48,8 +48,8 @@ public class Ambiguity implements Metric {
 
             for (MetaNamedEntity entity : d.getMarkings(MetaNamedEntity.class)) {
                 int idx;
-                String e = NifHelper.getEntityName(entity.getUri());
-                String sf = NifHelper.getSurfaceForm(d.getText(), entity);
+                String e = HftsHelper.getEntityName(entity.getUri());
+                String sf = HftsHelper.getSurfaceForm(d.getText(), entity);
                 sf = StringUtils.replace(sf, "_", " ").toLowerCase();
 
                 if ((idx = connectorEntity.contains(e)) != -1) {

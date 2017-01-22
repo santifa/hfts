@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 /**
  * Created by ratzeputz on 17.01.17.
@@ -30,17 +29,22 @@ public class PopularityConnector extends DictionaryConnector {
     }
 
     @Override
-    protected void readFile(Path file, List<Entry> key) throws IOException {
+    protected void readFile(Path file, Entry[] values) throws IOException {
+        //protected void readFile(Path file, List<Entry> key) throws IOException {
         Logger.debug("Loading file {}", file);
         BufferedReader reader = Files.newBufferedReader(file);
         String s;
+        int next = 0;
 
         while ((s = reader.readLine()) != null) {
             String uri = StringUtils.substringBetween(s, "<", "> ");
             String popularity = StringUtils.substringBetween(s, "> \"", "\"^^");
             //map.put(uri, popularity);
-            key.add(new Entry(hash(uri), popularity));
+            //key.add(new Entry(hash(uri), popularity));
             //value.add(popularity);
+            //keys[next] = hash(uri.toLowerCase());
+            values[next] = new Entry(hash(uri.toLowerCase()), popularity);
+            next++;
         }
     }
 

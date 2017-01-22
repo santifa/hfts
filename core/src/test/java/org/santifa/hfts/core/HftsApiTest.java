@@ -1,5 +1,6 @@
 package org.santifa.hfts.core;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.pmw.tinylog.Level;
@@ -7,7 +8,6 @@ import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.metric.*;
 import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.utils.DictionaryConnector;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -127,25 +127,33 @@ public class HftsApiTest {
 
     @Test
     public void runHftsApi() throws IOException, URISyntaxException {
-        Path file2 = Paths.get("../data/wes2015-dataset-nif.ttl");
-        Path file = Paths.get("../data/kore50-nif.ttl");
+        Path[] files = new Path[] {Paths.get("../data/wes2015-dataset-nif.ttl")
+                /*Paths.get("../data/kore50-nif.ttl"),
+                Paths.get("../data/dbpedia-spotlight-nif.ttl"),
+                Paths.get("../data/N3/News-100.ttl"),
+                Paths.get("../data/N3/Reuters-128.ttl"),
+                Paths.get("../data/N3/RSS-500.ttl")*/
+        };
 
-        DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector(2);
-        DictionaryConnector connectorSf = DictionaryConnector.getDefaultSFConnector(3);
-        String filename = StringUtils.substringBeforeLast(file.toFile().getName(), ".");
-        String filename2 = StringUtils.substringBeforeLast(file2.toFile().getName(), ".");
+        DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector(10);
+        DictionaryConnector connectorSf = DictionaryConnector.getDefaultSFConnector(10);
+        HftsApi api = new HftsApi().withMetric(new NotAnnotated(), new Density(),
+                CategoryAssignor.getDefaultAssignor(),
+                new MaxRecall(connectorSf),
+                new Ambiguity(connectorEntity, connectorSf),
+                new Diversity(connectorEntity, connectorSf),
+                PopularityAssignor.getDefaultPageRank(10),
+                PopularityAssignor.getDefaultHits(10)
+        );
 
-        HftsApi api = new HftsApi().withDataset(filename, file)//.withDataset(filename2, file2)
-                .withMetric(new NotAnnotated(), new Density(),
-                        CategoryAssignor.getDefaultAssignor(),
-                        new MaxRecall(connectorSf),
-                        new Ambiguity(connectorEntity, connectorSf),
-                        new Diversity(connectorEntity, connectorSf),
-                        PopularityAssignor.getDefaultPageRank(1),
-                        PopularityAssignor.getDefaultHits(1)
-                );
+
+        for (Path f : files) {
+            String filename = StringUtils.substringBeforeLast(f.toFile().getName(), ".");
+            api.withDataset(filename, f);
+        }
+
+
         List<NifDataset> results = api.run();
-
         for (NifDataset ds : results) {
             System.out.println("##### Printing dataset " + ds.getName());
             ds.write(new FileOutputStream(ds.getName() + "-ext.ttl"));

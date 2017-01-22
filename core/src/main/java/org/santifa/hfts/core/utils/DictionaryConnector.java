@@ -9,9 +9,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * This class loads a simple text file containing occurrences
@@ -27,11 +26,17 @@ import java.util.List;
  */
 public class DictionaryConnector {
 
-    protected List<Entry> key = new ArrayList<>(500000);
+    //protected List<Entry> key = new ArrayList<>(500000);
+
+    //protected int[] keys;
+
+    protected Entry[] values;
 
     private Path file;
 
     private int timeToLive;
+
+    private int pointer = 0;
 
     /**
      * Instantiates a new lazy dictionary connector.
@@ -43,12 +48,43 @@ public class DictionaryConnector {
     public DictionaryConnector(Path file, int timeToLive) {
         this.file = file;
         this.timeToLive = timeToLive;
+        try {
+            initArrays(file);
+            readFile(file, values);
+            Arrays.sort(values, (o1, o2) -> {
+                if (o1.hash == o2.hash) {
+                    return 0;
+                } else if (o1.hash < o2.hash) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    protected void readFile(Path file, List<Entry> key) throws IOException {
+    private void initArrays(Path file) throws IOException {
+        //Logger.debug("Getting line count {}", file);
+        BufferedReader reader = Files.newBufferedReader(file);
+
+        int counter = 0;
+        while (reader.readLine() != null) {
+            counter++;
+        }
+
+        //Logger.debug("line count {}", counter);
+        //this.keys = new int[counter];
+        this.values = new Entry[counter];
+    }
+
+ //   protected void readFile(Path file, List<Entry> key) throws IOException {
+    protected void readFile(Path file, Entry[] values) throws IOException {
         Logger.debug("Loading file {}", file);
         BufferedReader reader = Files.newBufferedReader(file);
         String line;
+        int next = 0;
 
         while ((line = reader.readLine()) != null) {
             // a line has as first part the ambiguity counter and as second the entity name with < >
@@ -56,36 +92,74 @@ public class DictionaryConnector {
             //value.add(split[0]);
             String entity = StringUtils.remove(split[1], "<");
             entity = StringUtils.remove(entity, ">");
-            key.add(new Entry(hash(entity.toLowerCase()), split[0]));
+            //key.add(new Entry(hash(entity.toLowerCase()), split[0]));
+            //keys[next] = hash(entity.toLowerCase());
+            values[next] = new Entry(hash(entity.toLowerCase()), split[0]);
+            next++;
         }
     }
 
-    public void present() {
+  /*  public void present() {
         if (key.isEmpty()) {
             try {
-                readFile(file, key);
+                readFile(file, keys, values);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
     public int contains(String e) {
-        present();
-        return key.indexOf(new Entry(hash(e), null));
+        int searchHash = hash(e);
+        int ret = -1;
+        //Logger.debug("Start pointer {}", pointer);
+        /* prevent running out of bounds since array size 0..n-1 */
+        if (pointer == values.length) {
+            pointer--;
+        }
+
+        if (searchHash < values[pointer].hash) {
+           // Logger.debug("downwards");
+            /* search backwards from point */
+            for (; pointer > 0; --pointer) {
+                if (searchHash == values[pointer].hash) {
+                    ret = pointer;
+                    break;
+                }
+            }
+
+        } else if (searchHash > values[pointer].hash) {
+            /* search forwards */
+            //Logger.debug("forwards");
+            for (; pointer < values.length; ++pointer) {
+                if (searchHash == values[pointer].hash) {
+                    ret = pointer;
+                    break;
+                }
+            }
+
+        } else if (searchHash == values[pointer].hash) {
+            /* we have the element directly */
+            //Logger.debug("equals");
+            ret = pointer;
+        }
+
+        //Logger.debug("End pointer {}", pointer);
+        //present();
+        return ret;//key.indexOf(new Entry(hash(e), null));
     }
 
     public String get(int idx) {
-        present();
+        //present();
         //int idx = key.indexOf(new Entry(hash(e), null));
-        return key.get(idx).value;
+        return values[idx].value;//key.get(idx).value;
     }
 
     public void flush() {
-        this.timeToLive--;
+        //this.timeToLive--;
         if (timeToLive <= 0) {
             Logger.debug("Flushing Dictionary...");
-            key.clear();
+            //key.clear();
             //value.clear();
         }
     }
@@ -106,7 +180,7 @@ public class DictionaryConnector {
         return new DictionaryConnector(Paths.get("..", "data", "ambiguity_sf"), timeToLive);
     }
 
-    protected int hash(Object key) {
+    private int hash(Object key) {
         int h;
         return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
     }
