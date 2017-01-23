@@ -180,7 +180,7 @@ public class DictionaryConnector {
         return new DictionaryConnector(Paths.get("..", "data", "ambiguity_sf"), timeToLive);
     }
 
-    private int hash(Object key) {
+    protected int hash(Object key) {
         int h;
         return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
     }

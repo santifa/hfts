@@ -3,49 +3,66 @@ package org.santifa.hfts.core.nif;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import org.aksw.gerbil.transfer.nif.vocabulary.NIF;
 
 /**
  * Created by ratzeputz on 16.01.17.
  */
 public class ExtendedNif {
 
-    public final static Property notAnnotatedProperty = ResourceFactory.createProperty(NIF.getURI(), "notAnnotatedProperty");
+    private static final String uri = "https://raw.githubusercontent.com/santifa/hfts/master/ont/nif-ext.ttl#";
+
+    public static final Property refDocs = property("referenceDocuments");
+    public static final Resource Dataset = resource("Dataset");
+
+    public static final Property notAnnotatedProperty = property("notAnnotatedProperty");
 
     /* density properties for document and dataset level */
-    public static final Property density = ResourceFactory.createProperty(NIF.getURI(), "density");
-    public static final Property microDensity = ResourceFactory.createProperty(NIF.getURI(), "microDensity");
-    public static final Property macroDensity = ResourceFactory.createProperty(NIF.getURI(), "macroDensity");
+    public static final Property density = property("density");
+    public static final Property microDensity = property("microDensity");
+    public static final Property macroDensity = property("macroDensity");
 
     /* popularity properties */
-    public static final Property pagerank = ResourceFactory.createProperty(NIF.getURI(), "pagerank");
-    public static final Property hits = ResourceFactory.createProperty(NIF.getURI(), "hits");
+    public static final Property pagerank = property("pagerank");
+    public static final Property hits = property("hits");
 
     /* diversity properties for dataset level  */
-    public static final Property diversityEntities = ResourceFactory.createProperty(NIF.getURI(), "diversityEntities");
-    public static final Property diversitySurfaceForms = ResourceFactory.createProperty(NIF.getURI(), "diversitySurfaceForms");
+    public static final Property diversityEntities = property("diversityEntities");
+    public static final Property diversitySurfaceForms = property("diversitySurfaceForms");
 
     /* ambiguity properties document and annotation level */
-    public static final Property ambiguityEntity = ResourceFactory.createProperty(NIF.getURI(), "ambiguityEntity");
-    public static final Property ambiguitySurfaceForm = ResourceFactory.createProperty(NIF.getURI(), "ambiguitySurfaceForm");
-    public static final Property ambiguityEntities = ResourceFactory.createProperty(NIF.getURI(), "ambiguityEntities");
-    public static final Property ambiguitySurfaceForms = ResourceFactory.createProperty(NIF.getURI(), "ambiguitySurfaceForms");
+    public static final Property ambiguityEntity = property("ambiguityEntity");
+    public static final Property ambiguitySurfaceForm = property("ambiguitySurfaceForm");
+    public static final Property ambiguityEntities = property("ambiguityEntities");
+    public static final Property ambiguitySurfaceForms = property("ambiguitySurfaceForms");
     /* dataset level */
-    public static final Property microAmbiguityEntities = ResourceFactory.createProperty(NIF.getURI(), "microAmbiguityEntities");
-    public static final Property microAmbiguitySurfaceForms = ResourceFactory.createProperty(NIF.getURI(), "microAmbiguitySurfaceForms");
-    public static final Property macroAmbiguityEntities = ResourceFactory.createProperty(NIF.getURI(), "macroAmbiguityEntities");
-    public static final Property macroAmbiguitySurfaceForms = ResourceFactory.createProperty(NIF.getURI(), "macroAmbiguitySurfaceForms");
+    public static final Property microAmbiguityEntities = property("microAmbiguityEntities");
+    public static final Property microAmbiguitySurfaceForms = property("microAmbiguitySurfaceForms");
+    public static final Property macroAmbiguityEntities = property("macroAmbiguityEntities");
+    public static final Property macroAmbiguitySurfaceForms = property("macroAmbiguitySurfaceForms");
 
     /* document and dataset level */
-    public static final Property maxRecall = ResourceFactory.createProperty(NIF.getURI(), "maxRecall");
-    public static final Property macroMaxRecall = ResourceFactory.createProperty(NIF.getURI(), "macroMaxRecall");
-    public static final Property microMaxRecall = ResourceFactory.createProperty(NIF.getURI(), "microMaxRecall");
+    public static final Property maxRecall = property("maxRecall");
+    public static final Property macroMaxRecall = property("macroMaxRecall");
+    public static final Property microMaxRecall = property("microMaxRecall");
+
+    protected static Resource resource(String local) {
+        return ResourceFactory.createResource(uri + local);
+    }
+
+    protected static Property property(String local) {
+        return ResourceFactory.createProperty(uri, local);
+    }
 
     public static Literal getTypedLiteral(Property p, String value) {
         if (p.getURI().equals(ambiguityEntity.getURI()) || p.getURI().equals(ambiguitySurfaceForm.getURI())) {
             return ResourceFactory.createTypedLiteral(value, XSDDatatype.XSDinteger);
         }
         return ResourceFactory.createTypedLiteral(value, XSDDatatype.XSDdouble);
+    }
+
+    public static String getUri() {
+        return uri;
     }
 }

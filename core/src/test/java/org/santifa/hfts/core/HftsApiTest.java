@@ -127,12 +127,12 @@ public class HftsApiTest {
 
     @Test
     public void runHftsApi() throws IOException, URISyntaxException {
-        Path[] files = new Path[] {Paths.get("../data/wes2015-dataset-nif.ttl")
-                /*Paths.get("../data/kore50-nif.ttl"),
+        Path[] files = new Path[] {//Paths.get("../data/wes2015-dataset-nif.ttl")
+                Paths.get("../data/kore50-nif.ttl"),
                 Paths.get("../data/dbpedia-spotlight-nif.ttl"),
                 Paths.get("../data/N3/News-100.ttl"),
                 Paths.get("../data/N3/Reuters-128.ttl"),
-                Paths.get("../data/N3/RSS-500.ttl")*/
+                Paths.get("../data/N3/RSS-500.ttl")
         };
 
         DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector(10);

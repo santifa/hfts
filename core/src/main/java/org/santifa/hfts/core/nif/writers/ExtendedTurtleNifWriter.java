@@ -8,7 +8,6 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import org.aksw.gerbil.io.nif.DocumentWriter;
 import org.aksw.gerbil.io.nif.impl.TurtleNIFWriter;
 import org.aksw.gerbil.transfer.nif.Document;
-import org.aksw.gerbil.transfer.nif.vocabulary.NIF;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.nif.ExtendedNif;
 
@@ -52,11 +51,15 @@ public class ExtendedTurtleNifWriter extends ExtendedAbstractNIFWriter {
         Model nifModel = createNIFModel(docs);
 
         /* create a dataset property */
-        Resource ds = ResourceFactory.createResource(NIF.getURI() + "dataset/" + dataset.getName());
-        Property dsProp = ResourceFactory.createProperty(NIF.getURI(), "dataset");
+        Resource ds = ResourceFactory.createResource(ExtendedNif.getUri() + dataset.getName());
 
         if (!dataset.getMetaInformations().isEmpty()) {
-            nifModel.add(ds, RDF.type, dsProp);
+            nifModel.add(ds, RDF.type, ExtendedNif.Dataset);
+
+            /* store reference docs */
+            for (Document d : docs) {
+                nifModel.add(ds, ExtendedNif.refDocs, d.getDocumentURI());
+            }
         }
 
         /* metrics */

@@ -5,6 +5,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import org.aksw.gerbil.io.nif.DocumentWriter;
 import org.aksw.gerbil.transfer.nif.Document;
 import org.aksw.gerbil.transfer.nif.NIFTransferPrefixMapping;
+import org.santifa.hfts.core.nif.ExtendedNif;
 
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -29,6 +30,7 @@ public abstract class ExtendedAbstractNIFWriter {
     protected Model createNIFModel(List<Document> document) {
         Model nifModel = ModelFactory.createDefaultModel();
         nifModel.setNsPrefixes(NIFTransferPrefixMapping.getInstance());
+        nifModel.getNsPrefixMap().put("nife", ExtendedNif.getUri());
 
         for (Document d : document) {
             writer.writeDocumentToModel(nifModel, d);
