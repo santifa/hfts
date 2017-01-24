@@ -22,7 +22,7 @@ public class NotAnnotated implements Metric {
         /* determine the ratio between empty documents and all documents */
         double result = (double) emptydocs / (double) dataset.getDocuments().size();
         dataset.getMetaInformations().put(ExtendedNif.notAnnotatedProperty, String.valueOf(result));
-        Logger.debug("Macro not-annotated for {} is {}", dataset.getName(), result);
+        Logger.debug("Not-annotated for {} is {}", dataset.getName(), result);
         return dataset;
     }
 

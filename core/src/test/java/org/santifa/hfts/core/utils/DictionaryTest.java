@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 /**
  * Created by ratzeputz on 21.01.17.
  */
-public class DictionaryConnectorTest {
+public class DictionaryTest {
 
     static {
         Logger.getConfiguration().level(Level.DEBUG).activate();
@@ -19,7 +19,7 @@ public class DictionaryConnectorTest {
     @Test
     public void testDictionaryLoading() {
         Path f = Paths.get("../data/ambiguity_sf");
-        DictionaryConnector conn = new DictionaryConnector(f, 1);
+        Dictionary conn = new AmbiguityDictionary(f);
     }
 
 }

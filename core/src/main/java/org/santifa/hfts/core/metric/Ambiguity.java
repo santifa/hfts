@@ -6,7 +6,8 @@ import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
-import org.santifa.hfts.core.utils.DictionaryConnector;
+import org.santifa.hfts.core.utils.AmbiguityDictionary;
+import org.santifa.hfts.core.utils.Dictionary;
 import org.santifa.hfts.core.utils.HftsHelper;
 
 /**
@@ -15,18 +16,18 @@ import org.santifa.hfts.core.utils.HftsHelper;
 public class Ambiguity implements Metric {
 
 
-    private DictionaryConnector connectorEntity;
+    private Dictionary<Integer> connectorEntity;
 
-    private DictionaryConnector connectorSf;
+    private Dictionary<Integer> connectorSf;
 
-    public Ambiguity(DictionaryConnector connectorEntity, DictionaryConnector connectorSf) {
+    public Ambiguity(Dictionary<Integer> connectorEntity, Dictionary<Integer> connectorSf) {
         this.connectorSf = connectorSf;
         this.connectorEntity = connectorEntity;
     }
 
-    public static Ambiguity getDefaultAmbiguity(int timeToLive) {
-            return new Ambiguity(DictionaryConnector.getDefaultEntityConnector(timeToLive),
-                    DictionaryConnector.getDefaultSFConnector(timeToLive));
+    public static Ambiguity getDefaultAmbiguity() {
+            return new Ambiguity(AmbiguityDictionary.getDefaultEntityConnector(),
+                    AmbiguityDictionary.getDefaultSFConnector());
     }
 
     @Override
@@ -34,10 +35,7 @@ public class Ambiguity implements Metric {
         dataset = calculateDocumentLevel(dataset);
         dataset = calculateMicro(dataset);
         dataset = calculateMacro(dataset);
-        connectorEntity.flush();
-        connectorSf.flush();
-
-       return dataset;
+        return dataset;
     }
 
     private NifDataset calculateDocumentLevel(NifDataset dataset) {
@@ -54,7 +52,7 @@ public class Ambiguity implements Metric {
 
                 if ((idx = connectorEntity.contains(e)) != -1) {
                     entity.getMetaInformations().put(ExtendedNif.ambiguityEntity, String.valueOf(connectorEntity.get(idx)));
-                    entities += Integer.decode(connectorEntity.get(idx));
+                    entities += connectorEntity.get(idx);
                 } else {
                     /* set to at least one if we have no information */
                     entity.getMetaInformations().put(ExtendedNif.ambiguityEntity, "1");
@@ -63,7 +61,7 @@ public class Ambiguity implements Metric {
 
                 if ((idx = connectorSf.contains(sf)) != -1) {
                     entity.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForm, String.valueOf(connectorSf.get(idx)));
-                    surfaceForms += Integer.decode(connectorSf.get(idx));
+                    surfaceForms += connectorSf.get(idx);
                 } else {
                     entity.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForm, "1");
                     surfaceForms++;
@@ -88,15 +86,14 @@ public class Ambiguity implements Metric {
 
     @Override
     public NifDataset calculateMicro(NifDataset dataset) {
-        double entities = 0.0;
-        double surfaceForms = 0.0;
+        double entities = 0;
+        double surfaceForms = 0;
 
         /* add every annotation ambiguity and increase number of stored ambiguities */
         for (MetaNamedEntity meaning : dataset.getMarkings()) {
-            entities += Double.valueOf(meaning.getMetaInformations().get(ExtendedNif.ambiguityEntity));
-            surfaceForms += Double.valueOf(meaning.getMetaInformations().get(ExtendedNif.ambiguitySurfaceForm));
+            entities += Double.parseDouble(meaning.getMetaInformations().get(ExtendedNif.ambiguityEntity));
+            surfaceForms += Double.parseDouble(meaning.getMetaInformations().get(ExtendedNif.ambiguitySurfaceForm));
         }
-
 
         if (!dataset.getMarkings().isEmpty()) {
             entities = entities / (double) dataset.getMarkings().size();

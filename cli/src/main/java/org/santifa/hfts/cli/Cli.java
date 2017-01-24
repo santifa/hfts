@@ -12,7 +12,8 @@ import org.pmw.tinylog.writers.ConsoleWriter;
 import org.santifa.hfts.core.HftsApi;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.metric.*;
-import org.santifa.hfts.core.utils.DictionaryConnector;
+import org.santifa.hfts.core.utils.AmbiguityDictionary;
+import org.santifa.hfts.core.utils.Dictionary;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,7 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by ratzeputz on 13.01.17.
+ * Provide a simple interface to the hfts library.
+ *
+ * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 @Command(name = "run", description = "Run the hfts api on some datasets.")
 public class Cli implements Runnable {
@@ -89,11 +92,13 @@ public class Cli implements Runnable {
         /* handle metrics selection */
         if (metrics.isEmpty()) {
             Logger.debug("Running all metrics.");
-            DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
-            api.withMetric(new NotAnnotated(), new Density(), new Ambiguity(connector, false), new Diversity(connector, true),
-                    CategoryAssignor.getDefaultAssignor(), PopularityAssignor.getHitsAssignor(), PopularityAssignor.getPageRankAssignor());
+            Dictionary<Integer> connectorEntity = AmbiguityDictionary.getDefaultEntityConnector();
+            Dictionary<Integer> connectorSf = AmbiguityDictionary.getDefaultSFConnector();
+            api.withMetric(new NotAnnotated(), new Density(), new Ambiguity(connectorEntity, connectorSf), new Diversity(connectorEntity, connectorSf),
+                    CategoryAssignor.getDefaultAssignor(), PopularityAssignor.getDefaultHits(), PopularityAssignor.getDefaultPageRank());
         } else {
-            DictionaryConnector conn = null;
+            Dictionary<Integer> connectorEntity = null;
+            Dictionary<Integer> connectorSf = null;
 
             for (String m : metrics.split(",")) {
                 switch (m.toLowerCase()) {
@@ -101,23 +106,27 @@ public class Cli implements Runnable {
                         break;
                     case "notannotated": api.withMetric(new NotAnnotated());
                         break;
-                    case "hits": api.withMetric(PopularityAssignor.getHitsAssignor());
+                    case "hits": api.withMetric(PopularityAssignor.getDefaultHits());
                         break;
-                    case "pagerank": api.withMetric(PopularityAssignor.getPageRankAssignor());
+                    case "pagerank": api.withMetric(PopularityAssignor.getDefaultPageRank());
                         break;
                     case "type": api.withMetric(CategoryAssignor.getDefaultAssignor());
                         break;
                     case "diversity":
-                        if (conn == null) {
-                            conn = DictionaryConnector.getDefaultConnector();
+                        if (connectorEntity == null) {
+                            connectorEntity = AmbiguityDictionary.getDefaultEntityConnector();
+                            connectorSf= AmbiguityDictionary.getDefaultSFConnector();
+
                         }
-                        api.withMetric(new Diversity(conn, true));
+                        api.withMetric(new Diversity(connectorEntity, connectorSf));
                         break;
                     case "ambiguity":
-                        if (conn == null) {
-                            conn = DictionaryConnector.getDefaultConnector();
+                        if (connectorEntity == null) {
+                            connectorEntity = AmbiguityDictionary.getDefaultEntityConnector();
+                            connectorSf = AmbiguityDictionary.getDefaultSFConnector();
+
                         }
-                        api.withMetric(new Ambiguity(conn, true));
+                        api.withMetric(new Ambiguity(connectorEntity, connectorSf));
                         break;
                     default: Logger.debug("Not recognized metric {}...", m);
                         break;
@@ -139,7 +148,6 @@ public class Cli implements Runnable {
         }
 
     }
-
 
     public static void main(String[] args) {
         SingleCommand<Cli> parser = SingleCommand.singleCommand(Cli.class);

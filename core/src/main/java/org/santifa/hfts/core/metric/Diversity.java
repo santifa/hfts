@@ -5,7 +5,8 @@ import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
-import org.santifa.hfts.core.utils.DictionaryConnector;
+import org.santifa.hfts.core.utils.AmbiguityDictionary;
+import org.santifa.hfts.core.utils.Dictionary;
 import org.santifa.hfts.core.utils.HftsHelper;
 
 import java.util.ArrayList;
@@ -17,18 +18,18 @@ import java.util.List;
  */
 public class Diversity implements Metric {
 
-    private DictionaryConnector connectorEntity;
+    private Dictionary<Integer> connectorEntity;
 
-    private DictionaryConnector connectorSf;
+    private Dictionary<Integer> connectorSf;
 
-    public Diversity(DictionaryConnector connectorEntity, DictionaryConnector connectorSf) {
+    public Diversity(Dictionary<Integer> connectorEntity, Dictionary<Integer> connectorSf) {
         this.connectorEntity = connectorEntity;
         this.connectorSf = connectorSf;
     }
 
-    public static Diversity getDefaultDiversity(int timeToLive) {
-            return new Diversity(DictionaryConnector.getDefaultEntityConnector(timeToLive),
-                    DictionaryConnector.getDefaultSFConnector(timeToLive));
+    public static Diversity getDefaultDiversity() {
+            return new Diversity(AmbiguityDictionary.getDefaultEntityConnector(),
+                    AmbiguityDictionary.getDefaultSFConnector());
     }
 
     @Override
@@ -75,12 +76,12 @@ public class Diversity implements Metric {
 
                 /* check if we have a known entity in dict and dataset */
                 if (knownEntities.containsKey(s) && ((idx = connectorEntity.contains(s)) != -1)) {
-                    diversityEntities += (double) knownEntities.get(s).size() / Double.valueOf(connectorEntity.get(idx));
+                    diversityEntities += (double) knownEntities.get(s).size() / (double) connectorEntity.get(idx);
                 }
 
                 /* check if we have a known surface form in dict and dataset */
                 if (knownSurfaceForms.containsKey(sf) && ((idx = connectorSf.contains(sf)) != -1)) {
-                    diversitySurfaceForms += (double) knownSurfaceForms.get(sf).size() / Double.valueOf(connectorSf.get(idx));
+                    diversitySurfaceForms += (double) knownSurfaceForms.get(sf).size() / (double) connectorSf.get(idx);
                 }
             }
         }
@@ -94,12 +95,10 @@ public class Diversity implements Metric {
 
         dataset.getMetaInformations().put(ExtendedNif.diversityEntities, String.valueOf(resultDiversityEntities));
         dataset.getMetaInformations().put(ExtendedNif.diversitySurfaceForms, String.valueOf(resultDiversitySurfaceForms));
-        Logger.debug("Macro diversity of entities for {} is {}", dataset.getName(), dataset.getMetaInformations().get(ExtendedNif.diversityEntities));
-        Logger.debug("Macro diversity of surface forms for {} is {}", dataset.getName(), dataset.getMetaInformations().get(ExtendedNif.diversitySurfaceForms));
+        Logger.debug("Diversity of entities for {} is {}", dataset.getName(), dataset.getMetaInformations().get(ExtendedNif.diversityEntities));
+        Logger.debug("Diversity of surface forms for {} is {}", dataset.getName(), dataset.getMetaInformations().get(ExtendedNif.diversitySurfaceForms));
 
         /* flush if requested */
-        connectorSf.flush();
-        connectorEntity.flush();
         return dataset;
     }
 

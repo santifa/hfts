@@ -25,16 +25,18 @@ import static org.hamcrest.core.Is.is;
 @RunWith(Parameterized.class)
 public class AmbiguityTest {
 
-    private static Ambiguity ambiguity = Ambiguity.getDefaultAmbiguity(5);
+    private static Ambiguity ambiguity = new Ambiguity(MetricTests.entities, MetricTests.surfaceForms);
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() throws URISyntaxException, IOException {
         NifDataset testset1 = NifDatasetTest.getTestDataset();
         testset1.getDocuments().get(0).setMarkings(new ArrayList<>());
+        testset1.reload();
 
         NifDataset testset2 = NifDatasetTest.getTestDataset();
         testset2.getDocuments().get(0).setMarkings(new ArrayList<>());
         testset2.getDocuments().add(new MetaDocument("", "", new ArrayList<>()));
+        testset2.reload();
 
         Path file = Paths.get(NotAnnotated.class.getResource("/kore50-nif-short.ttl").toURI());
         NifDataset testset3 = new NifDataset("test", file);
@@ -42,6 +44,7 @@ public class AmbiguityTest {
         NifDataset testset4 = new NifDataset("test", file);
         testset4.getDocuments().get(0).setMarkings(new ArrayList<>());
         testset4.getDocuments().get(1).setMarkings(new ArrayList<>());
+        testset4.reload();
 
         return Arrays.asList(new Object[][] {
                 {NifDatasetTest.getTestDataset(), "27.5", "1926.0", "27.5", "1926.0"},

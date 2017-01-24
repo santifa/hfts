@@ -25,7 +25,7 @@ import static org.hamcrest.core.Is.is;
 @RunWith(Parameterized.class)
 public class MaxRecallTest {
 
-    private static MaxRecall recall = MaxRecall.getDefaultMaxRecall(5);
+    private static MaxRecall recall = new MaxRecall(MetricTests.surfaceForms);
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() throws URISyntaxException, IOException {

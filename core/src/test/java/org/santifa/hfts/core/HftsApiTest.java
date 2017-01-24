@@ -7,7 +7,8 @@ import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.metric.*;
 import org.santifa.hfts.core.nif.ExtendedNif;
-import org.santifa.hfts.core.utils.DictionaryConnector;
+import org.santifa.hfts.core.utils.AmbiguityDictionary;
+import org.santifa.hfts.core.utils.Dictionary;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -71,8 +72,8 @@ public class HftsApiTest {
     @Test
     public void testCalculation() {
         NifDataset dataset = NifDatasetTest.getTestDataset();
-        DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector(2);
-        DictionaryConnector connectorSf = DictionaryConnector.getDefaultSFConnector(2);
+        Dictionary<Integer> connectorEntity = AmbiguityDictionary.getDefaultEntityConnector();
+        Dictionary<Integer> connectorSf = AmbiguityDictionary.getDefaultSFConnector();
         HftsApi api = new HftsApi().withDataset(dataset)
                 .withMetric(new NotAnnotated(), new Density(),
                             new Ambiguity(connectorEntity, connectorSf),
@@ -94,7 +95,7 @@ public class HftsApiTest {
     public void runHftsApiTyper() {
         NifDataset dataset = NifDatasetTest.getTestDataset();
         HftsApi api = new HftsApi().withDataset(dataset)
-                .withMetric(CategoryAssignor.getDefaultAssignor(), PopularityAssignor.getDefaultPageRank(1));
+                .withMetric(CategoryAssignor.getDefaultAssignor(), PopularityAssignor.getDefaultPageRank());
         List<NifDataset> results = api.run();
 
         for (NifDataset ds : results) {
@@ -106,16 +107,16 @@ public class HftsApiTest {
     @Test
     public void testHftsApi() throws IOException, URISyntaxException {
         Path file = Paths.get(getClass().getResource("/kore50-nif-short.ttl").toURI());
-        //NifDataset dataset = NifDatasetTest.getTestDataset();
-        DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector(2);
-        DictionaryConnector connectorSf = DictionaryConnector.getDefaultSFConnector(2);
+
+        Dictionary<Integer> connectorEntity = AmbiguityDictionary.getDefaultEntityConnector();
+        Dictionary<Integer> connectorSf = AmbiguityDictionary.getDefaultSFConnector();
         HftsApi api = new HftsApi().withDataset(file.toFile().getName(), file)
                 .withMetric(new NotAnnotated(), new Density(),
                         new Ambiguity(connectorEntity, connectorSf),
                         new Diversity(connectorEntity, connectorSf),
                         CategoryAssignor.getDefaultAssignor(),
-                        PopularityAssignor.getDefaultPageRank(1),
-                        PopularityAssignor.getDefaultHits(1)
+                        PopularityAssignor.getDefaultPageRank(),
+                        PopularityAssignor.getDefaultHits()
                 );
         List<NifDataset> results = api.run();
 
@@ -127,30 +128,41 @@ public class HftsApiTest {
 
     @Test
     public void runHftsApi() throws IOException, URISyntaxException {
-        Path[] files = new Path[] {//Paths.get("../data/wes2015-dataset-nif.ttl")
-                Paths.get("../data/kore50-nif.ttl"),
-                Paths.get("../data/dbpedia-spotlight-nif.ttl"),
-                Paths.get("../data/N3/News-100.ttl"),
-                Paths.get("../data/N3/Reuters-128.ttl"),
-                Paths.get("../data/N3/RSS-500.ttl")
+        Path[] files = new Path[] {//Paths.get("../ds/wes2015-dataset-nif.ttl")
+               /* Paths.get("../ds/kore50-nif.ttl"),
+                Paths.get("../ds/dbpedia-spotlight-nif.ttl"),
+                Paths.get("../ds/News-100.ttl"),
+                Paths.get("../ds/Reuters-128.ttl"),
+                Paths.get("../ds/RSS-500.ttl")
+                Paths.get("../ds/ACE2004/ACE2004.rdf"),
+                Paths.get("../ds/AIDA/AIDA.rdf"),
+                Paths.get("../ds/AQUAINT/AQUAINT.rdf"),
+                Paths.get("../ds/OKE1/OKE1.rdf"),
+                Paths.get("../ds/OKE2/OKE2.rdf"),*/
+               /* Paths.get("../ds/MSNBC/MSNBC.rdf"),
+                Paths.get("../ds/IITB/IITB.rdf")*/
+               // not working Paths.get("../ds/NEEL2016/NEEL2016.rdf")
         };
 
-        DictionaryConnector connectorEntity = DictionaryConnector.getDefaultEntityConnector(10);
-        DictionaryConnector connectorSf = DictionaryConnector.getDefaultSFConnector(10);
-        HftsApi api = new HftsApi().withMetric(new NotAnnotated(), new Density(),
-                CategoryAssignor.getDefaultAssignor(),
-                new MaxRecall(connectorSf),
-                new Ambiguity(connectorEntity, connectorSf),
-                new Diversity(connectorEntity, connectorSf),
-                PopularityAssignor.getDefaultPageRank(10),
-                PopularityAssignor.getDefaultHits(10)
-        );
-
-
+        HftsApi api = new HftsApi();
         for (Path f : files) {
             String filename = StringUtils.substringBeforeLast(f.toFile().getName(), ".");
             api.withDataset(filename, f);
         }
+
+        Dictionary<Integer> connectorEntity = AmbiguityDictionary.getDefaultEntityConnector();
+        Dictionary<Integer> connectorSf = AmbiguityDictionary.getDefaultSFConnector();
+        api.withMetric(new NotAnnotated(), new Density(),
+                CategoryAssignor.getDefaultAssignor(),
+                new MaxRecall(connectorSf),
+                new Ambiguity(connectorEntity, connectorSf),
+                new Diversity(connectorEntity, connectorSf),
+                PopularityAssignor.getDefaultPageRank(),
+                PopularityAssignor.getDefaultHits()
+        );
+
+
+
 
 
         List<NifDataset> results = api.run();

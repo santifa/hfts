@@ -7,6 +7,7 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import org.aksw.gerbil.io.nif.DocumentWriter;
 import org.aksw.gerbil.io.nif.impl.TurtleNIFWriter;
+import org.aksw.gerbil.io.nif.utils.NIFUriHelper;
 import org.aksw.gerbil.transfer.nif.Document;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.nif.ExtendedNif;
@@ -58,7 +59,11 @@ public class ExtendedTurtleNifWriter extends ExtendedAbstractNIFWriter {
 
             /* store reference docs */
             for (Document d : docs) {
-                nifModel.add(ds, ExtendedNif.refDocs, d.getDocumentURI());
+                String text = d.getText();
+                int end = text.codePointCount(0, text.length());
+                String documentUri = NIFUriHelper.getNifUri(d, end);
+                Resource documentResource = nifModel.createResource(documentUri);
+                nifModel.add(ds, ExtendedNif.refDocs, documentResource);
             }
         }
 

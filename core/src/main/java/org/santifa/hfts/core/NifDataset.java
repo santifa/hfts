@@ -136,7 +136,6 @@ public class NifDataset {
             doc.setMarkings(markings);
             metaDocs.add(doc);
         }
-        //System.out.println(docs);
         return metaDocs;
     }
 

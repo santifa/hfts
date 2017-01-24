@@ -5,8 +5,8 @@ import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
-import org.santifa.hfts.core.utils.DictionaryConnector;
-import org.santifa.hfts.core.utils.PopularityConnector;
+import org.santifa.hfts.core.utils.Dictionary;
+import org.santifa.hfts.core.utils.PopularityDictionary;
 
 import java.util.List;
 
@@ -17,9 +17,9 @@ public class PopularityAssignor implements Metric {
 
     private Property property;
 
-    private DictionaryConnector connector;
+    private Dictionary<Double> connector;
 
-    public PopularityAssignor(DictionaryConnector connector, Property property) {
+    public PopularityAssignor(Dictionary<Double> connector, Property property) {
         this.connector = connector;
         this.property = property;
     }
@@ -32,11 +32,10 @@ public class PopularityAssignor implements Metric {
         for (MetaNamedEntity m : meanings) {
                 int idx;
                 if ((idx = connector.contains(m.getUri())) != -1) {
-                    m.getMetaInformations().put(property, connector.get(idx));
+                    m.getMetaInformations().put(property, String.valueOf(connector.get(idx)));
                 }
             }
 
-        connector.flush();
         return dataset;
     }
 
@@ -51,11 +50,11 @@ public class PopularityAssignor implements Metric {
     }
 
 
-    public static PopularityAssignor getDefaultPageRank(int timeToLive) {
-        return new PopularityAssignor(PopularityConnector.getPageRankConnector(timeToLive), ExtendedNif.pagerank);
+    public static PopularityAssignor getDefaultPageRank() {
+        return new PopularityAssignor(PopularityDictionary.getPageRankConnector(), ExtendedNif.pagerank);
     }
 
-    public static PopularityAssignor getDefaultHits(int timeToLive) {
-        return new PopularityAssignor(PopularityConnector.getHitsConnector(timeToLive), ExtendedNif.hits);
+    public static PopularityAssignor getDefaultHits() {
+        return new PopularityAssignor(PopularityDictionary.getHitsConnector(), ExtendedNif.hits);
     }
 }

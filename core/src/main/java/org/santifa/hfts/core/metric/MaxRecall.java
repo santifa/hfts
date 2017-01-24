@@ -5,7 +5,8 @@ import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.nif.ExtendedNif;
 import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
-import org.santifa.hfts.core.utils.DictionaryConnector;
+import org.santifa.hfts.core.utils.AmbiguityDictionary;
+import org.santifa.hfts.core.utils.Dictionary;
 import org.santifa.hfts.core.utils.HftsHelper;
 
 /**
@@ -13,14 +14,14 @@ import org.santifa.hfts.core.utils.HftsHelper;
  */
 public class MaxRecall implements Metric {
 
-    private DictionaryConnector connector;
+    private Dictionary<Integer> connector;
 
-    public MaxRecall(DictionaryConnector connector) {
+    public MaxRecall(Dictionary<Integer> connector) {
         this.connector = connector;
     }
 
-    public static MaxRecall getDefaultMaxRecall(int timeToLive) {
-            return new MaxRecall(DictionaryConnector.getDefaultSFConnector(timeToLive));
+    public static MaxRecall getDefaultMaxRecall() {
+            return new MaxRecall(AmbiguityDictionary.getDefaultSFConnector());
     }
 
     @Override
@@ -28,8 +29,6 @@ public class MaxRecall implements Metric {
         calculateDocumentLevel(dataset);
         calculateMacro(dataset);
         calculateMicro(dataset);
-
-        connector.flush();
         return dataset;
     }
 
