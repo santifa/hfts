@@ -31,7 +31,7 @@ public class PopularityAssignor implements Metric {
 
         for (MetaNamedEntity m : meanings) {
                 int idx;
-                if ((idx = connector.contains(m.getUri())) != -1) {
+                if ((idx = connector.contains(m.getUri().toLowerCase())) != -1) {
                     m.getMetaInformations().put(property, String.valueOf(connector.get(idx)));
                 }
             }
