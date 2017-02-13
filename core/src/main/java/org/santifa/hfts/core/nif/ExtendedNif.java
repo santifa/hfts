@@ -11,7 +11,7 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
  */
 public class ExtendedNif {
 
-    private static final String uri = "https://raw.githubusercontent.com/santifa/hfts/master/ont/nif-ext.ttl#";
+    private static final String uri = "https://raw.githubusercontent.com/santifa/hfts/master/ont/hfts.ttl";
 
     public static final Property refDocs = property("referenceDocuments");
     public static final Resource Dataset = resource("Dataset");
@@ -48,11 +48,11 @@ public class ExtendedNif {
     public static final Property microMaxRecall = property("microMaxRecall");
 
     protected static Resource resource(String local) {
-        return ResourceFactory.createResource(uri + local);
+        return ResourceFactory.createResource(uri + "#" + local);
     }
 
     protected static Property property(String local) {
-        return ResourceFactory.createProperty(uri, local);
+        return ResourceFactory.createProperty(uri, "#" + local);
     }
 
     public static Literal getTypedLiteral(Property p, String value) {

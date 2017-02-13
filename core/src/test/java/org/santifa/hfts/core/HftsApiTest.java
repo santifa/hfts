@@ -128,19 +128,19 @@ public class HftsApiTest {
 
     @Test
     public void runHftsApi() throws IOException, URISyntaxException {
-        Path[] files = new Path[] {//Paths.get("../ds/wes2015-dataset-nif.ttl")
-               /* Paths.get("../ds/kore50-nif.ttl"),
+        Path[] files = new Path[] {Paths.get("../ds/wes2015-dataset-nif.ttl"),
+                Paths.get("../ds/kore50-nif.ttl"),
                 Paths.get("../ds/dbpedia-spotlight-nif.ttl"),
                 Paths.get("../ds/News-100.ttl"),
                 Paths.get("../ds/Reuters-128.ttl"),
-                Paths.get("../ds/RSS-500.ttl")
+                Paths.get("../ds/RSS-500.ttl"),
                 Paths.get("../ds/ACE2004/ACE2004.rdf"),
                 Paths.get("../ds/AIDA/AIDA.rdf"),
                 Paths.get("../ds/AQUAINT/AQUAINT.rdf"),
                 Paths.get("../ds/OKE1/OKE1.rdf"),
-                Paths.get("../ds/OKE2/OKE2.rdf"),*/
-               /* Paths.get("../ds/MSNBC/MSNBC.rdf"),
-                Paths.get("../ds/IITB/IITB.rdf")*/
+                Paths.get("../ds/OKE2/OKE2.rdf"),
+                Paths.get("../ds/MSNBC/MSNBC.rdf"),
+                Paths.get("../ds/IITB/IITB.rdf")
                // not working Paths.get("../ds/NEEL2016/NEEL2016.rdf")
         };
 

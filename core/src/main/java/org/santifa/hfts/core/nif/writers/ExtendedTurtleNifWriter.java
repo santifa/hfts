@@ -52,7 +52,7 @@ public class ExtendedTurtleNifWriter extends ExtendedAbstractNIFWriter {
         Model nifModel = createNIFModel(docs);
 
         /* create a dataset property */
-        Resource ds = ResourceFactory.createResource(ExtendedNif.getUri() + dataset.getName());
+        Resource ds = ResourceFactory.createResource(ExtendedNif.getUri() + "/" + dataset.getName());
 
         if (!dataset.getMetaInformations().isEmpty()) {
             nifModel.add(ds, RDF.type, ExtendedNif.Dataset);

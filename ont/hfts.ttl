@@ -1,7 +1,4 @@
-#   Licensed to the NLP2RDF project under one or more
-#   contributor license agreements.  See the NOTICE file distributed with
-#   this work for additional information regarding copyright ownership.
-#   The ASF licenses this file to You under the Apache License, Version 2.0
+#   We licenses this file to You under the Apache License, Version 2.0
 #   (the "License"); you may not use this file except in compliance with
 #   the License.  You may obtain a copy of the License at
 #
@@ -14,9 +11,8 @@
 #   limitations under the License.
 #
 #
-#   Extensions are made by Henrik Jürges (juerges.henrik@gmail.com) 2017
-#   The extensions enables th NIF core ontology to handle meta informations about
-#   multiple documents called datasets.
+#   Copyright by Henrik Jürges (juerges.henrik@gmail.com) 2017
+#   This ontology stores meta information about multiple NIF documents called datasets.
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -25,7 +21,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
-@prefix nife: <https://raw.githubusercontent.com/santifa/hfts/master/ont/nif-ext.ttl#> .
+@prefix hfts: <https://raw.githubusercontent.com/santifa/hfts/master/ont/nif-ext.ttl#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix lvont: <http://lexvo.org/ontology#> .
 @prefix marl: <http://purl.org/marl/ns#> .
@@ -35,197 +31,192 @@
 @prefix oa: <http://www.w3.org/ns/oa#> .
 @prefix vann: <http://purl.org/vocab/vann/> .
 
-<https://raw.githubusercontent.com/santifa/hfts/master/ont/nif-ext.ttl#>
+<https://raw.githubusercontent.com/santifa/hfts/master/ont/hfts.ttl#>
     a owl:Ontology ;
     owl:versionInfo "0.1.0" ;
 
-    vann:preferredNamespacePrefix "nife" ;
-    vann:preferredNamespaceUri "https://raw.githubusercontent.com/santifa/hfts/master/ont/nif-ext.ttl#" ;
-    vann:changes <https://raw.githubusercontent.com/santifa/hfts/master/ont/nif-ext.ttl#>
+    vann:preferredNamespacePrefix "hfts" ;
+    vann:preferredNamespaceUri "https://raw.githubusercontent.com/santifa/hfts/master/ont/hfts.ttl#" ;
+    vann:changes <https://raw.githubusercontent.com/santifa/hfts/master/ont/hfts.ttl#>
 
     dcterms:license <http://creativecommons.org/licenses/by/3.0/> ;
     dcterms:license <http://www.apache.org/licenses/LICENSE-2.0> ;
-    dcterms:title "NIF 2.1 Core Extension Ontology"@en ;
+    dcterms:title "Hfts ontology for annotation meta information"@en ;
 
-    rdfs:label "NIF 2.2 Core Extension Ontology"@en ;
-    rdfs:isDefinedBy <https://raw.githubusercontent.com/santifa/hfts/master/ont/nif-ext.ttl#> ;
-    rdfs:comment """The NLP Interchange Format (NIF) is an RDF/OWL-based format that aims to achieve interoperability between Natural Language Processing (NLP) tools, language resources and annotations. This ontology is an extension to the core NIF which is intended to store meta informations about annotions defined in NIF."""@en ;
+    rdfs:label "Hfts ontology for annotation meta information"@en ;
+    rdfs:isDefinedBy <https://raw.githubusercontent.com/santifa/hfts/master/ont/hfts.ttl#> ;
+    rdfs:comment """This ontology is intended to store meta information about annotations."""@en ;
 
     dc:creator "Henrik Jürges" ;
     dc:publisher "HPI, University Potsdam" ;
     dc:rights """This ontology is licensed under Apache 2.0 (http://www.apache.org/licenses/LICENSE-2.0) and CC-BY (http://creativecommons.org/licenses/by/3.0/)"""@en ;
-    
 
 ##############################
 # Base Classes
 ##############################
 
-nife:Dataset
+hfts:Dataset
     a owl:Class ;
     rdfs:label "Dataset"@en ;
     rdfs;comment """Individuals of this class describing meta informations for collections of documents."""
-
-
 
 ###################
 # Basic Properties
 ###################
 
-nife:referenceDocuments
+hfts:referenceDocuments
     a owl:DatatypeProperty ;
     a owl:functionalProperty ;
     rdfs:label "Documents which are used to compute dataset characteristics."@en ;
-    rdfs:domain nife:Dataset ;
+    rdfs:domain hfts:Dataset ;
     rdfs:range nif:Context , nif:String , nif:RFC5147String ;
 
 ###############
 # Dataset level
 ###############
 
-nife:notAnnotated
+hfts:notAnnotated
     a owl:DatatypeProperty ;
     rdfs:label "The amount of strings without annotations within a dataset."@en ;
-    rdfs:domain nife:Dataset ;
+    rdfs:domain hfts:Dataset ;
     rdfs:range xsd:double ;
 
-nife:microDensity
+hfts:microDensity
     a owl:DatatypeProperty ;
     rdfs:label "Describes the amount of annotations within the words in the dataset."@en ;
-    rdfs:domain nife:Dataset ;
+    rdfs:domain hfts:Dataset ;
     rdfs:range xsd:double ;
 
-nife:macroDensity
+hfts:macroDensity
     a owl:DatatypeProperty ;
     rdfs:label "Describes the amount of annotations within the words in the dataset."@en ;
-    rdfs:domain nife:Dataset ;
+    rdfs:domain hfts:Dataset ;
     rdfs:range xsd:double ;
 
-nife:microAmbiguityEntities
+hfts:microAmbiguityEntities
     a owl:DatatypeProperty ;
     rdfs:label "The average amount of surface forms per entity."@en ;
-    rdfs:domain nife:Dataset ;
+    rdfs:domain hfts:Dataset ;
     rdfs:range xsd:double ;
 
-nife:macroAmbiguityEntities
+hfts:macroAmbiguityEntities
     a owl:DatatypeProperty ;
     rdfs:label "The average amount of surface forms per entity."@en ;
-    rdfs:domain nife:Dataset ;
+    rdfs:domain hfts:Dataset ;
     rdfs:range xsd:double ;
 
-nife:microAmbiguitySurfaceForms
+hfts:microAmbiguitySurfaceForms
     a owl:DatatypeProperty ;
     rdfs:label "The average amount of entities per surface form."@en ;
-    rdfs:domain nife:Dataset ;
+    rdfs:domain hfts:Dataset ;
     rdfs:range xsd:double ;
 
-nife:macroAmbiguitySurfaceForms
+hfts:macroAmbiguitySurfaceForms
     a owl:DatatypeProperty ;
     rdfs:label "The average amount of entities per surface form."@en ;
-    rdfs:domain nife:Dataset ;
+    rdfs:domain hfts:Dataset ;
     rdfs:range xsd:double ;
 
-nife:microDiversityEntities
+hfts:microDiversityEntities
     a owl:DatatypeProperty ;
     rdfs:label "The average diversity of entities."@en ;
-    rdfs:domain nife:Dataset ;
+    rdfs:domain hfts:Dataset ;
     rdfs:range xsd:double ;
 
-nife:macroDiversityEntities
+hfts:macroDiversityEntities
     a owl:DatatypeProperty ;
     rdfs:label "The average diversity of entities."@en ;
-    rdfs:domain nife:Dataset ;
+    rdfs:domain hfts:Dataset ;
     rdfs:range xsd:double ;
 
-nife:microDiversitySurfaceForms
+hfts:microDiversitySurfaceForms
     a owl:DatatypeProperty ;
     rdfs:label "The average diversity of surface forms."@en ;
-    rdfs:domain nife:Dataset ;
+    rdfs:domain hfts:Dataset ;
     rdfs:range xsd:double ;
 
-nife:macroDiversitySurfaceForms
+hfts:macroDiversitySurfaceForms
     a owl:DatatypeProperty ;
     rdfs:label "The average diversity of surface form."@en ;
-    rdfs:domain nife:Dataset ;
+    rdfs:domain hfts:Dataset ;
     rdfs:range xsd:double ;
 
-nife:microMaxRecall
+hfts:microMaxRecall
     a owl:DatatypeProperty ;
     rdfs:label "The maximal achivable recall for the dataset."@en ;
-    rdfs:domain nife:Dataset ;
+    rdfs:domain hfts:Dataset ;
     rdfs:range xsd:double ;
 
-nife:macroMaxRecall
+hfts:macroMaxRecall
     a owl:DatatypeProperty ;
     rdfs:label "The maximal achivable recall for the dataset."@en ;
-    rdfs:domain nife:Dataset ;
+    rdfs:domain hfts:Dataset ;
     rdfs:range xsd:double ;
 
 ################
 # Document level
 ################
 
-nife:density
+hfts:density
     a owl:DatatypeProperty ;
     rdfs:label "Describes the amount of annotations within the words in the dataset."@en ;
     rdfs:domain nif:Context , nif:String , nif:RFC5147String ;
     rdfs:range xsd:double ;
 
-nife:ambiguityEntities
+hfts:ambiguityEntities
     a owl:DatatypeProperty ;
     rdfs:label "The average amount of surface forms per entity."@en ;
     rdfs:domain nif:Context  , nif:String , nif:RFC5147String ;
     rdfs:range xsd:double ;
 
-nife:ambiguitySurfaceForms
+hfts:ambiguitySurfaceForms
     a owl:DatatypeProperty ;
     rdfs:label "The average amount of entities per surface form."@en ;
     rdfs:domain nif:Context , nif:String , nif:RFC5147String ;
     rdfs:range xsd:double ;
 
-nife:diversityEntities
+hfts:diversityEntities
     a owl:DatatypeProperty ;
     rdfs:label "The average diversity of entities."@en ;
     rdfs:domain nif:Context , nif:String , nif:RFC5147String ;
     rdfs:range xsd:double ;
 
-nife:diversitySurfaceForms
+hfts:diversitySurfaceForms
     a owl:DatatypeProperty ;
     rdfs:label "The average diversity of surface form."@en ;
     rdfs:domain nif:Context , nif:String , nif:RFC5147String ;
     rdfs:range xsd:double ;
 
-nife:macRecall
+hfts:macRecall
     a owl:DatatypeProperty ;
     rdfs:label "The maximal achivable recall for a document."@en ;
     rdfs:domain nif:Context , nif:String , nif:RFC5147String ;
     rdfs:range xsd:double ;
 
-
 ###############
 # Word level
 ###############
 
-nife:ambiguityEntities
+hfts:ambiguityEntities
     a owl:DatatypeProperty ;
     rdfs:label "The average amount of surface forms per entity."@en ;
     rdfs:domainnif:Phrase , nif:String , nif:RFC5147String ;
     rdfs:range xsd:integer ;
 
-nife:ambiguitySurfaceForms
+hfts:ambiguitySurfaceForms
     a owl:DatatypeProperty ;
     rdfs:label "The average amount of entities per surface form."@en ;
     rdfs:domain nif:Phrase , nif:String , nif:RFC5147String ;
     rdfs:range xsd:integer ;
 
-nife:pagerank
+hfts:pagerank
     a owl:DatatypeProperty ;
     rdfs:label "PageRank score for an entity mention."@en ;
     rdfs:domainnif:Phrase , nif:String , nif:RFC5147String ;
     rdfs:range xsd:double ;
 
-nife:hits
+hfts:hits
     a owl:DatatypeProperty ;
     rdfs:label "Hubs and Authority score for an entity metion."@en ;
     rdfs:domain nif:Phrase , nif:String , nif:RFC5147String ;
     rdfs:range xsd:double ;
-
