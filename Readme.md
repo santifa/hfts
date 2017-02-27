@@ -26,7 +26,7 @@ properties to store meta informations in documents.
 We provide a new small ontology which can be found [hfts](https://github.com/santifa/hfts/blob/master/ont/hfts.ttl).
 The only new base class is `hfts:Dataset` which is represented as `hfts:{Dataset Name}`.
 The properties describing the meta informations are related to this object and are 
-further explaines along-side with the [metrics](https://github.com/santifa/hfts/blob/master/Metrics.md).
+further explaines alongside with the [metrics](https://github.com/santifa/hfts/blob/master/Metrics.md).
 
 ## Core API
 
@@ -78,12 +78,14 @@ This library provides a fluent interface for programming.
         System.out.println(ds.write());
     }
 
-Since the ambiguity and diversity metrics are memory intensive a shared
-dictionary should be used.
+Since the ambiguity and diversity metrics are memory intensive use it
+with care:
 
-    DictionaryConnector connector = DictionaryConnector.getDefaultConnector();
+    Dictionary<Integer> connectorEntity = AmbiguityDictionary.getDefaultEntityConnector();
+    Dictionary<Integer> connectorSf = AmbiguityDictionary.getDefaultSFConnector();
     HftsApi api = new HftsApi()
-        .withMetric(new Ambiguity(connector), new Diversity(connector));
+        .withMetric(new Ambiguity(connectorEntity, connectorSf), 
+                    new Diversity(connectorEntity, connectorSf));
    
 Also `owl:sameAs` retrival is provided with [http://sameas.org/](http://sameas.org/)
 
@@ -98,11 +100,8 @@ The library can be extended with every possible metric. See the [metrics documen
 Some drawbacks and remarks:
 
 * only nif data sets can be parsed. the enhanced one NOT!
-* until now, the documents are not linked to the data set
 * the diversity and ambiguity metric are using an external dictionary
  which takes long and much memory so be careful.
-* after a run the datasets and metrics are cleared from the api and
- the api can be used in further rounds.
 
 ### CLI
 
@@ -128,9 +127,8 @@ make a pull request.
 
 ## TODO
 
-- [ ] MaxRecall  
+- [x] MaxRecall  
 - [x] DocumentLevel Density, Ambiguity  
 - [x] AnnotationLevel Ambiguity  
-- [ ] Webservice  
-- [ ] irregular typing of meta properties at writing nif  
+- [x] irregular typing of meta properties at writing nif  
 - [ ] extensible reading and writing of nif + easier data structure  
