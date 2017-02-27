@@ -1,5 +1,15 @@
 
 # Remixing
+## Quickstart
+
+To jump right into remixing datasets we provide some already processed [datasets](https://github.com/santifa/hfts/releases/download/v1.0/hfts-datasets.tar.xz) which can be used.
+Simply store them into some triple store (e.g. fuseki, virtuoso) and play with SPARQL queries proposed
+here.
+
+## Templates
+
+The first template queries the whole graph for matches.
+The construct statement produces valid RDF as query result.
 
   # select document triples and annotation triples
   CONSTRUCT {?doc ?ddicate ?dObject .
@@ -15,7 +25,11 @@
 
     # use some filter condition 
   }
-  \caption{This basic template utilizes the whole graph.}
+
+
+The second one limits the amount of documents for the query
+but it still remains possible to fetch all annoation belonging
+to a document.
 
   # select document triples and annotation triples
   CONSTRUCT {?doc ?dPredicate ?dObject .
@@ -38,11 +52,19 @@
 
     # use some filter condition 
   }
-  \caption{This basic template limits the number of selected documents.}
+  
+### Basics queries
 
-\begin{figure}
-\tiny
-\begin{verbatim}
+This query selects documents with entity mentions which have an
+ambiguity above 2500. Only matching documents and entities are returned which produces
+artificially missing-annotations
+
+  CONSTRUCT {?doc ?dPredicate ?dObject .
+             ?ann ?aPrediacte ?aObject .}
+  WHERE {
+    # get all document triples
+    ?doc ?dPredicate ?dObject .
+
   # limit the amount of selected documents
   {SELECT DISTINCT (?d AS ?doc)
     WHERE {
@@ -56,14 +78,16 @@
  
   # use some filter condition 
   FILTER (?amb > 2500) .
-}
-\end{verbatim}
-\caption{This documents selects documents with entity mentions which have an
-ambiguity above 2500. Only matching documents and entities are returned which produces
-artificially missing-annotations.}
-\label{fig:temp1}
-\end{figure}
+  }
 
+This query selects all documents with persons but return
+all annotation and not only ones from type person.
+
+  CONSTRUCT {?doc ?dPredicate ?dObject .
+             ?ann ?aPrediacte ?aObject .}
+  WHERE {
+    # get all document triples
+    ?doc ?dPredicate ?dObject .
 
   # select the first 100 documents with person entity mentions
   {SELECT DISTINCT (?d AS ?doc)
@@ -78,16 +102,14 @@ artificially missing-annotations.}
   # select all referenced annotations
   ?ann ?aPredicate ?aObject ;
        nif:referenceContext ?doc .
-}
-\caption{Select documents and all entity mentions in which some are matched.}
+  }
 
+This basic query selects documents with a maximum recall 1.0.
 
-
-
-# select document triples and annotation triples
-CONSTRUCT {?doc ?dPredicate ?dObject .
-           ?ann ?aPredicate ?aObject .}
-WHERE {
+  # select document triples and annotation triples
+  CONSTRUCT {?doc ?dPredicate ?dObject .
+             ?ann ?aPredicate ?aObject .}
+  WHERE {
   # select all document triples
   ?doc ?dPredicate ?dObject ;
        hfts:maxRecall ?recall .
@@ -104,34 +126,6 @@ WHERE {
        nif:referenceContext ?doc.
   # use some filter condition 
   FILTER(xsd:double(?recall) >= 1.0) .
-}
-\end{verbatim}
-    \caption{Example remix with the maximum recall on the document level.}
-    \label{fig:temp3}
-\end{figure}
-
-
-
-
-CONSTRUCT {?doc ?dPredicate ?dObject .
-           ?ann ?aPredicate ?aObject .}
-WHERE {
-  # select all document triples
-  ?doc ?dPredicate ?dObject .
-  
-  # select the first 100 documents
-  {SELECT DISTINCT (?d AS ?doc)
-    WHERE {
-      ?ds hfts:referenceDocuments ?d .
-    } LIMIT 100
   }
   
-  # select all referenced annotations
-  ?ann ?aPredicate ?aObject ;
-       nif:referenceContext ?doc ;
-       hfts:ambiguitySurfaceForm ?amb
-  
-  # use some filter condition 
-  FILTER(?amb = 1) .
-}
-\caption{Select documents and entity mentions which have a likelihood of confusion for surface forms of one.}
+### More advanced queries
