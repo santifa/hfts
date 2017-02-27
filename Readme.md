@@ -1,9 +1,8 @@
 # HFTS
 
-This is a small library to extend [NIF](http://persistence.uni-leipzig.org/nlp2rdf)
-datasets with meta informations. It is designed to be integrated in other tools
+This is a small library which uses [NIF](http://persistence.uni-leipzig.org/nlp2rdf)
+datasets to produce meta informations. It is designed to be integrated in other tools
 like [GERBIL](gerbil.aksw.org). Also it should be easily extended with further meta inforamtions. 
-Consider everything is unstable at the moment and in permanent change!
 
 ## Background
 
@@ -11,10 +10,9 @@ Entity linking is the task of connecting entities in a natural language text wit
 pendants from a knowledge base like [Dbpedia](http://dbpedia.org). Benchmarking and evaluation of such annotation systems
 is done with well-known benchmarking datasets e.g. KORE50, MSNBC, WES2015. These datasets
 provides a rich set of texts with annotaions but they're lacking a rich description
-about themself. Since the datasets could be unbalanced or inappropriate for some tools 
-(person dataset with geo-information annotator) these meta informations could guide researchers selecting the appropriate
-dataset for their tool. In addition the meta informations could further be used to assemble new datasets
-out of all existing ones with special features like person-only, low-popularity, hard-to-disambiguate organisations.
+about themself. Since these datasets could be unbalanced or inappropriate for some tools 
+(person dataset in conjunction with a geo-information annotator) these meta informations could guide researchers selecting the appropriate dataset for their tool. In addition, the meta informations could further be used to assemble new datasets
+out of all existing ones with special features like person-only, low-popularity, hard-to-disambiguate organisations, cf. [remix](https://github.com/santifa/hfts/blob/master/Remix.md).
 
 ## NIF
 
@@ -25,16 +23,15 @@ The NIF core ontology already provides good definitions for documents (text with
 but is missing a class for meta informations about collections of documents and also some
 properties to store meta informations in documents.  
 
-The only new base class is `nif:Dataset` which is represented as `nif:{Dataset Name}`.
-The properties describing the meta informations are related to this object.
-
-The extended ontology file can be found [here](https://github.com/santifa/hfts/blob/master/ont/nif-core-meta.ttl).
-Also the properties are further explained within the [metrics document](https://github.com/santifa/hfts/blob/master/Metrics.md).
+We provide a new small ontology which can be found [hfts](https://github.com/santifa/hfts/blob/master/ont/hfts.ttl).
+The only new base class is `hfts:Dataset` which is represented as `hfts:{Dataset Name}`.
+The properties describing the meta informations are related to this object and are 
+further explaines along-side with the [metrics](https://github.com/santifa/hfts/blob/master/Metrics.md).
 
 ## Core API
 
-The core library consumes text files or strings in NIF format and
-enriches these datasets. Also a command line tool and a web service are provided (not done yet).
+The core library consumes text files or strings in Turtle-NIF format and
+enriches these datasets. Also, a command line tool is provided.
 
 ### Metrics
 
@@ -56,7 +53,7 @@ Clone the repository and then
     
 To get all metrics working you'll further need the dictionary data for ambiguity, diversity and
 popularity. This package contains the source data as well as the scripts to produce the neccessary
-format for the library.  
+format for the library.
 
 Get the data for the metric from [here]() (not done yet).
 In order to run the tests you have to place the dictionary data
