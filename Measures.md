@@ -1,43 +1,51 @@
+# Measures
 
-# Metrics
-
-This documents describes the metrics which are used to generate meta informations about
+This documents describes the measures which are used to generate meta informations about
 collections of documents or the documents themselves. Also the corresponding nif properties are
 mentioned.
 
 ## Background 
 
 Entity linking tools are evaluated with datasets which are crafted either by hand or multiple
-other entity linking tools. Although these datasets are carefully crafted some misconceptions
+other entity linking tools. Although, these datasets are carefully crafted some misconceptions
 or false assumptions can arise. In order to guide other researcher when choosing the
-dataset for testing their tools some metrics have been proposed. These metrics obtain
-informations about collections of documents and the entities. All of the metrics
+dataset for testing their tools, some measures have been proposed. These measures obtain
+informations about collections of documents and the entities. All of the measures
 in this library have been proposed in [1], [2], [3].
 
 ### Micro and Macro
 
 Some of the proposed metrics have two versions a micro and a macro version.
-The micro version of a metric takes the whole dataset as input as it was one annotated text.
-While at the macro version the metric is calculated for each document and then the average
+The micro version of a measure takes the whole dataset as input as it was one annotated text.
+While for the macro version the measure is calculated for each document and then the average
 is determined.  
-Their're corresponding NIF properties for each version.
+Their're corresponding properties for each version.
+
+### Layers
+
+There are three different layers which can be used to add further informations. The first
+one is the annotation itself, called annoation or entity mention layer (en). The second one
+is the document which is called the document layer (doc). The last one is the whole dataset (ds).
+Each measure is applied to one or multiple layers.
 
 ### Not annotated documents
 
-This metric shows the relation between documents without annotations and all documents
+This measures shows the relation between documents without annotations and all documents
 within a dataset. Most times documents without annotations are leading to and increased 
 false-positive rate which in terms cause a loss of precision.  
 
-The nif predicate is `nif:notAnnotated`.
+The hfts predicate is `hfts:notAnnotated` (ds).
 
 ### Density
 
-A low density meaning a poor annotated text can misslead an evaluation in terms
+A low density means a poor annotated text which can misslead an evaluation in terms
 of increasing the false-positive rate as well as a drop in the precision.
 To get a basic introspection the density is the relation between the amount
 of annotations and words within the dataset.
 
-The used nif predicates are `nif:macroDensity` and `nif:microDensity`.
+The used hfts predicates are:
+ds:`hfts:macroDensity` , `nif:microDensity`  
+doc:`hfts:density`
 
 ### Types
 
@@ -46,7 +54,7 @@ In order to choose the appropriate dataset for evaluation and benchmarking
 in such cases an overview about the types for the used entities has to be known.  
 These types are extracted from the DBpedia using a simple SPARQL query.  
 
-The used nif predicate is the already present `itsrdf:taClassRef`.
+The used nif predicate is the already present `itsrdf:taClassRef` (en).
 
 ### Ambiguity
 
@@ -56,7 +64,10 @@ meaning the different entities which can be described by the same textual repres
 This first one is also called the likelihood of confusion for an entity and the second one the likelihood
 of confusion for a surface form.  
 
-The four nif predicates are `nif:macroAmbiguityEntities`, `nif:macroAmbiguitySurfaceForms`, `nif:microAmbiguityEntities`, `nif:microAmbiguitySurfaceForms`.
+The hfts predicates are:
+ds:`hfts:macroAmbiguityEntities`, `hfts:macroAmbiguitySurfaceForms`, `hfts:microAmbiguityEntities`, `hfts:microAmbiguitySurfaceForms` 
+doc:`hfts:ambiguitySurfaceForms`, `hfts:ambiguityEntities` 
+en:`hfts:ambiguitySurfaceForm`, `hfts:ambiguityEntity`
 
 ### Diversity
 
@@ -68,19 +79,29 @@ the dataset in with respect to all possible surface forms referencing that entit
 On the other side the diversity of surface forms denotes the amount of all used entities for a specific
 surface form with repsect to all possible entities denoted by this surface form.
 
-The four nif predicates are `nif:macroDiversityEntities`, `nif:macroDiversitySurfaceForms`,
-`nif:microDiversityEntities`, `nif:microDiversitySurfaceForms`.
+The four nif predicates are:
+ds:`hfts:diversityEntities`, `hfts:diversitySurfaceForms`  
 
 ### PageRank and HIT Score
 
+These two measures apply the popularity score produced by the PageRank or Hubs & Authority algorithm
+directly to the annotation.
+
+en: `hfts:pagerank`, `hfts:hits`
+
 ### Maximum Recall
 
-## Implementing new metrics
+Some parts of the dataset might not be contained withinthe dictionary. Surface forms not in the intersection are unlikely to be found by entity linking since the annotators are using dictionaries to look up potential relations.  Therefore,  an  incomplete  dictionary  limits  the performance of an NEL system since an unknown surface form will lead to a loss in precision.
 
-New metrics are implemented by the interface `Metric` each Metric should provide the properties
-for the resulting NIF datasets.  
+ds: `hfts:microMaxRecall`, `hfts:macroMaxRecall`
+doc: `hfts:maxRecall`
 
-n simple example could be:
+## Implementing new measures
+
+New measures are implemented by the interface `Metric`. Each measure should provide the properties
+for the resulting datasets.  
+
+A simple example could be:
 
     public class NotAnnotated implements Metric {
 
