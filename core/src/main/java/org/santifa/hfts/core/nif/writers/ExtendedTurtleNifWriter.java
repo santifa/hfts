@@ -10,7 +10,7 @@ import org.aksw.gerbil.io.nif.impl.TurtleNIFWriter;
 import org.aksw.gerbil.io.nif.utils.NIFUriHelper;
 import org.aksw.gerbil.transfer.nif.Document;
 import org.santifa.hfts.core.NifDataset;
-import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.HftsOnt;
 
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -52,10 +52,10 @@ public class ExtendedTurtleNifWriter extends ExtendedAbstractNIFWriter {
         Model nifModel = createNIFModel(docs);
 
         /* create a dataset property */
-        Resource ds = ResourceFactory.createResource(ExtendedNif.getUri() + "/" + dataset.getName());
+        Resource ds = ResourceFactory.createResource(HftsOnt.getUri() + "/" + dataset.getName());
 
         if (!dataset.getMetaInformations().isEmpty()) {
-            nifModel.add(ds, RDF.type, ExtendedNif.Dataset);
+            nifModel.add(ds, RDF.type, HftsOnt.Dataset);
 
             /* store reference docs */
             for (Document d : docs) {
@@ -63,13 +63,13 @@ public class ExtendedTurtleNifWriter extends ExtendedAbstractNIFWriter {
                 int end = text.codePointCount(0, text.length());
                 String documentUri = NIFUriHelper.getNifUri(d, end);
                 Resource documentResource = nifModel.createResource(documentUri);
-                nifModel.add(ds, ExtendedNif.refDocs, documentResource);
+                nifModel.add(ds, HftsOnt.refDocs, documentResource);
             }
         }
 
         /* metrics */
         for (Property metaInformation : dataset.getMetaInformations().keySet()) {
-            nifModel.add(ds, metaInformation, ExtendedNif.getTypedLiteral(metaInformation, dataset.getMetaInformations().get(metaInformation)));
+            nifModel.add(ds, metaInformation, HftsOnt.getTypedLiteral(metaInformation, dataset.getMetaInformations().get(metaInformation)));
         }
         return nifModel;
     }

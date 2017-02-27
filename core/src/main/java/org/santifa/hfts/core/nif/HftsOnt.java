@@ -9,7 +9,7 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 /**
  * Created by ratzeputz on 16.01.17.
  */
-public class ExtendedNif {
+public class HftsOnt {
 
     private static final String uri = "https://raw.githubusercontent.com/santifa/hfts/master/ont/hfts.ttl";
 

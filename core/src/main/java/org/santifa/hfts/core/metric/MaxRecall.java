@@ -2,7 +2,7 @@ package org.santifa.hfts.core.metric;
 
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
-import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 import org.santifa.hfts.core.utils.AmbiguityDictionary;
@@ -50,7 +50,7 @@ public class MaxRecall implements Metric {
             if (!d.getMarkings().isEmpty()) {
                 maxRecall = (double) inDict / (double) d.getMarkings().size();
             }
-            d.getMetaInformations().put(ExtendedNif.maxRecall, String.valueOf(maxRecall));
+            d.getMetaInformations().put(HftsOnt.maxRecall, String.valueOf(maxRecall));
             Logger.debug("Max recall for document {} is {}", d.getDocumentURI(), maxRecall);
         }
         return dataset;
@@ -75,7 +75,7 @@ public class MaxRecall implements Metric {
         if (!dataset.getMarkings().isEmpty()) {
             maxRecall = (double) inDict / (double) dataset.getMarkings().size();
         }
-        dataset.getMetaInformations().put(ExtendedNif.microMaxRecall, String.valueOf(maxRecall));
+        dataset.getMetaInformations().put(HftsOnt.microMaxRecall, String.valueOf(maxRecall));
         Logger.debug("Micro max recall for dataset {} is {}", dataset.getName(), maxRecall);
         return dataset;
     }
@@ -85,13 +85,13 @@ public class MaxRecall implements Metric {
         double maxRecall = 0.0;
 
         for (MetaDocument d : dataset.getDocuments()) {
-            maxRecall += Double.valueOf(d.getMetaInformations().get(ExtendedNif.maxRecall));
+            maxRecall += Double.valueOf(d.getMetaInformations().get(HftsOnt.maxRecall));
         }
 
         if (!dataset.getDocuments().isEmpty()) {
             maxRecall = maxRecall / (double) dataset.getDocuments().size();
         }
-        dataset.getMetaInformations().put(ExtendedNif.macroMaxRecall, String.valueOf(maxRecall));
+        dataset.getMetaInformations().put(HftsOnt.macroMaxRecall, String.valueOf(maxRecall));
         Logger.debug("Macro max recall for dataset {} is {}", dataset.getName(), maxRecall);
         return dataset;
     }

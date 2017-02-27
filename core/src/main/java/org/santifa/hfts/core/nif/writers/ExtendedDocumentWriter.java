@@ -14,7 +14,7 @@ import org.aksw.gerbil.transfer.nif.Meaning;
 import org.aksw.gerbil.transfer.nif.Span;
 import org.aksw.gerbil.transfer.nif.data.Annotation;
 import org.aksw.gerbil.transfer.nif.vocabulary.NIF;
-import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.nif.MetaDocument;
 
 /**
@@ -50,7 +50,7 @@ public class ExtendedDocumentWriter extends DocumentWriter {
         if (document instanceof MetaDocument) {
             MetaDocument doc = (MetaDocument) document;
             for (Property p : doc.getMetaInformations().keySet()) {
-                nifModel.add(documentResource, p, ExtendedNif.getTypedLiteral(p, doc.getMetaInformations().get(p)));
+                nifModel.add(documentResource, p, HftsOnt.getTypedLiteral(p, doc.getMetaInformations().get(p)));
             }
         }
 

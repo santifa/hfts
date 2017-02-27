@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.NifDatasetTest;
-import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.nif.MetaDocument;
 
 import java.io.IOException;
@@ -68,8 +68,8 @@ public class DiversityTest {
     public void calculate() throws Exception {
         dataset = diversity.calculate(dataset);
         dataset.write(System.out);
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.diversityEntities), is(expectedEntitiesDiversity));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.diversitySurfaceForms), is(expectedSfDiversity));
+        Assert.assertThat(dataset.getMetaInformations().get(HftsOnt.diversityEntities), is(expectedEntitiesDiversity));
+        Assert.assertThat(dataset.getMetaInformations().get(HftsOnt.diversitySurfaceForms), is(expectedSfDiversity));
     }
 
 }

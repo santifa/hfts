@@ -3,7 +3,7 @@ package org.santifa.hfts.core.metric;
 import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
-import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 import org.santifa.hfts.core.utils.AmbiguityDictionary;
@@ -51,19 +51,19 @@ public class Ambiguity implements Metric {
                 sf = StringUtils.replace(sf, "_", " ").toLowerCase();
 
                 if ((idx = connectorEntity.contains(e)) != -1) {
-                    entity.getMetaInformations().put(ExtendedNif.ambiguityEntity, String.valueOf(connectorEntity.get(idx)));
+                    entity.getMetaInformations().put(HftsOnt.ambiguityEntity, String.valueOf(connectorEntity.get(idx)));
                     entities += connectorEntity.get(idx);
                 } else {
                     /* set to at least one if we have no information */
-                    entity.getMetaInformations().put(ExtendedNif.ambiguityEntity, "1");
+                    entity.getMetaInformations().put(HftsOnt.ambiguityEntity, "1");
                     entities++;
                 }
 
                 if ((idx = connectorSf.contains(sf)) != -1) {
-                    entity.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForm, String.valueOf(connectorSf.get(idx)));
+                    entity.getMetaInformations().put(HftsOnt.ambiguitySurfaceForm, String.valueOf(connectorSf.get(idx)));
                     surfaceForms += connectorSf.get(idx);
                 } else {
-                    entity.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForm, "1");
+                    entity.getMetaInformations().put(HftsOnt.ambiguitySurfaceForm, "1");
                     surfaceForms++;
                 }
           }
@@ -75,8 +75,8 @@ public class Ambiguity implements Metric {
                 resultSurfaceForms = (double) surfaceForms / (double) d.getMarkings().size();
             }
 
-            d.getMetaInformations().put(ExtendedNif.ambiguityEntities, String.valueOf(resultEntities));
-            d.getMetaInformations().put(ExtendedNif.ambiguitySurfaceForms, String.valueOf(resultSurfaceForms));
+            d.getMetaInformations().put(HftsOnt.ambiguityEntities, String.valueOf(resultEntities));
+            d.getMetaInformations().put(HftsOnt.ambiguitySurfaceForms, String.valueOf(resultSurfaceForms));
             Logger.debug("Document ambiguity of entities for {} is {}", d.getDocumentURI(), resultEntities);
             Logger.debug("Document ambiguity of surface forms for {} is {}", d.getDocumentURI(), resultSurfaceForms);
         }
@@ -91,8 +91,8 @@ public class Ambiguity implements Metric {
 
         /* add every annotation ambiguity and increase number of stored ambiguities */
         for (MetaNamedEntity meaning : dataset.getMarkings()) {
-            entities += Double.parseDouble(meaning.getMetaInformations().get(ExtendedNif.ambiguityEntity));
-            surfaceForms += Double.parseDouble(meaning.getMetaInformations().get(ExtendedNif.ambiguitySurfaceForm));
+            entities += Double.parseDouble(meaning.getMetaInformations().get(HftsOnt.ambiguityEntity));
+            surfaceForms += Double.parseDouble(meaning.getMetaInformations().get(HftsOnt.ambiguitySurfaceForm));
         }
 
         if (!dataset.getMarkings().isEmpty()) {
@@ -103,8 +103,8 @@ public class Ambiguity implements Metric {
             surfaceForms = 0.0;
         }
 
-        dataset.getMetaInformations().put(ExtendedNif.microAmbiguityEntities, String.valueOf(entities));
-        dataset.getMetaInformations().put(ExtendedNif.microAmbiguitySurfaceForms, String.valueOf(surfaceForms));
+        dataset.getMetaInformations().put(HftsOnt.microAmbiguityEntities, String.valueOf(entities));
+        dataset.getMetaInformations().put(HftsOnt.microAmbiguitySurfaceForms, String.valueOf(surfaceForms));
 
         Logger.debug("Micro ambiguity of entities for {} is {}", dataset.getName(), entities);
         Logger.debug("Micro ambiguity of surface forms for {} is {}", dataset.getName(), surfaceForms);
@@ -117,8 +117,8 @@ public class Ambiguity implements Metric {
         double ambiguitySurfaceForms = 0.0;
 
         for (MetaDocument d : dataset.getDocuments()) {
-            ambiguityEntities += Double.valueOf(d.getMetaInformations().get(ExtendedNif.ambiguityEntities));
-            ambiguitySurfaceForms += Double.valueOf(d.getMetaInformations().get(ExtendedNif.ambiguitySurfaceForms));
+            ambiguityEntities += Double.valueOf(d.getMetaInformations().get(HftsOnt.ambiguityEntities));
+            ambiguitySurfaceForms += Double.valueOf(d.getMetaInformations().get(HftsOnt.ambiguitySurfaceForms));
         }
 
         double resultEntities = 0.0;
@@ -128,8 +128,8 @@ public class Ambiguity implements Metric {
             resultSurfaceForms = ambiguitySurfaceForms / (double) dataset.getDocuments().size();
         }
 
-        dataset.getMetaInformations().put(ExtendedNif.macroAmbiguityEntities, String.valueOf(resultEntities));
-        dataset.getMetaInformations().put(ExtendedNif.macroAmbiguitySurfaceForms, String.valueOf(resultSurfaceForms));
+        dataset.getMetaInformations().put(HftsOnt.macroAmbiguityEntities, String.valueOf(resultEntities));
+        dataset.getMetaInformations().put(HftsOnt.macroAmbiguitySurfaceForms, String.valueOf(resultSurfaceForms));
         Logger.debug("Macro ambiguity of entities for {} is {}", dataset.getName(), resultEntities);
         Logger.debug("Macro ambiguity of surface forms for {} is {}", dataset.getName(), resultSurfaceForms);
         return dataset;

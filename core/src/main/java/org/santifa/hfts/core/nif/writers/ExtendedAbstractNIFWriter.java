@@ -6,7 +6,7 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 import org.aksw.gerbil.io.nif.DocumentWriter;
 import org.aksw.gerbil.transfer.nif.Document;
 import org.aksw.gerbil.transfer.nif.NIFTransferPrefixMapping;
-import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.HftsOnt;
 
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -31,7 +31,7 @@ public abstract class ExtendedAbstractNIFWriter {
     protected Model createNIFModel(List<Document> document) {
         Model nifModel = ModelFactory.createDefaultModel();
         PrefixMapping mapping = NIFTransferPrefixMapping.getInstance();
-        mapping = mapping.setNsPrefix("hfts", ExtendedNif.getUri() + "#");
+        mapping = mapping.setNsPrefix("hfts", HftsOnt.getUri() + "#");
         nifModel.setNsPrefixes(mapping);
 
         for (Document d : document) {

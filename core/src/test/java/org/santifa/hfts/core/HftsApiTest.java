@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.metric.*;
-import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.utils.AmbiguityDictionary;
 import org.santifa.hfts.core.utils.Dictionary;
 
@@ -83,12 +83,12 @@ public class HftsApiTest {
         Assert.assertThat(results.size(), is(1));
         dataset = results.get(0);
         Assert.assertThat(dataset.getName(), is("test"));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroDensity), is("0.16666666666666666"));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.notAnnotatedProperty), is("0.0"));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguityEntities), is("27.5"));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.macroAmbiguitySurfaceForms), is("1926.0"));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.diversityEntities), is("0.03787878787878788"));
-        Assert.assertThat(dataset.getMetaInformations().get(ExtendedNif.diversitySurfaceForms), is("9.738979176990524E-4"));
+        Assert.assertThat(dataset.getMetaInformations().get(HftsOnt.macroDensity), is("0.16666666666666666"));
+        Assert.assertThat(dataset.getMetaInformations().get(HftsOnt.notAnnotatedProperty), is("0.0"));
+        Assert.assertThat(dataset.getMetaInformations().get(HftsOnt.macroAmbiguityEntities), is("27.5"));
+        Assert.assertThat(dataset.getMetaInformations().get(HftsOnt.macroAmbiguitySurfaceForms), is("1926.0"));
+        Assert.assertThat(dataset.getMetaInformations().get(HftsOnt.diversityEntities), is("0.03787878787878788"));
+        Assert.assertThat(dataset.getMetaInformations().get(HftsOnt.diversitySurfaceForms), is("9.738979176990524E-4"));
     }
 
     @Test

@@ -3,7 +3,7 @@ package org.santifa.hfts.core.metric;
 import org.aksw.gerbil.transfer.nif.Document;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
-import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.HftsOnt;
 
 /**
  * Created by ratzeputz on 30.12.16.
@@ -21,7 +21,7 @@ public class NotAnnotated implements Metric {
 
         /* determine the ratio between empty documents and all documents */
         double result = (double) emptydocs / (double) dataset.getDocuments().size();
-        dataset.getMetaInformations().put(ExtendedNif.notAnnotatedProperty, String.valueOf(result));
+        dataset.getMetaInformations().put(HftsOnt.notAnnotatedProperty, String.valueOf(result));
         Logger.debug("Not-annotated for {} is {}", dataset.getName(), result);
         return dataset;
     }

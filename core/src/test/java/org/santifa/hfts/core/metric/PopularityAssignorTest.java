@@ -3,7 +3,7 @@ package org.santifa.hfts.core.metric;
 import org.junit.Test;
 import org.santifa.hfts.core.NifDataset;
 import org.santifa.hfts.core.NifDatasetTest;
-import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.HftsOnt;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -14,9 +14,9 @@ import java.nio.file.Paths;
  */
 public class PopularityAssignorTest {
 
-    private static PopularityAssignor hits = new PopularityAssignor(MetricTests.hits, ExtendedNif.hits);
+    private static PopularityAssignor hits = new PopularityAssignor(MetricTests.hits, HftsOnt.hits);
 
-    private static PopularityAssignor pagerank = new PopularityAssignor(MetricTests.pagerank, ExtendedNif.pagerank);
+    private static PopularityAssignor pagerank = new PopularityAssignor(MetricTests.pagerank, HftsOnt.pagerank);
 
     @Test
     public void testPageRank() throws URISyntaxException {

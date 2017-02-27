@@ -2,7 +2,7 @@ package org.santifa.hfts.core.metric;
 
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
-import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 import org.santifa.hfts.core.utils.AmbiguityDictionary;
@@ -93,10 +93,10 @@ public class Diversity implements Metric {
             resultDiversitySurfaceForms = diversitySurfaceForms / (double) dataset.getMarkings().size();
         }
 
-        dataset.getMetaInformations().put(ExtendedNif.diversityEntities, String.valueOf(resultDiversityEntities));
-        dataset.getMetaInformations().put(ExtendedNif.diversitySurfaceForms, String.valueOf(resultDiversitySurfaceForms));
-        Logger.debug("Diversity of entities for {} is {}", dataset.getName(), dataset.getMetaInformations().get(ExtendedNif.diversityEntities));
-        Logger.debug("Diversity of surface forms for {} is {}", dataset.getName(), dataset.getMetaInformations().get(ExtendedNif.diversitySurfaceForms));
+        dataset.getMetaInformations().put(HftsOnt.diversityEntities, String.valueOf(resultDiversityEntities));
+        dataset.getMetaInformations().put(HftsOnt.diversitySurfaceForms, String.valueOf(resultDiversitySurfaceForms));
+        Logger.debug("Diversity of entities for {} is {}", dataset.getName(), dataset.getMetaInformations().get(HftsOnt.diversityEntities));
+        Logger.debug("Diversity of surface forms for {} is {}", dataset.getName(), dataset.getMetaInformations().get(HftsOnt.diversitySurfaceForms));
 
         /* flush if requested */
         return dataset;

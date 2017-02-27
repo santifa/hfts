@@ -3,7 +3,7 @@ package org.santifa.hfts.core.metric;
 import com.hp.hpl.jena.rdf.model.Property;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
-import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 import org.santifa.hfts.core.utils.Dictionary;
 import org.santifa.hfts.core.utils.PopularityDictionary;
@@ -51,10 +51,10 @@ public class PopularityAssignor implements Metric {
 
 
     public static PopularityAssignor getDefaultPageRank() {
-        return new PopularityAssignor(PopularityDictionary.getPageRankConnector(), ExtendedNif.pagerank);
+        return new PopularityAssignor(PopularityDictionary.getPageRankConnector(), HftsOnt.pagerank);
     }
 
     public static PopularityAssignor getDefaultHits() {
-        return new PopularityAssignor(PopularityDictionary.getHitsConnector(), ExtendedNif.hits);
+        return new PopularityAssignor(PopularityDictionary.getHitsConnector(), HftsOnt.hits);
     }
 }

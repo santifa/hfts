@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
-import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 
 import java.io.IOException;
@@ -85,12 +85,12 @@ public class NifDatasetTest {
     @Test
     public void testWriting() {
         NifDataset dataset = getTestDataset();
-        dataset.getMetaInformations().put(ExtendedNif.notAnnotatedProperty, "0.0");
-        dataset.getMetaInformations().put(ExtendedNif.macroDensity, "0.1");
-        dataset.getMetaInformations().put(ExtendedNif.macroAmbiguityEntities, "0.2");
-        dataset.getMetaInformations().put(ExtendedNif.macroAmbiguitySurfaceForms, "0.3");
-        dataset.getMetaInformations().put(ExtendedNif.diversityEntities, "0.4");
-        dataset.getMetaInformations().put(ExtendedNif.diversitySurfaceForms, "0.5");
+        dataset.getMetaInformations().put(HftsOnt.notAnnotatedProperty, "0.0");
+        dataset.getMetaInformations().put(HftsOnt.macroDensity, "0.1");
+        dataset.getMetaInformations().put(HftsOnt.macroAmbiguityEntities, "0.2");
+        dataset.getMetaInformations().put(HftsOnt.macroAmbiguitySurfaceForms, "0.3");
+        dataset.getMetaInformations().put(HftsOnt.diversityEntities, "0.4");
+        dataset.getMetaInformations().put(HftsOnt.diversitySurfaceForms, "0.5");
         String result = dataset.write();
         System.out.println(result);
     }

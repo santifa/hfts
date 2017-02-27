@@ -4,7 +4,7 @@ import org.aksw.gerbil.transfer.nif.Document;
 import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
 import org.santifa.hfts.core.NifDataset;
-import org.santifa.hfts.core.nif.ExtendedNif;
+import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.nif.MetaDocument;
 
 /**
@@ -36,7 +36,7 @@ public class Density implements Metric {
             if (words != 0) {
                 result = (double) d.getMarkings().size() / (double) words;
             }
-            d.getMetaInformations().put(ExtendedNif.density, String.valueOf(result));
+            d.getMetaInformations().put(HftsOnt.density, String.valueOf(result));
             Logger.debug("Density for document {} is {}", d.getDocumentURI(), result);
         }
         return dataset;
@@ -55,7 +55,7 @@ public class Density implements Metric {
         }
 
         double result = (double) dataset.getMarkings().size() / (double) words;
-        dataset.getMetaInformations().put(ExtendedNif.microDensity, String.valueOf(result));
+        dataset.getMetaInformations().put(HftsOnt.microDensity, String.valueOf(result));
         Logger.debug("Micro Density for {} is {}", dataset.getName(), result);
         return dataset;
     }
@@ -66,7 +66,7 @@ public class Density implements Metric {
 
         /* sum up the individual densities */
         for (MetaDocument d : dataset.getDocuments()) {
-            density += Double.valueOf(d.getMetaInformations().get(ExtendedNif.density));
+            density += Double.valueOf(d.getMetaInformations().get(HftsOnt.density));
         }
 
         /* calculate the average of all individual densities */
@@ -75,7 +75,7 @@ public class Density implements Metric {
             result = density / (double) dataset.getDocuments().size();
         }
 
-        dataset.getMetaInformations().put(ExtendedNif.macroDensity, String.valueOf(result));
+        dataset.getMetaInformations().put(HftsOnt.macroDensity, String.valueOf(result));
         Logger.debug("Macro Density for {} is {}", dataset.getName(), result);
         return dataset;
     }
