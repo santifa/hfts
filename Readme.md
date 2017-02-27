@@ -51,13 +51,13 @@ Clone the repository and then
     cd hfts
     mvn clean install -DskipTests
     
-To get all metrics working you'll further need the dictionary data for ambiguity, diversity and
+To get all measures working you'll further need the dictionary data for ambiguity, diversity and
 popularity. This package contains the source data as well as the scripts to produce the neccessary
-format for the library.
+format for the library as well as production ready dictionaries.
 
-Get the data for the metric from [here]() (not done yet).
+Get the dictionaries from [here](https://github.com/santifa/hfts/releases/download/v1.0/hfts-voc.tar.xz).
 In order to run the tests you have to place the dictionary data
-in the `hfts/data` directory otherwise only provide the paths.
+in the `hfts/data` directory otherwise only provide the paths at programming time.
 
 ### Usage
 
