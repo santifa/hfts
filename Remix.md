@@ -8,8 +8,9 @@ here.
 
 ## Templates
 
-The first template queries the whole graph for matches.
-The construct statement produces valid RDF as query result.
+In general, one wants to query either the whole graph or some subset
+of documents. So the first basic template does the first one and
+utlizies the construct statement to produce RDF as result.
 
     # select document triples and annotation triples
     CONSTRUCT {?doc ?ddicate ?dObject .
@@ -27,7 +28,7 @@ The construct statement produces valid RDF as query result.
     }
 
 
-The second one limits the amount of documents for the query
+The second query limits the amount of documents
 but it still remains possible to fetch all annoation belonging
 to a document.
 
@@ -129,3 +130,58 @@ This basic query selects documents with a maximum recall 1.0.
     }
   
 ### More advanced queries
+
+This more advanced query selects the first one hundred documents
+and counts the annotation with type person. Afterwards, documents with less
+than 4 persons or a maximum recall of 0.8 are sorted out.
+
+    CONSTRUCT {?doc ?dPredicate ?dObject .
+               ?ann ?aPrediacte ?aObject .}
+    WHERE {
+    # get all document triples
+    ?doc ?dPredicate ?dObject ;
+        hfts:maxRecall ?recall .
+    # use count for a later filter expression
+    {SELECT DISTINCT (?d AS ?doc) (COUNT(?a) AS ?aCount)
+        WHERE {
+            ?ds hfts:referenceDocuments ?d .
+            # select matching entities
+            ?a nif:referenceContext ?d ;
+                itsrdf:taClassRef dbo:Person .
+        } GROUP BY ?d LIMIT 100
+    }
+    
+    ?ann ?aPredicate ?aObject ;
+         nif:referenceContext ?doc.
+    # select only documents with more then three persons
+    # and a maximum recall of 0.8
+    FILTER(?aCount > 3) .
+    FILTER(xsd:double(?recall) >= 0.8) .
+    }
+
+This last example demonstrates the power of SPARQL for
+dataset generation. The subselect uses a federated query to 
+select documents which contains person born before 1970. 
+    
+    CONSTRUCT {?doc ?dPredicate ?dObject .
+               ?ann ?aPrediacte ?aObject .}
+    WHERE {
+    # get all document triples
+    ?doc ?dPredicate ?dObject.
+    # construct block omitted
+    {SELECT DISTINCT (?d AS ?doc)
+        WHERE {
+            ?ds hfts:referenceDocuments ?d .
+            # select matching entities
+            ?a nif:referenceContext ?d ;
+                itsrdf:taIdentRef ?ref ;
+                itsrdf:taClassRef dbo:Person .
+            # fetch data from another endpoint
+            SERVICE <http://dbpedia.org/sparql> {
+                ?ref dbo:birthDate ?date .
+            }
+            FILTER (?date <= xsd:date(’1970-01-01’)).
+       }
+    ?ann ?aPredicate ?aObject ;
+       nif:referenceContext ?doc.
+    }
