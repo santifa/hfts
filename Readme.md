@@ -23,7 +23,7 @@ The NIF core ontology already provides good definitions for documents (text with
 but is missing a class for meta informations about collections of documents and also some
 properties to store meta informations in documents.  
 
-We provide a new small ontology which can be found [hfts](https://github.com/santifa/hfts/blob/master/ont/hfts.ttl).
+We provide a new small ontology which can be found [here](https://github.com/santifa/hfts/blob/master/ont/hfts.ttl).
 The only new base class is `hfts:Dataset` which is represented as `hfts:{Dataset Name}`.
 The properties describing the meta informations are related to this object and are 
 further explaines alongside with the [metrics](https://github.com/santifa/hfts/blob/master/Metrics.md).
@@ -90,6 +90,7 @@ with care:
 Also `owl:sameAs` retrival is provided with [http://sameas.org/](http://sameas.org/)
 
     api.withSameAsRetrival();
+    
     
 ### Extension
 
