@@ -103,24 +103,24 @@ for the resulting datasets.
 
 A simple example could be:
 
-    public class NotAnnotated implements Metric {
+    public class sampleMetric implements Metric {
 
         public final static Property sampleProp = ResourceFactory.createProperty(NIF.getURI(), "sampleProp");
 
         @Override
-        public NifDataset calculate(NifDataset dataset) {
+        public HftsDataset calculate(HftsDataset dataset) {
             /* do some calculation and store the result as meta information */
             dataset.getMetaInformations().put(sampleProp, String.valueOf(result));
             return dataset;
         }
 
         @Override
-        public NifDataset calculateMicro(NifDataset dataset) {
+        public HftsDataset calculateMicro(HftsDataset dataset) {
             return calculate(dataset);
         }
 
         @Override
-        public NifDataset calculateMacro(NifDataset dataset) {
+        public HftsDataset calculateMacro(HftsDataset dataset) {
             return calculate(dataset);
         }
     }
