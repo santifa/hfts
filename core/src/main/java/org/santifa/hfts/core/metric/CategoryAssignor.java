@@ -7,7 +7,7 @@ import com.hp.hpl.jena.query.ResultSet;
 import org.apache.jena.iri.IRI;
 import org.apache.jena.iri.IRIFactory;
 import org.pmw.tinylog.Logger;
-import org.santifa.hfts.core.NifDataset;
+import org.santifa.hfts.core.HftsDataset;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by ratzeputz on 30.12.16.
+ * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 public class CategoryAssignor implements Metric {
 
@@ -41,21 +41,21 @@ public class CategoryAssignor implements Metric {
     }
 
     @Override
-    public NifDataset calculate(NifDataset dataset) {
+    public HftsDataset calculate(HftsDataset dataset) {
         return type(dataset);
     }
 
     @Override
-    public NifDataset calculateMicro(NifDataset dataset) {
+    public HftsDataset calculateMicro(HftsDataset dataset) {
         return type(dataset);
     }
 
     @Override
-    public NifDataset calculateMacro(NifDataset dataset) {
+    public HftsDataset calculateMacro(HftsDataset dataset) {
         return type(dataset);
     }
 
-    private NifDataset type(NifDataset dataset) {
+    private HftsDataset type(HftsDataset dataset) {
         List<String> entities = new ArrayList<>();
         Logger.debug("Assign categories to dataset {}", dataset.getName());
 

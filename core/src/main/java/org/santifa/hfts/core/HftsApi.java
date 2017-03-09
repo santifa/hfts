@@ -11,8 +11,8 @@ import java.util.List;
 
 /**
  * The hfts api provides a fluent interface for on the fly
- * enhancement of nif data sets. <br/>
- * Nif data sets can be loaded from file or string and
+ * enhancement of nif datasets. <br/>
+ * Nif datasets can be loaded from file or string and
  * several {@link Metric}s can be applied on them.<br/>
  * Afterwards the resulting nif data sets are returned and
  * can be serialised into turtle.
@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class HftsApi {
 
-    private List<NifDataset> datasets = new ArrayList<>();
+    private List<HftsDataset> datasets = new ArrayList<>();
 
     private List<Metric> metrics = new ArrayList<>();
 
@@ -50,7 +50,7 @@ public class HftsApi {
      *
      * @return the datasets
      */
-    List<NifDataset> getDatasets() {
+    List<HftsDataset> getDatasets() {
         return datasets;
     }
 
@@ -63,7 +63,7 @@ public class HftsApi {
      * @throws IOException the io exception if file not found
      */
     public HftsApi withDataset(String name, Path p) throws IOException {
-        datasets.add(new NifDataset(name, p));
+        datasets.add(new HftsDataset(name, p));
         return this;
     }
 
@@ -75,7 +75,7 @@ public class HftsApi {
      * @return the hfts api
      */
     public HftsApi withDataset(String name, String nifContent) {
-        datasets.add(new NifDataset(name, nifContent));
+        datasets.add(new HftsDataset(name, nifContent));
         return this;
     }
 
@@ -85,7 +85,7 @@ public class HftsApi {
      * @param dataset the dataset
      * @return the hfts api
      */
-    public HftsApi withDataset(NifDataset dataset) {
+    public HftsApi withDataset(HftsDataset dataset) {
         datasets.add(dataset);
         return this;
     }
@@ -132,10 +132,10 @@ public class HftsApi {
      *
      * @return the list
      */
-    public List<NifDataset> run() {
-        List<NifDataset> result = new ArrayList<>(datasets.size());
+    public List<HftsDataset> run() {
+        List<HftsDataset> result = new ArrayList<>(datasets.size());
 
-        for (NifDataset d : datasets) {
+        for (HftsDataset d : datasets) {
             Logger.debug("Procssesing dataset {}...", d.getName());
 
             for (Metric m : metrics) {

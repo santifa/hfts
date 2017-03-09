@@ -1,8 +1,8 @@
 package org.santifa.hfts.core.metric;
 
 import org.junit.Test;
-import org.santifa.hfts.core.NifDataset;
-import org.santifa.hfts.core.NifDatasetTest;
+import org.santifa.hfts.core.HftsDataset;
+import org.santifa.hfts.core.HftsDatasetTest;
 import org.santifa.hfts.core.nif.HftsOnt;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class PopularityAssignorTest {
 
     @Test
     public void testPageRank() throws URISyntaxException {
-        NifDataset testdata = NifDatasetTest.getTestDataset();
+        HftsDataset testdata = HftsDatasetTest.getTestDataset();
         testdata = pagerank.calculate(testdata);
         testdata.write(System.out);
     }
@@ -28,21 +28,21 @@ public class PopularityAssignorTest {
 
     @Test
     public void testPageRankBig() throws URISyntaxException, IOException {
-        NifDataset testdata = new NifDataset("test", Paths.get(this.getClass().getResource("/kore50-nif-short.ttl").toURI()));
+        HftsDataset testdata = new HftsDataset("test", Paths.get(this.getClass().getResource("/kore50-nif-short.ttl").toURI()));
         testdata = pagerank.calculate(testdata);
         testdata.write(System.out);
     }
 
     @Test
     public void testHits() throws URISyntaxException {
-        NifDataset testdata = NifDatasetTest.getTestDataset();
+        HftsDataset testdata = HftsDatasetTest.getTestDataset();
         testdata = hits.calculate(testdata);
         testdata.write(System.out);
     }
 
     @Test
     public void testHitsBig() throws URISyntaxException, IOException {
-        NifDataset testdata = new NifDataset("test", Paths.get(this.getClass().getResource("/kore50-nif-short.ttl").toURI()));
+        HftsDataset testdata = new HftsDataset("test", Paths.get(this.getClass().getResource("/kore50-nif-short.ttl").toURI()));
         testdata = hits.calculate(testdata);
         testdata.write(System.out);
     }

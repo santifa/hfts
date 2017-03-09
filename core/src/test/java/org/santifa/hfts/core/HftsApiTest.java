@@ -71,14 +71,14 @@ public class HftsApiTest {
 
     @Test
     public void testCalculation() {
-        NifDataset dataset = NifDatasetTest.getTestDataset();
+        HftsDataset dataset = HftsDatasetTest.getTestDataset();
         Dictionary<Integer> connectorEntity = AmbiguityDictionary.getDefaultEntityConnector();
         Dictionary<Integer> connectorSf = AmbiguityDictionary.getDefaultSFConnector();
         HftsApi api = new HftsApi().withDataset(dataset)
                 .withMetric(new NotAnnotated(), new Density(),
                             new Ambiguity(connectorEntity, connectorSf),
                             new Diversity(connectorEntity, connectorSf));
-        List<NifDataset> results = api.run();
+        List<HftsDataset> results = api.run();
 
         Assert.assertThat(results.size(), is(1));
         dataset = results.get(0);
@@ -93,12 +93,12 @@ public class HftsApiTest {
 
     @Test
     public void runHftsApiTyper() {
-        NifDataset dataset = NifDatasetTest.getTestDataset();
+        HftsDataset dataset = HftsDatasetTest.getTestDataset();
         HftsApi api = new HftsApi().withDataset(dataset)
                 .withMetric(CategoryAssignor.getDefaultAssignor(), PopularityAssignor.getDefaultPageRank());
-        List<NifDataset> results = api.run();
+        List<HftsDataset> results = api.run();
 
-        for (NifDataset ds : results) {
+        for (HftsDataset ds : results) {
             System.out.println("##### Printing dataset " + ds.getName());
             System.out.println(ds.write());
         }
@@ -118,9 +118,9 @@ public class HftsApiTest {
                         PopularityAssignor.getDefaultPageRank(),
                         PopularityAssignor.getDefaultHits()
                 );
-        List<NifDataset> results = api.run();
+        List<HftsDataset> results = api.run();
 
-        for (NifDataset ds : results) {
+        for (HftsDataset ds : results) {
             System.out.println("##### Printing dataset " + ds.getName());
             ds.write(new FileOutputStream(ds.getName() + "test.ttl"));
         }
@@ -165,8 +165,8 @@ public class HftsApiTest {
 
 
 
-        List<NifDataset> results = api.run();
-        for (NifDataset ds : results) {
+        List<HftsDataset> results = api.run();
+        for (HftsDataset ds : results) {
             System.out.println("##### Printing dataset " + ds.getName());
             ds.write(new FileOutputStream(ds.getName() + "-ext.ttl"));
         }

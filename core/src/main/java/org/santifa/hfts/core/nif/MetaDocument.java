@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by ratzeputz on 17.01.17.
+ * Meta information wrapper around the normal nif Document.
+ *
+ * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 public class MetaDocument extends DocumentImpl implements Document {
 

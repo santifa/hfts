@@ -3,7 +3,9 @@ package org.santifa.hfts.cli;
 import org.junit.Test;
 
 /**
- * Created by ratzeputz on 16.01.17.
+ * Basic test.
+ *
+ * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 public class CliTest {
 

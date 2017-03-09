@@ -10,7 +10,7 @@ import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
 import org.pmw.tinylog.writers.ConsoleWriter;
 import org.santifa.hfts.core.HftsApi;
-import org.santifa.hfts.core.NifDataset;
+import org.santifa.hfts.core.HftsDataset;
 import org.santifa.hfts.core.metric.*;
 import org.santifa.hfts.core.utils.AmbiguityDictionary;
 import org.santifa.hfts.core.utils.Dictionary;
@@ -135,10 +135,10 @@ public class Cli implements Runnable {
         }
 
         /* run everything */
-        List<NifDataset> result = api.run();
+        List<HftsDataset> result = api.run();
 
         /* write back to disk */
-        for (NifDataset d : result) {
+        for (HftsDataset d : result) {
             try {
                 FileOutputStream fos = new FileOutputStream(d.getName());
                 d.write(fos);

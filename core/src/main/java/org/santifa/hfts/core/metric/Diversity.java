@@ -1,7 +1,7 @@
 package org.santifa.hfts.core.metric;
 
 import org.pmw.tinylog.Logger;
-import org.santifa.hfts.core.NifDataset;
+import org.santifa.hfts.core.HftsDataset;
 import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by ratzeputz on 30.12.16.
+ * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 public class Diversity implements Metric {
 
@@ -33,7 +33,7 @@ public class Diversity implements Metric {
     }
 
     @Override
-    public NifDataset calculate(NifDataset dataset) {
+    public HftsDataset calculate(HftsDataset dataset) {
         HashMap<String, List<String>> knownEntities = new HashMap<>();
         HashMap<String, List<String>> knownSurfaceForms = new HashMap<>();
 
@@ -103,12 +103,12 @@ public class Diversity implements Metric {
     }
 
     @Override
-    public NifDataset calculateMicro(NifDataset dataset) {
+    public HftsDataset calculateMicro(HftsDataset dataset) {
         return calculate(dataset);
     }
 
     @Override
-    public NifDataset calculateMacro(NifDataset dataset) {
+    public HftsDataset calculateMacro(HftsDataset dataset) {
         return calculate(dataset);
     }
 }

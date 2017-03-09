@@ -2,7 +2,7 @@ package org.santifa.hfts.core.metric;
 
 import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
-import org.santifa.hfts.core.NifDataset;
+import org.santifa.hfts.core.HftsDataset;
 import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
@@ -11,7 +11,7 @@ import org.santifa.hfts.core.utils.Dictionary;
 import org.santifa.hfts.core.utils.HftsHelper;
 
 /**
- * Created by ratzeputz on 30.12.16.
+ * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 public class Ambiguity implements Metric {
 
@@ -31,14 +31,14 @@ public class Ambiguity implements Metric {
     }
 
     @Override
-    public NifDataset calculate(NifDataset dataset) {
+    public HftsDataset calculate(HftsDataset dataset) {
         dataset = calculateDocumentLevel(dataset);
         dataset = calculateMicro(dataset);
         dataset = calculateMacro(dataset);
         return dataset;
     }
 
-    private NifDataset calculateDocumentLevel(NifDataset dataset) {
+    private HftsDataset calculateDocumentLevel(HftsDataset dataset) {
 
         for (MetaDocument d : dataset.getDocuments()) {
             int entities = 0;
@@ -85,7 +85,7 @@ public class Ambiguity implements Metric {
     }
 
     @Override
-    public NifDataset calculateMicro(NifDataset dataset) {
+    public HftsDataset calculateMicro(HftsDataset dataset) {
         double entities = 0;
         double surfaceForms = 0;
 
@@ -112,7 +112,7 @@ public class Ambiguity implements Metric {
     }
 
     @Override
-    public NifDataset calculateMacro(NifDataset dataset) {
+    public HftsDataset calculateMacro(HftsDataset dataset) {
         double ambiguityEntities = 0.0;
         double ambiguitySurfaceForms = 0.0;
 

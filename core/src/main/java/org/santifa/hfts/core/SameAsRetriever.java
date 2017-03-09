@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * The class takes a {@link NifDataset} and resolves
+ * The class takes a {@link HftsDataset} and resolves
  * all 'owl:sameAs' relations for every URI present in the data set.
  * <br/>
  * This can be used with some metrics which are utilizing URIs
@@ -24,12 +24,12 @@ class SameAsRetriever {
     private SameAsService service = DefaultSameAsServiceFactory.createNew();
 
     /**
-     * Retrieve all sameAs relations for URIs present in a {@link NifDataset}
+     * Retrieve all sameAs relations for URIs present in a {@link HftsDataset}
      *
      * @param dataset the data set
      * @return the extended data set
      */
-    NifDataset retrieve(NifDataset dataset) {
+    HftsDataset retrieve(HftsDataset dataset) {
         for (Document d : dataset.getDocuments()) {
 
             /* we can only retrieve additional uris for markings

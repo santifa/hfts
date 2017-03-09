@@ -10,13 +10,13 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 
 /**
- * Created by ratzeputz on 28.12.16.
+ * Created by Henrik Jürges (jürges.henrik@gmail.com)
  */
 public class SameAsRetrieverTest {
 
     @Test
     public void retrieve() throws Exception {
-        NifDataset testDataset = NifDatasetTest.getTestDataset();
+        HftsDataset testDataset = HftsDatasetTest.getTestDataset();
         SameAsRetriever retriever = new SameAsRetriever();
         retriever.retrieve(testDataset);
 

@@ -3,25 +3,25 @@ package org.santifa.hfts.core.metric;
 import org.aksw.gerbil.transfer.nif.Document;
 import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
-import org.santifa.hfts.core.NifDataset;
+import org.santifa.hfts.core.HftsDataset;
 import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.nif.MetaDocument;
 
 /**
- * Created by ratzeputz on 30.12.16.
+ * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 public class Density implements Metric {
 
 
     @Override
-    public NifDataset calculate(NifDataset dataset) {
+    public HftsDataset calculate(HftsDataset dataset) {
         dataset = calculateDocumentLevel(dataset);
         dataset = calculateMacro(dataset);
         dataset = calculateMicro(dataset);
         return dataset;
     }
 
-    private NifDataset calculateDocumentLevel(NifDataset dataset) {
+    private HftsDataset calculateDocumentLevel(HftsDataset dataset) {
         for (MetaDocument d : dataset.getDocuments()) {
             String[] split = StringUtils.split(d.getText(), " ");
             int words = 0;
@@ -43,7 +43,7 @@ public class Density implements Metric {
     }
 
     @Override
-    public NifDataset calculateMicro(NifDataset dataset) {
+    public HftsDataset calculateMicro(HftsDataset dataset) {
         int words = 0;
 
         for (Document d : dataset.getDocuments()) {
@@ -61,7 +61,7 @@ public class Density implements Metric {
     }
 
     @Override
-    public NifDataset calculateMacro(NifDataset dataset) {
+    public HftsDataset calculateMacro(HftsDataset dataset) {
         double density = 0;
 
         /* sum up the individual densities */

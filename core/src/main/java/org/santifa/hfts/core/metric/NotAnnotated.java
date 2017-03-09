@@ -2,16 +2,16 @@ package org.santifa.hfts.core.metric;
 
 import org.aksw.gerbil.transfer.nif.Document;
 import org.pmw.tinylog.Logger;
-import org.santifa.hfts.core.NifDataset;
+import org.santifa.hfts.core.HftsDataset;
 import org.santifa.hfts.core.nif.HftsOnt;
 
 /**
- * Created by ratzeputz on 30.12.16.
+ * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 public class NotAnnotated implements Metric {
 
     @Override
-    public NifDataset calculate(NifDataset dataset) {
+    public HftsDataset calculate(HftsDataset dataset) {
         int emptydocs = 0;
         for (Document d : dataset.getDocuments()) {
             if (d.getMarkings().isEmpty()) {
@@ -27,12 +27,12 @@ public class NotAnnotated implements Metric {
     }
 
     @Override
-    public NifDataset calculateMicro(NifDataset dataset) {
+    public HftsDataset calculateMicro(HftsDataset dataset) {
         return calculate(dataset);
     }
 
     @Override
-    public NifDataset calculateMacro(NifDataset dataset) {
+    public HftsDataset calculateMacro(HftsDataset dataset) {
         return calculate(dataset);
     }
 }

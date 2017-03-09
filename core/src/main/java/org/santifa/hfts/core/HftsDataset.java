@@ -21,7 +21,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 /**
- * A {@link NifDataset} is an extension to the common
+ * A {@link HftsDataset} is an extension to the common
  * {@link Document} which is normally used for NIF documents.
  * <br/>
  * The data set contains additional meta information
@@ -29,7 +29,7 @@ import java.util.*;
  *
  * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
-public class NifDataset {
+public class HftsDataset {
 
     private String name;
 
@@ -46,7 +46,7 @@ public class NifDataset {
      * @param data the path to the data file
      * @throws IOException the io exception if no file is found
      */
-    public NifDataset(String name, Path data) throws IOException {
+    public HftsDataset(String name, Path data) throws IOException {
         this.name = name;
         this.documents = parse(Files.newInputStream(data));
         this.markings = referenceMarkings(documents);
@@ -59,7 +59,7 @@ public class NifDataset {
      * @param name the name of the data set
      * @param data the data as string
      */
-    NifDataset(String name, String data) {
+    HftsDataset(String name, String data) {
         this.name = name;
         this.documents = parse(new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8"))));
         this.markings = referenceMarkings(documents);
@@ -161,7 +161,7 @@ public class NifDataset {
 
     @Override
     public String toString() {
-        return "NifDataset{" +
+        return "HftsDataset{" +
                 "name='" + name + '\'' +
                 ", documents=" + documents +
                 ", markings=" + markings +

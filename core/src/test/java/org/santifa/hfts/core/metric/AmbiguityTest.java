@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.santifa.hfts.core.NifDataset;
-import org.santifa.hfts.core.NifDatasetTest;
+import org.santifa.hfts.core.HftsDataset;
+import org.santifa.hfts.core.HftsDatasetTest;
 import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.nif.MetaDocument;
 
@@ -29,25 +29,25 @@ public class AmbiguityTest {
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() throws URISyntaxException, IOException {
-        NifDataset testset1 = NifDatasetTest.getTestDataset();
+        HftsDataset testset1 = HftsDatasetTest.getTestDataset();
         testset1.getDocuments().get(0).setMarkings(new ArrayList<>());
         testset1.reload();
 
-        NifDataset testset2 = NifDatasetTest.getTestDataset();
+        HftsDataset testset2 = HftsDatasetTest.getTestDataset();
         testset2.getDocuments().get(0).setMarkings(new ArrayList<>());
         testset2.getDocuments().add(new MetaDocument("", "", new ArrayList<>()));
         testset2.reload();
 
         Path file = Paths.get(NotAnnotated.class.getResource("/kore50-nif-short.ttl").toURI());
-        NifDataset testset3 = new NifDataset("test", file);
+        HftsDataset testset3 = new HftsDataset("test", file);
 
-        NifDataset testset4 = new NifDataset("test", file);
+        HftsDataset testset4 = new HftsDataset("test", file);
         testset4.getDocuments().get(0).setMarkings(new ArrayList<>());
         testset4.getDocuments().get(1).setMarkings(new ArrayList<>());
         testset4.reload();
 
         return Arrays.asList(new Object[][] {
-                {NifDatasetTest.getTestDataset(), "27.5", "1926.0", "27.5", "1926.0"},
+                {HftsDatasetTest.getTestDataset(), "27.5", "1926.0", "27.5", "1926.0"},
                 {testset1, "0.0", "0.0", "0.0", "0.0"},
                 {testset2, "0.0", "0.0", "0.0", "0.0"},
                 {testset3, "28.166666666666668", "1291.8333333333333", "28.166666666666668", "1291.8333333333333"},
@@ -55,7 +55,7 @@ public class AmbiguityTest {
         });
     }
 
-    private NifDataset dataset;
+    private HftsDataset dataset;
 
     private String expectedMacroEntityAmb;
 
@@ -65,7 +65,7 @@ public class AmbiguityTest {
 
     private String expectedMicroSfAmb;
 
-    public AmbiguityTest(NifDataset dataset, String expectedMacroEntityAmb, String expectedMacroSfAmb,
+    public AmbiguityTest(HftsDataset dataset, String expectedMacroEntityAmb, String expectedMacroSfAmb,
                          String expectedMicroEntityAmb, String expectedMicroSfAmb) {
         this.dataset = dataset;
         this.expectedMacroEntityAmb = expectedMacroEntityAmb;

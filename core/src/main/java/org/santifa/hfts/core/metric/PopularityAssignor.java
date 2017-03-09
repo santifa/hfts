@@ -2,7 +2,7 @@ package org.santifa.hfts.core.metric;
 
 import com.hp.hpl.jena.rdf.model.Property;
 import org.pmw.tinylog.Logger;
-import org.santifa.hfts.core.NifDataset;
+import org.santifa.hfts.core.HftsDataset;
 import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 import org.santifa.hfts.core.utils.Dictionary;
@@ -11,7 +11,7 @@ import org.santifa.hfts.core.utils.PopularityDictionary;
 import java.util.List;
 
 /**
- * Created by ratzeputz on 09.01.17.
+ * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 public class PopularityAssignor implements Metric {
 
@@ -25,7 +25,7 @@ public class PopularityAssignor implements Metric {
     }
 
     @Override
-    public NifDataset calculate(NifDataset dataset) {
+    public HftsDataset calculate(HftsDataset dataset) {
         List<MetaNamedEntity> meanings = dataset.getMarkings();
         Logger.debug("Assign popularity {} to dataset {}", property, dataset.getName());
 
@@ -40,12 +40,12 @@ public class PopularityAssignor implements Metric {
     }
 
     @Override
-    public NifDataset calculateMicro(NifDataset dataset) {
+    public HftsDataset calculateMicro(HftsDataset dataset) {
         return calculate(dataset);
     }
 
     @Override
-    public NifDataset calculateMacro(NifDataset dataset) {
+    public HftsDataset calculateMacro(HftsDataset dataset) {
         return calculate(dataset);
     }
 

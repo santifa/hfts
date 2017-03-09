@@ -7,7 +7,9 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
 /**
- * Created by ratzeputz on 16.01.17.
+ * Ontology definition.
+ *
+ * Created by Henrik Jürges (jürges.henrik@gmail.com)
  */
 public class HftsOnt {
 

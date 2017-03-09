@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.santifa.hfts.core.NifDataset;
-import org.santifa.hfts.core.NifDatasetTest;
+import org.santifa.hfts.core.HftsDataset;
+import org.santifa.hfts.core.HftsDatasetTest;
 import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.nif.MetaDocument;
 
@@ -27,22 +27,22 @@ public class NotAnnotatedTest {
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() throws URISyntaxException, IOException {
-        NifDataset testset1 = NifDatasetTest.getTestDataset();
+        HftsDataset testset1 = HftsDatasetTest.getTestDataset();
         testset1.getDocuments().get(0).setMarkings(new ArrayList<>());
 
-        NifDataset testset2 = NifDatasetTest.getTestDataset();
+        HftsDataset testset2 = HftsDatasetTest.getTestDataset();
         testset2.getDocuments().get(0).setMarkings(new ArrayList<>());
         testset2.getDocuments().add(new MetaDocument("", "", new ArrayList<>()));
 
         Path file = Paths.get(NotAnnotated.class.getResource("/kore50-nif-short.ttl").toURI());
-        NifDataset testset3 = new NifDataset("test", file);
+        HftsDataset testset3 = new HftsDataset("test", file);
 
-        NifDataset testset4 = new NifDataset("test", file);
+        HftsDataset testset4 = new HftsDataset("test", file);
         testset4.getDocuments().get(0).setMarkings(new ArrayList<>());
         testset4.getDocuments().get(1).setMarkings(new ArrayList<>());
 
         return Arrays.asList(new Object[][] {
-                {NifDatasetTest.getTestDataset(), "0.0"},
+                {HftsDatasetTest.getTestDataset(), "0.0"},
                 {testset1, "1.0"},
                 {testset2, "1.0"},
                 {testset3, "0.0"},
@@ -50,11 +50,11 @@ public class NotAnnotatedTest {
         });
     }
 
-    private NifDataset dataset;
+    private HftsDataset dataset;
 
     private String expectation;
 
-    public NotAnnotatedTest(NifDataset dataset, String expectation) {
+    public NotAnnotatedTest(HftsDataset dataset, String expectation) {
         this.dataset = dataset;
         this.expectation = expectation;
     }

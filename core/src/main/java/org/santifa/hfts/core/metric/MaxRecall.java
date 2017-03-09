@@ -1,16 +1,15 @@
 package org.santifa.hfts.core.metric;
 
 import org.pmw.tinylog.Logger;
-import org.santifa.hfts.core.NifDataset;
+import org.santifa.hfts.core.HftsDataset;
 import org.santifa.hfts.core.nif.HftsOnt;
 import org.santifa.hfts.core.nif.MetaDocument;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
-import org.santifa.hfts.core.utils.AmbiguityDictionary;
 import org.santifa.hfts.core.utils.Dictionary;
 import org.santifa.hfts.core.utils.HftsHelper;
 
 /**
- * Created by ratzeputz on 16.01.17.
+ * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 public class MaxRecall implements Metric {
 
@@ -20,12 +19,8 @@ public class MaxRecall implements Metric {
         this.connector = connector;
     }
 
-    public static MaxRecall getDefaultMaxRecall() {
-            return new MaxRecall(AmbiguityDictionary.getDefaultSFConnector());
-    }
-
     @Override
-    public NifDataset calculate(NifDataset dataset) {
+    public HftsDataset calculate(HftsDataset dataset) {
         calculateDocumentLevel(dataset);
         calculateMacro(dataset);
         calculateMicro(dataset);
@@ -33,7 +28,7 @@ public class MaxRecall implements Metric {
     }
 
 
-    private NifDataset calculateDocumentLevel(NifDataset dataset) {
+    private HftsDataset calculateDocumentLevel(HftsDataset dataset) {
         for (MetaDocument d : dataset.getDocuments()) {
             int inDict = 0;
 
@@ -57,7 +52,7 @@ public class MaxRecall implements Metric {
     }
 
     @Override
-    public NifDataset calculateMicro(NifDataset dataset) {
+    public HftsDataset calculateMicro(HftsDataset dataset) {
         int inDict = 0;
 
         for (MetaDocument d : dataset.getDocuments()) {
@@ -81,7 +76,7 @@ public class MaxRecall implements Metric {
     }
 
     @Override
-    public NifDataset calculateMacro(NifDataset dataset) {
+    public HftsDataset calculateMacro(HftsDataset dataset) {
         double maxRecall = 0.0;
 
         for (MetaDocument d : dataset.getDocuments()) {

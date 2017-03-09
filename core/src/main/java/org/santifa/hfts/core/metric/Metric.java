@@ -1,16 +1,40 @@
 package org.santifa.hfts.core.metric;
 
-import org.santifa.hfts.core.NifDataset;
+import org.santifa.hfts.core.HftsDataset;
 
 /**
- * Created by ratzeputz on 30.12.16.
+ * Implement this interface to add new measures
+ * to the meta information generation process.
+ *
+ * If no micro or macro measure is possible call
+ * the normal {@link Metric#calculate(HftsDataset)}.
+ *
+ * Created by Henrik Jürges (jürges.henrik@gmail.com)
  */
 public interface Metric {
 
-    NifDataset calculate(NifDataset dataset);
+    /**
+     * Calculate the general measure for a hfts dataset.
+     *
+     * @param dataset the dataset
+     * @return the hfts dataset
+     */
+    HftsDataset calculate(HftsDataset dataset);
 
-    NifDataset calculateMicro(NifDataset dataset);
+    /**
+     * Calculate micro measure for a hfts dataset.
+     *
+     * @param dataset the dataset
+     * @return the hfts dataset
+     */
+    HftsDataset calculateMicro(HftsDataset dataset);
 
-    NifDataset calculateMacro(NifDataset dataset);
+    /**
+     * Calculate macro measure for a hfts dataset.
+     *
+     * @param dataset the dataset
+     * @return the hfts dataset
+     */
+    HftsDataset calculateMacro(HftsDataset dataset);
 
 }

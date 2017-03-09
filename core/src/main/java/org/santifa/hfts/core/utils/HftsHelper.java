@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.santifa.hfts.core.nif.MetaNamedEntity;
 
 /**
- * Created by ratzeputz on 20.01.17.
+ * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 public class HftsHelper {
 

@@ -4,8 +4,8 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import org.aksw.gerbil.io.nif.DocumentWriter;
+import org.aksw.gerbil.io.nif.utils.NIFTransferPrefixMapping;
 import org.aksw.gerbil.transfer.nif.Document;
-import org.aksw.gerbil.transfer.nif.NIFTransferPrefixMapping;
 import org.santifa.hfts.core.nif.HftsOnt;
 
 import java.io.OutputStream;
@@ -14,7 +14,9 @@ import java.io.Writer;
 import java.util.List;
 
 /**
- * Created by ratzeputz on 16.01.17.
+ * A simple replacement of the
+ *
+ * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
 public abstract class ExtendedAbstractNIFWriter {
 

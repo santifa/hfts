@@ -6,7 +6,7 @@
 
     <groupId>org.santifa</groupId>
     <artifactId>hfts</artifactId>
-    <version>0.1</version>
+    <version>1.0</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -30,12 +30,12 @@
         <dependency>
             <groupId>org.tinylog</groupId>
             <artifactId>tinylog</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>org.tinylog</groupId>
             <artifactId>log4j-facade</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
         </dependency>
     </dependencies>
 

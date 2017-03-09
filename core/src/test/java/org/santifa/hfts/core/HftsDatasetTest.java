@@ -22,7 +22,7 @@ import static org.hamcrest.core.Is.is;
  *
  * Created by Henrik Jürges (juerges.henrik@gmail.com)
  */
-public class NifDatasetTest {
+public class HftsDatasetTest {
 
     static {
         Logger.getConfiguration().level(Level.DEBUG).activate();
@@ -31,13 +31,13 @@ public class NifDatasetTest {
     @Test
     public void testDatasetCreation() throws URISyntaxException, IOException {
         Path file = Paths.get(getClass().getResource("/kore50-nif-short.ttl").toURI());
-        NifDataset dataset = new NifDataset("test", file);
+        HftsDataset dataset = new HftsDataset("test", file);
         Assert.assertNotNull(dataset.getDocuments());
     }
 
     @Test(expected = IOException.class)
     public void testDatasetCreationException() throws URISyntaxException, IOException {
-        NifDataset dataset = new NifDataset("test", Paths.get(".sdaf"));
+        HftsDataset dataset = new HftsDataset("test", Paths.get(".sdaf"));
     }
 
     @Test
@@ -72,7 +72,7 @@ public class NifDatasetTest {
                 "a nif:Phrase ;\n" +
                 "itsrdf:taIdentRef  <http://dbpedia.org/resource/Victoria_Beckham> .\n";
 
-        NifDataset dataset = new NifDataset("test", data);
+        HftsDataset dataset = new HftsDataset("test", data);
         Assert.assertThat(dataset.getDocuments().size(), is(1));
 
         Document d = dataset.getDocuments().get(0);
@@ -84,7 +84,7 @@ public class NifDatasetTest {
 
     @Test
     public void testWriting() {
-        NifDataset dataset = getTestDataset();
+        HftsDataset dataset = getTestDataset();
         dataset.getMetaInformations().put(HftsOnt.notAnnotatedProperty, "0.0");
         dataset.getMetaInformations().put(HftsOnt.macroDensity, "0.1");
         dataset.getMetaInformations().put(HftsOnt.macroAmbiguityEntities, "0.2");
@@ -96,12 +96,12 @@ public class NifDatasetTest {
     }
 
     /**
-     * Gets a {@link NifDataset} which contains one sentence with two entities
+     * Gets a {@link HftsDataset} which contains one sentence with two entities
      * 'Victoria Beckham' and 'David Beckham'
      *
      * @return the test data set
      */
-    public static NifDataset getTestDataset() {
+    public static HftsDataset getTestDataset() {
         String data = "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n" +
                 "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n" +
                 "@prefix owl: <http://www.w3.org/2002/07/owl#> .\n" +
@@ -132,6 +132,6 @@ public class NifDatasetTest {
                 "a nif:Phrase ;\n" +
                 "itsrdf:taIdentRef  <http://dbpedia.org/resource/Victoria_Beckham> .\n";
 
-        return new NifDataset("test", data);
+        return new HftsDataset("test", data);
     }
 }
