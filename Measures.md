@@ -1,7 +1,7 @@
 # Measures
 
 This documents describes the measures which are used to generate meta informations about
-collections of documents or the documents themselves. Also the corresponding nif properties are
+collections of documents or the documents themselves. Also the corresponding properties are
 mentioned.
 
 ## Background 
