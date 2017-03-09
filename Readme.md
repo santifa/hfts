@@ -51,6 +51,15 @@ Clone the repository and then
     cd hfts
     mvn clean install -DskipTests
     
+The library is installed into your local `m2` folder. Now add tou you pom.xml
+
+    <dependency>
+        <groupId>org.santifa</groupId>
+        <artifactId>hfts-core</artifactId>
+        <version>1.0</version>
+    </dependency>
+   
+    
 To get all measures working you'll further need the dictionary data for ambiguity, diversity and
 popularity. This package contains the source data as well as the scripts to produce the neccessary
 format for the library as well as production ready dictionaries.
@@ -128,8 +137,4 @@ make a pull request.
 
 ## TODO
 
-- [x] MaxRecall  
-- [x] DocumentLevel Density, Ambiguity  
-- [x] AnnotationLevel Ambiguity  
-- [x] irregular typing of meta properties at writing nif  
 - [ ] extensible reading and writing of nif + easier data structure  
