@@ -13,7 +13,7 @@ of documents. So the first basic template does the first one and
 utlizies the construct statement to produce RDF as result.
 
     # select document triples and annotation triples
-    CONSTRUCT {?doc ?ddicate ?dObject .
+    CONSTRUCT {?doc ?dPredicate ?dObject .
                ?ann ?aPrediacte ?aObject .}
     WHERE {
       # select all document triples
