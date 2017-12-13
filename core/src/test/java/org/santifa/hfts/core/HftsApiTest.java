@@ -127,18 +127,27 @@ public class HftsApiTest {
     }
 
     @Test
+    public void testDocumentAnnotations() throws IOException, URISyntaxException {
+        Path file = Paths.get("../ds/enhanced/hfts_new.ttl");
+        HftsApi api = new HftsApi();
+        String filename = StringUtils.substringBeforeLast(file.toFile().getName(), ".");
+        api.withDataset(filename, file).withMetric(new Annotations());
+        api.run();
+    }
+
+    @Test
     public void runHftsApi() throws IOException, URISyntaxException {
-        Path[] files = new Path[] {Paths.get("../ds/wes2015-dataset-nif.ttl"),
+        Path[] files = new Path[] {//Paths.get("../ds/wes2015-dataset-nif.ttl"),
                 Paths.get("../ds/kore50-nif.ttl"),
                 Paths.get("../ds/dbpedia-spotlight-nif.ttl"),
                 Paths.get("../ds/News-100.ttl"),
                 Paths.get("../ds/Reuters-128.ttl"),
                 Paths.get("../ds/RSS-500.ttl"),
-                Paths.get("../ds/ACE2004/ACE2004.rdf"),
-                Paths.get("../ds/AIDA/AIDA.rdf"),
+                Paths.get("../ds/ACE2004.ttl"),
+                //Paths.get("../ds/AIDA.ttl"),
                 Paths.get("../ds/AQUAINT/AQUAINT.rdf"),
-                Paths.get("../ds/OKE1/OKE1.rdf"),
-                Paths.get("../ds/OKE2/OKE2.rdf"),
+                //Paths.get("../ds/OKE1/OKE1.rdf"),
+                //Paths.get("../ds/OKE2/OKE2.rdf"),
                 Paths.get("../ds/MSNBC/MSNBC.rdf"),
                 Paths.get("../ds/IITB/IITB.rdf")
                // not working Paths.get("../ds/NEEL2016/NEEL2016.rdf")
@@ -150,25 +159,24 @@ public class HftsApiTest {
             api.withDataset(filename, f);
         }
 
-        Dictionary<Integer> connectorEntity = AmbiguityDictionary.getDefaultEntityConnector();
-        Dictionary<Integer> connectorSf = AmbiguityDictionary.getDefaultSFConnector();
+        //Dictionary<Integer> connectorEntity = AmbiguityDictionary.getDefaultEntityConnector();
+        //Dictionary<Integer> connectorSf = AmbiguityDictionary.getDefaultSFConnector();
         api.withMetric(new NotAnnotated(), new Density(),
-                CategoryAssignor.getDefaultAssignor(),
-                new MaxRecall(connectorSf),
-                new Ambiguity(connectorEntity, connectorSf),
-                new Diversity(connectorEntity, connectorSf),
-                PopularityAssignor.getDefaultPageRank(),
-                PopularityAssignor.getDefaultHits()
+                CategoryAssignor.getDefaultAssignor()
+                //new MaxRecall(connectorSf),
+                //new Ambiguity(connectorEntity, connectorSf),
+                //new Diversity(connectorEntity, connectorSf),
+                //PopularityAssignor.getDefaultPageRank(),
+                //PopularityAssignor.getDefaultHits()
         );
-
-
 
 
 
         List<HftsDataset> results = api.run();
         for (HftsDataset ds : results) {
-            System.out.println("##### Printing dataset " + ds.getName());
-            ds.write(new FileOutputStream(ds.getName() + "-ext.ttl"));
+            System.out.println("##### Storing dataset " + ds.getName());
+            //ds.write(new BufferedOutputStream(new FileOutputStream("aida-hfts-ext.ttl")));
+            ds.write(new FileOutputStream(ds.getName() + "-hfts-ext2.ttl"));
         }
     }
 
