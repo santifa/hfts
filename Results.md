@@ -1,7 +1,7 @@
 
 # Results generated with the hfts library
 
-The data can be found at the release (page)[https://github.com/santifa/hfts/releases/tag/v1.0]
+The data can be found at the release [page](https://github.com/santifa/hfts/releases/tag/v1.0)
 
 ## Queries
 
