@@ -1,17 +1,21 @@
 
 # Results generated with the hfts library
 
-The data can be found at the release [page](https://github.com/santifa/hfts/releases/tag/v1.0)
+Here one can find some of the results from the reasearch paper 
+[Remixing Entity Linking Evaluation Datasets for Focused Benchmarking](http://www.semantic-web-journal.net/content/remixing-entity-linking-evaluation-datasets-focused-benchmarking-0).
+
+The datasets we used are provided as a [release](https://github.com/santifa/hfts/releases/tag/v1.0) in different version. Either as the whole dataset or the whole dataset and the generated subsets.
 
 ## Queries
 
-The queries used for the generation of some of the datasets.
+Below one can find the queries we used to generate the individuel subsets.
+The dataset results are presented within the paper mentioned above.
+We described how to create such queries [here](https://github.com/santifa/hfts/blob/master/Remix.md).
 
 ## Difficulty
 
 Fair
 
-    ```
     prefix hfts: <https://raw.githubusercontent.com/santifa/hfts/master/ont/hfts.ttl#>
     prefix nif:   <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>
     CONSTRUCT {?doc ?dPredicate ?dObject . ?ann ?aPredicate ?aObject .} 
@@ -31,11 +35,9 @@ Fair
         FILTER (?ae >= 3) FILTER (?ae <= 200)
         FILTER (?asf >= 5) FILTER (?asf <= 1786) 
     }
-    ```
 
 Unfair
 
-    ```
     prefix hfts: <https://raw.githubusercontent.com/santifa/hfts/master/ont/hfts.ttl#>
     prefix nif:   <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> 
     CONSTRUCT {?doc ?dPredicate ?dObject . ?ann ?aPredicate ?aObject .} 
@@ -54,11 +56,9 @@ Unfair
         FILTER (?pr <= 1.38967404379e-07 || ?pr >= 0.000697539286086)  
         FILTER (?ae <= 3 || ?ae >= 200)  FILTER (?asf <= 5 || ?asf >= 1786) 
     }
-    ```
 
 Easy
 
-    ```
     prefix hfts: <https://raw.githubusercontent.com/santifa/hfts/master/ont/hfts.ttl#>
     prefix nif:   <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> 
     CONSTRUCT {?doc ?dPredicate ?dObject . ?ann ?aPredicate ?aObject .} 
@@ -78,11 +78,9 @@ Easy
     FILTER (?pr >= 9.85e-06) FILTER (?pr <= 0.000697539286086)    
     FILTER (?ae >= 19) FILTER (?ae <= 200) FILTER (?asf >= 5) FILTER (?asf <= 338) 
     }
-    ```
 
 Difficult
 
-    ```
     prefix hfts: <https://raw.githubusercontent.com/santifa/hfts/master/ont/hfts.ttl#> 
     prefix nif:   <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> 
     CONSTRUCT {?doc ?dPredicate ?dObject . ?ann ?aPredicate ?aObject .}
@@ -102,12 +100,11 @@ Difficult
     FILTER (?pr >= 1.38967404379e-07) FILTER (?pr <= 2.86e-05)
     FILTER (?ae >= 3) FILTER (?ae <= 62)  FILTER (?asf >= 64) FILTER (?asf <= 1786)
     }
-    ```
 
 ### Types
 
 Persons
-    ```
+
     prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     prefix xsd:    <http://www.w3.org/2001/XMLSchema#>
     prefix itsrdf: <http://www.w3.org/2005/11/its/rdf#>
@@ -129,12 +126,9 @@ Persons
     # use some filter condition
     Filter (?class = <http://xmlns.com/foaf/0.1/Person> || ?class = <http://dbpedia.org/ontology/Person>)
     }
-    ```
-
 
 Organization
 
-    ```
     prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     prefix xsd:    <http://www.w3.org/2001/XMLSchema#>
     prefix itsrdf: <http://www.w3.org/2005/11/its/rdf#>
@@ -156,7 +150,6 @@ Organization
     # use some filter condition
     Filter (?class = <http://schema.org/Organization> || ?class = <http://dbpedia.org/ontology/Organization>)
     }
-    ```
 
 Places
 
@@ -182,11 +175,9 @@ Places
     # use some filter condition
     Filter (?class = <http://schema.org/Place> || ?class = <http://dbpedia.org/ontology/Place> || ?class = <http://dbpedia.org/ontology/Location>)
     }
-    ```
 
 Other
 
-    ```
     CONSTRUCT {?doc ?dPredicate ?dObject .
         ?ann ?aPrediacte ?aObject .}
     WHERE {
@@ -207,11 +198,9 @@ Other
     Filter  (NOT EXISTS {?ann <http://www.w3.org/2005/11/its/rdf#taClassRef> <http://schema.org/Organization>})
     Filter  (NOT EXISTS {?ann <http://www.w3.org/2005/11/its/rdf#taClassRef> <http://dbpedia.org/ontology/Organization>})
     }
-    ```
 
 All Classes
 
-    ```
     CONSTRUCT {?doc ?dPredicate ?dObject .
     ?ann ?aPrediacte ?aObject .}
     WHERE {
@@ -226,11 +215,9 @@ All Classes
     # use some filter condition
     Filter  (bound(?class))
     }
-    ```
 
 No Class
 
-    ```
     CONSTRUCT {?doc ?dPredicate ?dObject .
     ?ann ?aPrediacte ?aObject .}
     WHERE {
@@ -244,4 +231,3 @@ No Class
     # use some filter condition
     Filter  ( NOT EXISTS {?ann <http://www.w3.org/2005/11/its/rdf#taClassRef> ?class })
     }
-    ```
